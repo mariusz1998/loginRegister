@@ -10,6 +10,33 @@ const initializePassport = require('./passport-config')
 const flash = require('express-flash')
 const session = require('express-session')
 const methodOverride = require('method-override')
+const neo4j = require('neo4j-driver');
+
+var driver = neo4j.driver('bolt://54.234.73.102:33113', neo4j.auth.basic('neo4j', 'arrays-drug-leaper'));
+
+var sessionNeo = driver.session();
+app.get('/test', function(req,res){ 
+    sessionNeo
+            .run('MATCH(n:User) RETURN n')
+            .then(function(result2){
+                var userArr= [];
+         
+                result2.records.forEach(function(record){
+                    userArr.push({
+                        login: record._fields[0].properties.login,
+                        password: record._fields[0].properties.password
+                        
+                    });
+                });
+             
+    res.render('test.ejs',{users:userArr});
+            })
+                    .catch(function(err){
+               console.log(err);         
+            });
+    });
+
+
 
 initializePassport(passport,email =>
     users.find(user=>user.email === email), //wyszukiwanie użytkownika przekazanie funkcji getUserbyEmail
@@ -18,6 +45,8 @@ initializePassport(passport,email =>
 //sesja z paszportem przesyła aktualnie uwierzytelnionego użytkownika
 
 const users=[] //użytkownicy 
+
+
 
 app.set('view-engine', 'ejs')
 app.use(express.urlencoded({ extended: false }))
