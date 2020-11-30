@@ -1,0 +1,177 @@
+body{
+	background-color: LightSteelBlue;
+	font-family: Verdana;
+	font-size: 20px;
+	color: Black;
+}
+
+input[type=radio] {
+    width: 20px;
+    height: 20px;
+}
+
+#showMeTheWinner{
+   width: 220px; 
+}
+
+input[type=text], select, input[type=number], input[type=submit] {
+    width: 150px;
+    padding: 4px 6px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 2px solid #ccc;
+    border-color: LightSlateGray;
+    border-radius: 6px;
+    box-sizing: border-box;
+}
+
+input[type=date], [type=password]{
+    width: 150px;
+    padding: 4px 6px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 2px solid #ccc;
+    border-color: LightSlateGray;
+    border-radius: 6px;
+    box-sizing: border-box;
+}
+
+iframe {
+    border: 5px solid #ccc;
+    border-color: LightSlateGray;
+    border-radius: 10px;
+    width: 400px;
+    height: 235px;
+    display: inline-block;
+}
+
+
+
+#container {
+  height: 50%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+#avaible{
+    margin-right: 5px;
+}
+
+#AvaibleUsers{
+    margin-top: 5px;
+}
+#AvaibleDisciplines{
+    margin-top: 5px;
+}
+#AvaibleTeams{
+    margin-top: 5px;
+}
+
+#ChoosedUsers{
+    margin-top: 5px;
+}
+#ChoosedDisciplines{
+    margin-top: 5px;
+}
+#ChoosedTeams{
+    margin-top: 5px;
+}
+
+#Im100Sure{
+    width: 250px;
+}
+#ImNot100Sure{
+    width: 180px;
+}
+
+#login{
+    width: 150px;
+}
+
+#added{
+    margin-left: 5px;
+}
+
+#searchDisciplines {
+  width: 75%;
+}
+
+#searchTeams {
+  width: 75%;
+}
+
+#tournamentMode{
+     width: 110px;
+}
+
+#enterResult{
+    width: 120px;
+}
+
+#myCheck{
+    margin-top: 13px;
+    zoom: 1.3;
+}
+
+#myForm{
+    display: inline-block;
+}
+
+#text{
+    text-align: right;
+}
+
+#textArea{
+    text-align: left;
+}
+
+#fields{
+    text-align: left;
+    display: inline-block;
+    float: left;
+    padding-top: 2px;
+    margin-top: 5px;
+}
+
+.label2 {
+    display:inline-block;
+    float: right;
+    padding-top: 18px;
+}
+
+#regDiv{
+    height: 50%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+logDiv{
+    height: 50%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}

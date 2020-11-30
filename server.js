@@ -49,6 +49,7 @@ const users=[] //użytkownicy
 
 
 app.set('view-engine', 'ejs')
+app.use("/CSS", express.static(__dirname + "/CSS")); //do użycia CSS
 app.use(express.urlencoded({ extended: false }))
 app.use(flash())
 app.use(session({
@@ -78,18 +79,27 @@ app.get('/',checkAuthenticated, (req, res) => {
   })
   app.post('/register',checkNotAuthenticated,  async (req, res) => {
     try {
-        const hashedPassword = await bcrypt.hash(req.body.password, 10)
-        users.push({
-          id: Date.now().toString(),
-          name: req.body.name,
-          email: req.body.email,
-          password: hashedPassword //haszowanie hasłaaa
-        })
-        res.redirect('/login')
-      } catch{
+        console.log("1")
+        const hashedPassword = await bcrypt.hash(req.body.password1, 10)
+        console.log("2")
+        sessionNeo
+             .run('CREATE(n:User {firstName:$firstNameParam, lastName:$lastNameParam, email:$emailParam, password:$passwordParam, active:\'false\'})',
+             {firstNameParam:req.body.firstName,lastNameParam:req.body.lastName,emailParam: req.body.email, passwordParam:hashedPassword })
+             .then(function(result){  
+                console.log("3")  
+                res.render('login.ejs')
+            })
+             //users.push({
+       //   id: Date.now().toString(),
+       //   name: req.body.name,
+      //    email: req.body.email,
+      //    password: hashedPassword //haszowanie hasłaaa
+     //   })
+            
+             } catch{
         res.redirect('/register')
       }
-      console.log(users)
+ 
     })
 
     app.delete('/logout', (req, res) => {
