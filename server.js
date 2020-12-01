@@ -38,9 +38,7 @@ app.get('/test', function(req,res){
 
 
 
-initializePassport(passport,email =>
-    users.find(user=>user.email === email), //wyszukiwanie użytkownika przekazanie funkcji getUserbyEmail
-   id=> users.find(user=>user.id === id))
+initializePassport(passport,sessionNeo)
 
 //sesja z paszportem przesyła aktualnie uwierzytelnionego użytkownika
 
@@ -62,7 +60,7 @@ app.use(passport.session())
 app.use(methodOverride('_method'))
 
 app.get('/',checkAuthenticated, (req, res) => {
-    res.render('index.ejs', {name: req.user.name})
+    res.render('index.ejs', {name: req.user.id+" "+req.user.email})
   })
 
  app.get('/login', checkNotAuthenticated, (req, res) => { //przejście do login
@@ -79,23 +77,13 @@ app.get('/',checkAuthenticated, (req, res) => {
   })
   app.post('/register',checkNotAuthenticated,  async (req, res) => {
     try {
-        console.log("1")
         const hashedPassword = await bcrypt.hash(req.body.password1, 10)
-        console.log("2")
         sessionNeo
-             .run('CREATE(n:User {firstName:$firstNameParam, lastName:$lastNameParam, email:$emailParam, password:$passwordParam, active:\'false\'})',
-             {firstNameParam:req.body.firstName,lastNameParam:req.body.lastName,emailParam: req.body.email, passwordParam:hashedPassword })
-             .then(function(result){  
-                console.log("3")  
+            .run('CREATE(n:User {firstName:$firstNameParam, lastName:$lastNameParam, email:$emailParam, password:$passwordParam, active:\'false\'})',
+            {firstNameParam:req.body.firstName,lastNameParam:req.body.lastName,emailParam: req.body.email, passwordParam:hashedPassword })
+            .then(function(result){   
                 res.render('login.ejs')
-            })
-             //users.push({
-       //   id: Date.now().toString(),
-       //   name: req.body.name,
-      //    email: req.body.email,
-      //    password: hashedPassword //haszowanie hasłaaa
-     //   })
-            
+           })
              } catch{
         res.redirect('/register')
       }
