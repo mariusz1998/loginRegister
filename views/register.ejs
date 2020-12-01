@@ -1,4 +1,7 @@
 <h1>Register</h1>
+<% if(typeof alert != 'undefined'){ %>
+   <%= alert %>
+<% } %>
 <form action="/register" method="POST">
   <div>
     <label for="firstName">First Name</label>
@@ -6,7 +9,7 @@
   </div>
   <div>
     <label for="lastName">Last Name</label>
-    <input type="text" id="lastNa" name="lastName" required>
+    <input type="text"  id="lastNa" name="lastName" required>
   </div>
   <div>
     <label for="email">Email</label>
@@ -14,12 +17,30 @@
   </div>
   <div>
     <label for="password1">Password</label>
-    <input type="password" id="password1" name="password1" required>
+    <input type="password" onChange='checkPasswordMatch()' id="password1" name="password1" required>
   </div>
   <div>
     <label for="password2">Repeat Password</label>
-    <input type="password" id="password2" name="password2" required>
+    <input type="password" onChange='checkPasswordMatch()' id="password2" name="password2" required>  <l id="passwordError"></l>
   </div>
-  <button type="submit">Register</button>
+  <button id="submit" type="submit">Register</button>
 </form>
 <a href="/login">Login</a>
+
+<script>
+function checkPasswordMatch()
+{
+  if(document.getElementById('password1').value !=document.getElementById('password2').value)
+  {
+    document.getElementById('password2').style = 'border-color:red'
+    document.getElementById("passwordError").innerHTML = " Password is not same"
+    document.getElementById('submit').disabled=true
+  }
+  else
+  {
+    document.getElementById('password2').style = 'border-color:black'
+    document.getElementById("passwordError").innerHTML = ""
+    document.getElementById('submit').disabled=false
+  }
+}
+</script>

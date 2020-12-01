@@ -10,8 +10,6 @@ function initialize(passport,sessionNeo) {
   {loginParam:email})
         .then(function(result2){
             result2.records.forEach(function(record){
-                    console.log(record._fields[0].identity.low)
-                    console.log(record._fields[0].properties.email)
                     user.id = record._fields[0].identity.low
                    user.email=record._fields[0].properties.email
                     user.password=record._fields[0].properties.password
@@ -19,7 +17,6 @@ function initialize(passport,sessionNeo) {
                 });
             });
             setTimeout(async () =>{ 
- // console.log(typeof (user.id)=='undefined')
     if (typeof (user.id)=='undefined') {
       return done(null, false, { message: 'No user with that email' }) //parametr 1 ->błąd , parametr 2 czy zwracamy użytkownika 
     }

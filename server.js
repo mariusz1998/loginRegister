@@ -76,6 +76,15 @@ app.get('/',checkAuthenticated, (req, res) => {
     res.render('register.ejs')
   })
   app.post('/register',checkNotAuthenticated,  async (req, res) => {
+    sessionNeo
+    .run('MATCH (n:User{email:$emailParam}) RETURN count(n) as user_exists',
+    {emailParam:req.body.email})
+          .then(function(result2){
+               console.log(result2.records[0].get('user_exists').low ); 
+            if(result2.records[0].get('user_exists').low > 0) //==1
+            res.render('register.ejs',{alert:"Email is used"})
+            else
+                  setTimeout(async () =>{   
     try {
         const hashedPassword = await bcrypt.hash(req.body.password1, 10)
         sessionNeo
@@ -87,7 +96,8 @@ app.get('/',checkAuthenticated, (req, res) => {
              } catch{
         res.redirect('/register')
       }
- 
+    } ,10000)
+  })
     })
 
     app.delete('/logout', (req, res) => {
