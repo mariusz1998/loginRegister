@@ -60,7 +60,7 @@ app.use(passport.session())
 app.use(methodOverride('_method'))
 
 app.get('/',checkAuthenticated, (req, res) => {
-    res.render('index.ejs', {name: req.user.id+" "+req.user.email})
+    res.render('index.ejs', {user: req.user})
   })
 
  app.get('/login', checkNotAuthenticated, (req, res) => { //przejście do login

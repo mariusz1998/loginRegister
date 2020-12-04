@@ -22,7 +22,9 @@ function initialize(passport,sessionNeo) {
                     console.log( result.records[0].get('adminExists'))
                     if(result.records[0].get('adminExists')===true && dStart.getTime() <= d.getTime() &&
                     dEnd.getTime() >= d.getTime())
-                           user.admin= true                      
+                           user.admin= true  
+                           else
+                           user.admin =false                    
                 console.log(user)
 
             });
