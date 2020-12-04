@@ -6,15 +6,15 @@ function initialize(passport,sessionNeo) {
   const authenticateUser = async (email, password, done) => { //done gdy zakończyliśmy uwietrzlnienie użytkownika
     //const user = getUserByEmail(email)
     sessionNeo
-            .run('MATCH (n:User{email:$loginParam}) RETURN n',
+            .run('MATCH (u:User{email:$loginParam}),(a:Admin) RETURN EXISTS ((u)-[:ADMIN]-(a)) as adminExists,u,a',
   {loginParam:email})
-        .then(function(result2){
-            result2.records.forEach(function(record){
-                    user.id = record._fields[0].identity.low
-                   user.email=record._fields[0].properties.email
-                    user.password=record._fields[0].properties.password
-                   
-                });
+      .then(result => {
+                    user.id = result.records[0].get('u').identity.low
+                   user.email=result.records[0].get('u').properties.email
+                    user.password=result.records[0].get('u').properties.password
+                    if(result.records[0].get('adminExists')===true)
+                             user.admin= true
+                console.log(user)
             });
             setTimeout(async () =>{ 
     if (typeof (user.id)=='undefined') {

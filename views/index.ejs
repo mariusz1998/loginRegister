@@ -1,5 +1,8 @@
 
 <h1>Hi <%= name %></h1>
+<form action="/users/activate" method="POST">
+  <button id="submit" type="submit">Active other users</button>
+</form>
 <form action="/logout?_method=DELETE" method="POST">
   <button type="submit">Log Out</button>
 </form>

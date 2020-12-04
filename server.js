@@ -12,7 +12,7 @@ const session = require('express-session')
 const methodOverride = require('method-override')
 const neo4j = require('neo4j-driver');
 
-var driver = neo4j.driver('bolt://54.234.73.102:33113', neo4j.auth.basic('neo4j', 'arrays-drug-leaper'));
+var driver = neo4j.driver('bolt://54.160.68.122:33257', neo4j.auth.basic('neo4j', 'dope-sill-towel'));
 
 var sessionNeo = driver.session();
 app.get('/test', function(req,res){ 
@@ -80,7 +80,7 @@ app.get('/',checkAuthenticated, (req, res) => {
     .run('MATCH (n:User{email:$emailParam}) RETURN count(n) as user_exists',
     {emailParam:req.body.email})
           .then(function(result2){
-               console.log(result2.records[0].get('user_exists').low ); 
+         //      console.log(result2.records[0].get('user_exists').low );  //jakie maile są
             if(result2.records[0].get('user_exists').low > 0) //==1
             res.render('register.ejs',{alert:"Email is used"})
             else
