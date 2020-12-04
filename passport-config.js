@@ -1,20 +1,30 @@
 const LocalStrategy = require('passport-local').Strategy
 const bcrypt = require('bcrypt')
+const moment = require('moment')
 
 function initialize(passport,sessionNeo) {
   var user  = new Object();
   const authenticateUser = async (email, password, done) => { //done gdy zakończyliśmy uwietrzlnienie użytkownika
     //const user = getUserByEmail(email)
     sessionNeo
-            .run('MATCH (u:User{email:$loginParam}),(a:Admin) RETURN EXISTS ((u)-[:ADMIN]-(a)) as adminExists,u,a',
+            .run('MATCH (u:User{email:$loginParam}),((u)-[:ADMIN]-(a:Admin)) RETURN EXISTS ((u)-[:ADMIN]-(a)) as adminExists,u,a',
   {loginParam:email})
       .then(result => {
                     user.id = result.records[0].get('u').identity.low
                    user.email=result.records[0].get('u').properties.email
                     user.password=result.records[0].get('u').properties.password
-                    if(result.records[0].get('adminExists')===true)
-                             user.admin= true
+                    var d = new Date();
+                    var dStart = new Date(result.records[0].get('a').properties.startDay);
+                    var dEnd = new Date(result.records[0].get('a').properties.endDay);
+                    console.log(d);
+                    console.log(dStart);
+                    console.log(dEnd);
+                    console.log( result.records[0].get('adminExists'))
+                    if(result.records[0].get('adminExists')===true && dStart.getTime() <= d.getTime() &&
+                    dEnd.getTime() >= d.getTime())
+                           user.admin= true                      
                 console.log(user)
+
             });
             setTimeout(async () =>{ 
     if (typeof (user.id)=='undefined') {
