@@ -7,6 +7,7 @@ const app = express()
 const bcrypt = require('bcrypt')
 const passport = require('passport')
 const initializePassport = require('./passport-config')
+const activeUsers = require('./active-user')
 const flash = require('express-flash')
 const session = require('express-session')
 const methodOverride = require('method-override')
@@ -15,36 +16,10 @@ const neo4j = require('neo4j-driver');
 var driver = neo4j.driver('bolt://54.160.68.122:33257', neo4j.auth.basic('neo4j', 'dope-sill-towel'));
 
 var sessionNeo = driver.session();
-app.get('/test', function(req,res){ 
-    sessionNeo
-            .run('MATCH(n:User) RETURN n')
-            .then(function(result2){
-                var userArr= [];
-         
-                result2.records.forEach(function(record){
-                    userArr.push({
-                        login: record._fields[0].properties.login,
-                        password: record._fields[0].properties.password
-                        
-                    });
-                });
-             
-    res.render('test.ejs',{users:userArr});
-            })
-                    .catch(function(err){
-               console.log(err);         
-            });
-    });
-
-
 
 initializePassport(passport,sessionNeo)
 
 //sesja z paszportem przesyła aktualnie uwierzytelnionego użytkownika
-
-const users=[] //użytkownicy 
-
-
 
 app.set('view-engine', 'ejs')
 app.use("/CSS", express.static(__dirname + "/CSS")); //do użycia CSS
@@ -52,8 +27,8 @@ app.use(express.urlencoded({ extended: false }))
 app.use(flash())
 app.use(session({
   secret: process.env.SESSION_SECRET, //klucz który szyfruje wszystko
-  resave: false, //zapisujemy sesję gdy się nic nie zmieniło
-  saveUninitialized: false //nie zapisuj nie zinicjalizowanego
+  resave: true, //zapisujemy sesję gdy się nic nie zmieniło
+  saveUninitialized: true //nie zapisuj nie zinicjalizowanego
 }))
 app.use(passport.initialize())
 app.use(passport.session())
@@ -99,7 +74,9 @@ app.get('/',checkAuthenticated, (req, res) => {
     } ,10000)
   })
     })
-
+  //  app.post('/users/activate',checkAuthenticated,(req, res)=>{ tutaj pomysł bez podziału na pliki tylko te 3 wystarczą reszte usuń dotyczącą user Active 
+  //  res.render('activateUsers.ejs', {user: req.user})
+  //  });
     app.delete('/logout', (req, res) => {
         req.logOut() //wyolguj i przekieruj do login
         res.redirect('/login')
@@ -119,7 +96,5 @@ app.get('/',checkAuthenticated, (req, res) => {
         }
         next()
       }
-
-
-
+      activeUsers(app,checkAuthenticated)
 app.listen(3000)

@@ -1,6 +1,5 @@
 const LocalStrategy = require('passport-local').Strategy
 const bcrypt = require('bcrypt')
-const moment = require('moment')
 
 function initialize(passport,sessionNeo) {
   var user  = new Object();
@@ -48,7 +47,7 @@ function initialize(passport,sessionNeo) {
 
   passport.use(new LocalStrategy({ usernameField: 'email' }, authenticateUser))
   passport.serializeUser((user, done) => done(null, user.id)) //zapisanie użytkownika do sesji
-  passport.deserializeUser((id, done) => {
+  passport.deserializeUser((id,done) => {
     return done(null, user)
   })
 }
