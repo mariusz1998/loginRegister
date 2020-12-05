@@ -15,10 +15,9 @@ function initialize(passport,sessionNeo) {
                    user.email=result.records[0].get('u').properties.email
                     user.password=result.records[0].get('u').properties.password
                     var d = new Date();
-                    var dStart = new Date(result.records[0].get('a').properties.startDay);
-                    var dEnd = new Date(result.records[0].get('a').properties.endDay);
-                    console.log(d);
-                    console.log( result.records[0].get('adminExists'))
+                    var dStart = new Date(result.records[0].get('a').properties.startDay)
+                    var dEnd = new Date(result.records[0].get('a').properties.endDay)
+                    user.active = result.records[0].get('u').properties.active
                     if(result.records[0].get('adminExists')===true && dStart.getTime() <= d.getTime() &&
                     dEnd.getTime() >= d.getTime())
                            user.admin= true  
@@ -31,7 +30,9 @@ function initialize(passport,sessionNeo) {
     if (typeof (user.id)=='undefined') {
       return done(null, false, { message: 'No user with that email' }) //parametr 1 ->błąd , parametr 2 czy zwracamy użytkownika 
     }
-
+    if (user.active==false) {
+      return done(null, false, { message: 'Account is not active' }) //parametr 1 ->błąd , parametr 2 czy zwracamy użytkownika 
+    }
     try {
       if (await bcrypt.compare(password, user.password)) {
         return done(null, user) //parametr2 -> zwracamy użytkownika
