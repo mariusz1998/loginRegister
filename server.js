@@ -88,7 +88,7 @@ app.get('/',checkAuthenticated, (req, res) => {
     try {
         const hashedPassword = await bcrypt.hash(req.body.password1, 10)
         sessionNeo
-            .run('CREATE(n:User {firstName:$firstNameParam, lastName:$lastNameParam, email:$emailParam, password:$passwordParam, active:\'false\'})',
+            .run('CREATE(n:User {firstName:$firstNameParam, lastName:$lastNameParam, email:$emailParam, password:$passwordParam, active:false})',
             {firstNameParam:req.body.firstName,lastNameParam:req.body.lastName,emailParam: req.body.email, passwordParam:hashedPassword })
             .then(function(result){   
                 res.render('login.ejs')

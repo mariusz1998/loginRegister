@@ -10,6 +10,7 @@ function initialize(passport,sessionNeo) {
             .run('MATCH (u:User{email:$loginParam}),((u)-[:ADMIN]-(a:Admin)) RETURN EXISTS ((u)-[:ADMIN]-(a)) as adminExists,u,a',
   {loginParam:email})
       .then(result => {
+       if(result.records.length!==0){ //sprawdzenie czy jest jakiś user
                     user.id = result.records[0].get('u').identity.low
                    user.email=result.records[0].get('u').properties.email
                     user.password=result.records[0].get('u').properties.password
@@ -17,8 +18,6 @@ function initialize(passport,sessionNeo) {
                     var dStart = new Date(result.records[0].get('a').properties.startDay);
                     var dEnd = new Date(result.records[0].get('a').properties.endDay);
                     console.log(d);
-                    console.log(dStart);
-                    console.log(dEnd);
                     console.log( result.records[0].get('adminExists'))
                     if(result.records[0].get('adminExists')===true && dStart.getTime() <= d.getTime() &&
                     dEnd.getTime() >= d.getTime())
@@ -26,7 +25,7 @@ function initialize(passport,sessionNeo) {
                            else
                            user.admin =false                    
                 console.log(user)
-
+       }
             });
             setTimeout(async () =>{ 
     if (typeof (user.id)=='undefined') {
