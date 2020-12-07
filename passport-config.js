@@ -6,22 +6,23 @@ function initialize(passport,sessionNeo) {
   const authenticateUser = async (email, password, done) => { //done gdy zakończyliśmy uwietrzlnienie użytkownika
     //const user = getUserByEmail(email)
     sessionNeo
-            .run('MATCH (u:User{email:$loginParam}),((u)-[:ADMIN]-(a:Admin)) RETURN EXISTS ((u)-[:ADMIN]-(a)) as adminExists,u,a',
-  {loginParam:email})
-      .then(result => {
-       if(result.records.length!==0){ //sprawdzenie czy jest jakiś user
+            .run('MATCH (u:User{email:$loginParam}) OPTIONAL MATCH (u)-[:ADMIN]-(a:Admin) RETURN u,a',
+        {loginParam:email})
+        .then(result => {
+       if(result.records.length>0){ //sprawdzenie czy jest jakiś user
                     user.id = result.records[0].get('u').identity.low
                    user.email=result.records[0].get('u').properties.email
                     user.password=result.records[0].get('u').properties.password
+                    user.active = result.records[0].get('u').properties.active
+                    if(result.records[0].get('a')!=null){
                     var d = new Date();
                     var dStart = new Date(result.records[0].get('a').properties.startDay)
                     var dEnd = new Date(result.records[0].get('a').properties.endDay)
-                    user.active = result.records[0].get('u').properties.active
-                    if(result.records[0].get('adminExists')===true && dStart.getTime() <= d.getTime() &&
-                    dEnd.getTime() >= d.getTime())
+                   if (dStart.getTime() <= d.getTime() && dEnd.getTime() >= d.getTime())
                            user.admin= true  
-                           else
-                           user.admin =false                    
+                    }
+                    else
+                    user.admin =false       
                 console.log(user)
        }
             });

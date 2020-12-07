@@ -13,7 +13,7 @@ const session = require('express-session')
 const methodOverride = require('method-override')
 const neo4j = require('neo4j-driver');
 
-var driver = neo4j.driver('bolt://54.160.68.122:33257', neo4j.auth.basic('neo4j', 'dope-sill-towel'));
+var driver = neo4j.driver('bolt://35.153.16.53:33613', neo4j.auth.basic('neo4j', 'lumps-poke-torques'));
 
 var sessionNeo = driver.session();
 
