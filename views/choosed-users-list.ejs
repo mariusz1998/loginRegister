@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" href="/CSS/style.css" type="text/css"/>
+        <title>Users list</title>
+    </head>
+    <body>
+        
+        <script>var toFilter="Users"</script>
+        Nazwa: <input type = "text" name = "searchUsers" id="searchUsers" onkeyup="myFilterFunction(toFilter)">
+        
+        <center>
+            <select name="sorting" size="1" style="width:40%;" id="sorting">
+                <option selected>A-Z</option>
+                <option>Z-A</option>
+            </select>
+            Ilość: <input type="text" id="amount" value="" style="width:20%;" readonly>
+        </center>
+                
+
+                    <select name="choosedUsers" size="6" style="width:100%;" id="choosedUsers">
+        </select>
+
+        <script src="/forLists/filterFunction.js"></script>
+        <script src="/forLists/sortingFunction.js"></script>
+        <script>
+            sort = document.getElementById("sorting");
+            var toSort = "Users";
+            sort.addEventListener("change", mySortingFunction.bind(this,toSort),false); 
+            window.onload = mySortingFunction(toSort);
+        </script>
+    </body>
+</html>

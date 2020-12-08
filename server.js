@@ -23,6 +23,7 @@ initializePassport(passport,sessionNeo)
 
 app.set('view-engine', 'ejs')
 app.use("/CSS", express.static(__dirname + "/CSS")); //do użycia CSS
+app.use("/forLists", express.static(__dirname + "/forLists"));
 app.use(express.urlencoded({ extended: false }))
 app.use(flash())
 app.use(session({
@@ -96,5 +97,22 @@ app.get('/',checkAuthenticated, (req, res) => {
         }
         next()
       }
-      activeUsers(app,checkAuthenticated)
+      activeUsers(app,checkAuthenticated,sessionNeo)
+
+      app.get('/users/activate',(req,res)=>{
+        var allUsersEmails = []
+        sessionNeo
+        .run('MATCH (n:User{active:false}) RETURN (n)') 
+        .then(function(result){
+          result.records.forEach(function(record){
+            allUsersEmails.push(record._fields[0].identity.low+" "+record._fields[0].properties.email)
+    
+          });
+          //console.log(allUsersEmails)
+        res.render('activate-users-list.ejs',{users: allUsersEmails})
+      })
+    });
+     app.get('/users/choosed',(req,res)=>{
+        res.render('choosed-users-list.ejs')
+      })
 app.listen(3000)

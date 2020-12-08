@@ -1,2 +1,50 @@
+<head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="/CSS/style.css">
+        <title>User activate</title>
+     </head>
+    <script>var toInit = "Users";</script>
+    <body onload="init(toInit);">
+    <center>
 
-<h1>Hi <%= user.id +"  siemka " + user.admin%></h1>
+           Select users  :
+            
+            <br/><br/>
+            <div id="container">
+                <div id="avaible">
+                   To activate: 
+                    <br/>
+                    <iframe id="AvaibleUsers" src="/users/activate"></iframe>
+                </div>
+                <div id="added">
+                    Added:
+                    <br/>
+                    <iframe id="ChoosedUsers" src="/users/choosed"></iframe>
+                </div>
+            </div>
+
+            <br/><br/>
+
+          
+            
+            <input type = "submit" value = "Activate" onclick="temp()">
+            
+        <!--
+        Powrót do menu g?ównego
+        -->
+        <form action = "/Turnieje/MainMenu.jsp" method="get">
+            <input type = "submit" value = "Powrót">
+        </form>
+            
+        <!--</form>-->
+    </center>
+    
+    <script type="text/javascript" src="/forLists/initFunction.js"></script>
+    <script type="text/javascript" src="/forLists/addFunction.js"></script>
+    <script type="text/javascript" src="/forLists/deleteFunction.js"></script>
+    <script type="text/javascript" src="/forLists/optionsCounter.js"></script>
+    </body>
+</html>
+
+
