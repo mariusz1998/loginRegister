@@ -13,6 +13,8 @@ function initialize(passport,sessionNeo) {
                    user.email=result.records[0].get('u').properties.email
                     user.password=result.records[0].get('u').properties.password
                     user.active = result.records[0].get('u').properties.active
+                    user.firstName = result.records[0].get('u').properties.firstName
+                    user.lastName = result.records[0].get('u').properties.lastName
                     if(result.records[0].get('a')!=null){
                     var d = new Date();
                     var dStart = new Date(result.records[0].get('a').properties.startDay)
