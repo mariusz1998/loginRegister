@@ -7,15 +7,13 @@
     <script>var toInit = "Users";</script>
     <body onload="init(toInit);">
     <center>
-
-           Select users  :
-            
+           Select users  :          
             <br/><br/>
             <div id="container">
                 <div id="avaible">
                    To activate: 
                     <br/>
-                    <iframe id="AvaibleUsers" src="/users/activate"></iframe>
+                    <iframe name="AvaibleUsers" id="AvaibleUsers" src="/users/activate"></iframe>
                 </div>
                 <div id="added">
                     Added:
@@ -23,28 +21,28 @@
                     <iframe id="ChoosedUsers" src="/users/choosed"></iframe>
                 </div>
             </div>
-
+            <input type = "submit" value = "Zatwierdź" onclick="temp()">
             <br/><br/>
-
-          
-            
-            <input type = "submit" value = "Activate" onclick="temp()">
-            
-        <!--
-        Powrót do menu g?ównego
-        -->
-        <form action = "/Turnieje/MainMenu.jsp" method="get">
-            <input type = "submit" value = "Powrót">
+        <form action = "/" method="get">
+            <input type = "submit" value = "Back">
         </form>
             
         <!--</form>-->
+
     </center>
-    
+    <script>
+        function temp()
+        {
+            submit();
+        }
+    </script>
     <script type="text/javascript" src="/forLists/initFunction.js"></script>
     <script type="text/javascript" src="/forLists/addFunction.js"></script>
     <script type="text/javascript" src="/forLists/deleteFunction.js"></script>
     <script type="text/javascript" src="/forLists/optionsCounter.js"></script>
+    <script type="text/javascript" src="/submits/activateUsers.js"></script>
     </body>
+    
 </html>
 
 

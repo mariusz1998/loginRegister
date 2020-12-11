@@ -3,8 +3,7 @@ const bcrypt = require('bcrypt')
 
 function initialize(passport,sessionNeo) {
   var user  = new Object();
-  const authenticateUser = async (email, password, done) => { //done gdy zakończyliśmy uwietrzlnienie użytkownika
-    //const user = getUserByEmail(email)
+  const authenticateUser = async (email, password, done) => { 
     sessionNeo
             .run('MATCH (u:User{email:$loginParam}) OPTIONAL MATCH (u)-[:ADMIN]-(a:Admin) RETURN u,a',
         {loginParam:email})
@@ -40,14 +39,14 @@ function initialize(passport,sessionNeo) {
         return done(null, false, { message: 'Password incorrect' })
       }
     } catch (e) {
-      return done(e) //parametr1 -> wystąpił błąd 
+      return done(e) 
     }
   }
             ,1000)
 }
 
   passport.use(new LocalStrategy({ usernameField: 'email' }, authenticateUser))
-  passport.serializeUser((user, done) => done(null, user.id)) //zapisanie użytkownika do sesji
+  passport.serializeUser((user, done) => done(null, user.id)) 
   passport.deserializeUser((id,done) => {
     return done(null, user)
   })

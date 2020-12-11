@@ -10,7 +10,7 @@ function activeUser(app,checkAuthenticated,sessionNeo) {
 
       });
       console.log(allUsersEmails)
-      res.render('activateUsers.ejs', {users: allUsersEmails})
+      res.render('activateUsers.ejs')
     //  res.render('activateUsers.ejs', {users: 'sdfssdsd'})
   })
    });

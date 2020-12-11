@@ -3,23 +3,14 @@
 function addFunction(toAdd)
 {
     var iframe = document.getElementById("Avaible"+toAdd);   //dobieram sie do iframe
-    var select = iframe.contentWindow.document.getElementById("choosed"+toAdd);   //dobieram sie do listy druzyn
+    var select = iframe.contentWindow.document.getElementById("choosed"+toAdd);   
     var options = select.getElementsByTagName('option');    //pobieram opcje z listy
 
     var iframe2 = document.getElementById("Choosed"+toAdd);   //dobieram sie do iframe
-    var select2 = iframe2.contentWindow.document.getElementById("choosed"+toAdd);   //dobieram sie do listy druzyn
+    var select2 = iframe2.contentWindow.document.getElementById("choosed"+toAdd);  
     var option = document.createElement("option");
     option.text = options[select.selectedIndex].text;
     
-    /*var captainEmail = document.getElementById("captain").value;
-    if(captainEmail != null)
-    {
-        if(option.text == captainEmail)
-        {
-            alert("Kapitan jest nietykalny");
-            return;
-        }
-    }*/
     
     select2.add(option);
 
