@@ -74,7 +74,7 @@ app.get('/',checkAuthenticated, (req, res) => {
              } catch{
         res.redirect('/register')
       }
-    } ,10000)
+    } ,2000)
   })
     })
   //  app.post('/users/activate',checkAuthenticated,(req, res)=>{

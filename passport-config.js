@@ -44,7 +44,7 @@ function initialize(passport,sessionNeo) {
       return done(e) 
     }
   }
-            ,1000)
+            ,2000)
 }
 
   passport.use(new LocalStrategy({ usernameField: 'email' }, authenticateUser))

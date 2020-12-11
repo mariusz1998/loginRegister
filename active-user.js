@@ -3,6 +3,9 @@ function activeUser(app,checkAuthenticated,sessionNeo) {
     app.post('/users/activate',checkAuthenticated,(req, res)=>{
       res.render('activateUsers.ejs')
   })
+  app.get('/users/activate/success',(req,res)=>{
+    res.render('activateUsers.ejs')
+  })
   app.get('/users/activate',(req,res)=>{
     var allUsersEmails = []
     sessionNeo
@@ -29,7 +32,8 @@ function activeUser(app,checkAuthenticated,sessionNeo) {
   sessionNeo
   .run('MATCH (n:User) WHERE n.email IN $email  SET n.active = true',params) 
   .then(function(){
-    res.render('activateUsers.ejs')
+    res.redirect('/users/activate/success');
+   //res.render('activateUsers.ejs')
 })
  });
 }
