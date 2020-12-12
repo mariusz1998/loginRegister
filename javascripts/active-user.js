@@ -3,10 +3,10 @@ function activeUser(app,checkAuthenticated,sessionNeo) {
     app.post('/users/activate',checkAuthenticated,(req, res)=>{
       res.render('activateUsers.ejs')
   })
-  app.get('/users/activate/success',(req,res)=>{
+  app.get('/users/activate/success',checkAuthenticated,(req,res)=>{
     res.render('activateUsers.ejs')
   })
-  app.get('/users/activate',(req,res)=>{
+  app.get('/users/activate',checkAuthenticated,(req,res)=>{
     var allUsersEmails = []
     sessionNeo
     .run('MATCH (n:User{active:false}) RETURN (n)') 
@@ -18,7 +18,7 @@ function activeUser(app,checkAuthenticated,sessionNeo) {
     res.render('activate-users-list.ejs',{users: allUsersEmails})
   })
 });
- app.get('/users/choosed',(req,res)=>{
+ app.get('/users/choosed',checkAuthenticated,(req,res)=>{
     res.render('choosed-users-list.ejs')
   })
   app.get('/users/activates',checkAuthenticated,(req, res)=>{

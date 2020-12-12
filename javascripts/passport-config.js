@@ -2,12 +2,14 @@ const LocalStrategy = require('passport-local').Strategy
 const bcrypt = require('bcrypt')
 
 function initialize(passport,sessionNeo) {
-  var user  = new Object();
+  var user
   const authenticateUser = async (email, password, done) => { 
+        user = new Object();
     sessionNeo
             .run('MATCH (u:User{email:$loginParam}) OPTIONAL MATCH (u)-[:ADMIN]-(a:Admin) RETURN u,a',
         {loginParam:email})
         .then(result => {
+          console.log(email+" 1")
        if(result.records.length>0){ //sprawdzenie czy jest jakiś user
                     user.id = result.records[0].get('u').identity.low
                    user.email=result.records[0].get('u').properties.email
@@ -28,6 +30,7 @@ function initialize(passport,sessionNeo) {
        }
             });
             setTimeout(async () =>{ 
+              console.log(user.email+" 2")
     if (typeof (user.id)=='undefined') {
       return done(null, false, { message: 'No user with that email' }) //parametr 1 ->błąd , parametr 2 czy zwracamy użytkownika 
     }
@@ -44,7 +47,7 @@ function initialize(passport,sessionNeo) {
       return done(e) 
     }
   }
-            ,2000)
+            ,3000)
 }
 
   passport.use(new LocalStrategy({ usernameField: 'email' }, authenticateUser))
