@@ -8,6 +8,7 @@ const bcrypt = require('bcrypt')
 const passport = require('passport')
 const initializePassport = require('./javascripts/passport-config')
 const activeUsers = require('./javascripts/active-user')
+const overviewUsers = require('./javascripts/overviewUsers')
 const flash = require('express-flash')
 const session = require('express-session')
 const methodOverride = require('method-override')
@@ -38,6 +39,13 @@ app.use(methodOverride('_method'))
 
 app.get('/',checkAuthenticated, (req, res) => {
    // res.locals.app = app;
+   req.session.usersChoose=[]
+   var user1 = new Object();
+   user1.id=12;
+   var user2 = new Object();
+   user2.id=122;
+   req.session.usersChoose.push(user1)
+   req.session.usersChoose.push(user2)
     res.render('index.ejs', {user: req.user})
   })
 
@@ -103,5 +111,5 @@ app.get('/',checkAuthenticated, (req, res) => {
         next()
       }
       activeUsers(app,checkAuthenticated,sessionNeo)
-    //  overviewUsers(app,checkAuthenticated,sessionNeo)
+      overviewUsers(app,checkAuthenticated,sessionNeo)
 app.listen(3000)

@@ -1,0 +1,48 @@
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/CSS/style.css">
+    <title>User activate</title>
+ </head>
+<script>var toInit = "Users";</script>
+<body onload="init(toInit);">
+<center>
+       Select users  :          
+        <br/><br/>
+        <div id="container">
+            <div id="avaible">
+               To activate: 
+                <br/>
+                <iframe name="AvaibleUsers" id="AvaibleUsers" src="/users/overview"></iframe>
+            </div>
+            <div id="added">
+                Added:
+                <br/>
+                <iframe id="ChoosedUsers" src="/users/choosed"></iframe>
+            </div>
+        </div>
+        <input type = "submit" value = "Set admin" onclick="temp()">
+        <br/><br/>
+    <form action = "/" method="get">
+        <input type = "submit" value = "Back">
+    </form>
+        
+    <!--</form>-->
+
+</center>
+<script>
+    function temp()
+    {
+        submit();
+    }
+</script>
+<script type="text/javascript" src="/forLists/initFunction.js"></script>
+<script type="text/javascript" src="/forLists/addFunction.js"></script>
+<script type="text/javascript" src="/forLists/deleteFunction.js"></script>
+<script type="text/javascript" src="/forLists/optionsCounter.js"></script>
+<script type="text/javascript" src="/submits/overviewUsers.js"></script>
+</body>
+
+</html>
+
+

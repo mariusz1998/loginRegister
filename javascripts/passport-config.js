@@ -30,7 +30,6 @@ function initialize(passport,sessionNeo) {
        }
             });
             setTimeout(async () =>{ 
-              console.log(user.email+" 2")
     if (typeof (user.id)=='undefined') {
       return done(null, false, { message: 'No user with that email' }) //parametr 1 ->błąd , parametr 2 czy zwracamy użytkownika 
     }
