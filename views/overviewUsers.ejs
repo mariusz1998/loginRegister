@@ -5,23 +5,16 @@
     <title>User activate</title>
  </head>
 <script>var toInit = "Users";</script>
-<body onload="init(toInit);">
 <center>
        Select users  :          
         <br/><br/>
         <div id="container">
             <div id="avaible">
-               To activate: 
                 <br/>
                 <iframe name="AvaibleUsers" id="AvaibleUsers" src="/users/overview"></iframe>
             </div>
-            <div id="added">
-                Added:
-                <br/>
-                <iframe id="ChoosedUsers" src="/users/choosed"></iframe>
-            </div>
         </div>
-        <input type = "submit" value = "Set admin" onclick="temp()">
+        <input type = "submit" value = "Show statistics" onclick="temp()">
         <br/><br/>
     <form action = "/" method="get">
         <input type = "submit" value = "Back">
@@ -36,10 +29,6 @@
         submit();
     }
 </script>
-<script type="text/javascript" src="/forLists/initFunction.js"></script>
-<script type="text/javascript" src="/forLists/addFunction.js"></script>
-<script type="text/javascript" src="/forLists/deleteFunction.js"></script>
-<script type="text/javascript" src="/forLists/optionsCounter.js"></script>
 <script type="text/javascript" src="/submits/overviewUsers.js"></script>
 </body>
 

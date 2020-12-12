@@ -1,0 +1,32 @@
+<form action="/user/setAdmin" method="POST">
+<div>
+    <label for="email">Email</label>
+    <input type="text" id="email"  readonly name="email" value=<%- user.email %> >
+  </div>
+  <div>
+    <label for="firstName">First Name</label>
+    <input type="text" readonly id="firstName" name="firstName"  value=<%- user.firstName %> >
+  </div>
+  <div>
+    <label for="lastName">Last Name</label>
+    <input type="text" readonly id="lastName" name="lastName"  value=<%- user.lastName %> >
+  </div>
+
+<% if ( user.admin == true) { %>
+    Admin <br>
+    <label for="startDay">Start Day</label>
+    <input type="text" readonly id="startDay" name="startDay" value=<%- user.adminDayStart %> >
+  </div>
+  <div>
+    <label for="endDay">End Day</label>
+    <input type="text" readonly id="endDay" name="endDay" value=<%- user.adminDayEnd %> >
+  </div>
+  
+  <% } else{ %>  
+This user is not an admin now and in the future.
+    <% } %>
+    <br/><br/>
+ 
+        <button type="submit">Set admin</button>
+    </form>
+
