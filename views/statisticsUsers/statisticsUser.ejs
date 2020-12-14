@@ -1,4 +1,3 @@
-<form action="/user/setAdmin" method="POST">
 <div>
     <label for="email">Email</label>
     <input type="text" id="email"  readonly name="email" value=<%- user.email %> >
@@ -36,6 +35,14 @@
           <% } %>
     <br/><br/>
  
-        <button type="submit">Set admin</button>
-    </form>
+        <button type="submit" onclick="tempAdmin()">Edit admin date</button>
+        <button type="submit" onclick="tempUserData()">Edit user data </button>
+        <script>
+          function tempAdmin(){
+             location='/user/setAdmin'
+          }
+          function tempUserData(){
+             location='/user/edit'
+          }
+        </script>
 

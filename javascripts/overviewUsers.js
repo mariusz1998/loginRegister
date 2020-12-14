@@ -5,7 +5,7 @@ function overviewUsers(app,checkAuthenticated,sessionNeo)
     app.post('/users/overview',checkAuthenticated,(req, res)=>{
        // console.log ( "Dlugosc: ")
        // console.log( req.session.usersChoose.length)
-        res.render('overviewUsers.ejs')
+        res.render('listUsers/overviewUsers.ejs')
     })
     app.get('/users/overview',checkAuthenticated,(req,res)=>{
         var allUsers = []
@@ -16,7 +16,7 @@ function overviewUsers(app,checkAuthenticated,sessionNeo)
             allUsers.push(record._fields[0].identity.low+") "+record._fields[0].properties.email 
             + " "+ record._fields[0].properties.firstName + " "+ record._fields[0].properties.lastName )
           });
-        res.render('statisticsUserList.ejs',{users: allUsers})
+        res.render('statisticsUsers/statisticsUserList.ejs',{users: allUsers})
       })
     });
 
@@ -47,11 +47,11 @@ function overviewUsers(app,checkAuthenticated,sessionNeo)
         else
         user.admin = 'no'
         req.session.selectUser=user;  //?
-        res.render('statisticsUser.ejs',{user: user})
+        res.render('statisticsUsers/statisticsUser.ejs',{user: user})
       })
      });  
 
-     app.post('/user/setAdmin',checkAuthenticated,(req, res)=>{
+     app.get('/user/setAdmin',checkAuthenticated,(req, res)=>{
      var today = new Date();
   var dd = today.getDate();
   var mm = today.getMonth()+1; 
@@ -80,8 +80,7 @@ function overviewUsers(app,checkAuthenticated,sessionNeo)
     mm='0'+mm;
      var endDayAdmin = yyyy+"-"+mm+"-"+dd;
 
-     console.log(startDayAdmin )
-    res.render('setAdminDateRange.ejs',{user: req.session.selectUser,minDate:dateToday,startDay: startDayAdmin 
+    res.render('adminUsers/setAdminDateRange.ejs',{user: req.session.selectUser,minDate:dateToday,startDay: startDayAdmin 
     , endDay:endDayAdmin })
    })
 
@@ -124,7 +123,7 @@ function overviewUsers(app,checkAuthenticated,sessionNeo)
       else
       user.admin = 'no'
       req.session.selectUser=user;  //
-      res.render('statisticsUser.ejs',{user: user})
+      res.render('statisticsUsers/statisticsUser.ejs',{user: user})
     })
    });  
 }

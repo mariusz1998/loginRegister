@@ -9,6 +9,7 @@ const passport = require('passport')
 const initializePassport = require('./javascripts/passport-config')
 const activeUsers = require('./javascripts/active-user')
 const overviewUsers = require('./javascripts/overviewUsers')
+const editUsers = require('./javascripts/editUser')
 const flash = require('express-flash')
 const session = require('express-session')
 const methodOverride = require('method-override')
@@ -38,11 +39,11 @@ app.use(passport.session())
 app.use(methodOverride('_method'))
 
 app.get('/',checkAuthenticated, (req, res) => {
-    res.render('index.ejs', {user: req.user})
+    res.render('start/index.ejs', {user: req.user})
   })
 
  app.get('/login', checkNotAuthenticated, (req, res) => { //przejście do login
-    res.render('login.ejs')
+    res.render('start/login.ejs')
   })
   app.post('/login',checkNotAuthenticated, passport.authenticate('local', { 
     successRedirect: '/',
@@ -51,7 +52,7 @@ app.get('/',checkAuthenticated, (req, res) => {
   }))
 
   app.get('/register',checkNotAuthenticated, (req, res) => {
-    res.render('register.ejs')
+    res.render('start/register.ejs')
   })
   app.post('/register',checkNotAuthenticated,  async (req, res) => {
     
@@ -60,7 +61,7 @@ app.get('/',checkAuthenticated, (req, res) => {
     {emailParam:req.body.email})
           .then(function(result2){
             if(result2.records[0].get('user_exists').low > 0) //==1
-            res.render('register.ejs',{alert:"Email is used"})
+            res.render('start/register.ejs',{alert:"Email is used"})
             else
                   setTimeout(async () =>{   
     try {
@@ -69,7 +70,7 @@ app.get('/',checkAuthenticated, (req, res) => {
             .run('CREATE(n:User {firstName:$firstNameParam, lastName:$lastNameParam, email:$emailParam, password:$passwordParam, active:false})',
             {firstNameParam:req.body.firstName,lastNameParam:req.body.lastName,emailParam: req.body.email, passwordParam:hashedPassword })
             .then(function(result){   
-                res.render('login.ejs')
+                res.render('start/login.ejs')
            })
              } catch{
         res.redirect('/register')
@@ -104,4 +105,5 @@ app.get('/',checkAuthenticated, (req, res) => {
       }
       activeUsers(app,checkAuthenticated,sessionNeo)
       overviewUsers(app,checkAuthenticated,sessionNeo)
+      editUsers(app,checkAuthenticated,sessionNeo)
 app.listen(3000)

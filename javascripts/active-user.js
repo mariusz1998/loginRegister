@@ -1,10 +1,10 @@
 function activeUser(app,checkAuthenticated,sessionNeo) {
  
     app.post('/users/activate',checkAuthenticated,(req, res)=>{
-      res.render('activateUsers.ejs')
+      res.render('activateUsers/activateUsers.ejs')
   })
   app.get('/users/activate/success',checkAuthenticated,(req,res)=>{
-    res.render('activateUsers.ejs')
+    res.render(activateUsers/'activateUsers.ejs')
   })
   app.get('/users/activate',checkAuthenticated,(req,res)=>{
     var allUsersEmails = []
@@ -15,11 +15,11 @@ function activeUser(app,checkAuthenticated,sessionNeo) {
         allUsersEmails.push(record._fields[0].identity.low+") "+record._fields[0].properties.email 
         + " "+ record._fields[0].properties.firstName + " "+ record._fields[0].properties.lastName )
       });
-    res.render('activate-users-list.ejs',{users: allUsersEmails})
+    res.render('activateUsers/activate-users-list.ejs',{users: allUsersEmails})
   })
 });
  app.get('/users/choosed',checkAuthenticated,(req,res)=>{
-    res.render('choosed-users-list.ejs')
+    res.render('listUsers/choosed-users-list.ejs')
   })
   app.get('/users/activates',checkAuthenticated,(req, res)=>{
   var obj = JSON.parse(req.query.JSONFrom);
