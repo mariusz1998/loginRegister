@@ -1,3 +1,4 @@
+
 <div>
     <label for="email">Email</label>
     <input type="text" id="email"  readonly name="email" value=<%- user.email %> >
@@ -10,6 +11,26 @@
     <label for="lastName">Last Name</label>
     <input type="text" readonly id="lastName" name="lastName"  value=<%- user.lastName %> >
   </div>
-  <input type="date" id="startDay" name="endDay" form="DD-MM-YYYY" min=>
- 
- 
+  <div>
+    <label for="startDay">Start day:</label>
+  <input type="date" id="startDay" name="startDay" onchange="startDayChange()" form="YYYY-MM-DD"   value=<%- startDay %> min=<%- minDate %> > 
+</div>
+  <div>
+    <label for="endDay">End day:</label>
+  <input type="date" id="endDay" name="endDay" onchange="endDayChange()" form="DD-MM-YYYY" value=<%- endDay %> min=<%- minDate %>>
+</div>
+<input type = "submit" value = "Set admin date " onclick="temp()">
+  <script>
+function startDayChange(){
+document.getElementById("endDay").setAttribute("min", document.getElementById("startDay").value);
+}
+function endDayChange(){
+document.getElementById("startDay").setAttribute("max", document.getElementById("endDay").value);
+}
+function temp(){
+
+  submit();
+}
+  </script>
+
+<script type="text/javascript" src="/submits/setAdminDate.js"></script>

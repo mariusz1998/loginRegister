@@ -14,7 +14,7 @@ const session = require('express-session')
 const methodOverride = require('method-override')
 const neo4j = require('neo4j-driver');
 
-var driver = neo4j.driver('bolt://100.25.182.48:33371', neo4j.auth.basic('neo4j', 'umbrellas-insulation-carbon'));
+var driver = neo4j.driver('bolt://100.25.182.48:33481', neo4j.auth.basic('neo4j', 'vector-confinements-extenuation'));
 
 var sessionNeo = driver.session();
 
@@ -38,14 +38,6 @@ app.use(passport.session())
 app.use(methodOverride('_method'))
 
 app.get('/',checkAuthenticated, (req, res) => {
-   // res.locals.app = app;
-   req.session.usersChoose=[]
-   var user1 = new Object();
-   user1.id=12;
-   var user2 = new Object();
-   user2.id=122;
-   req.session.usersChoose.push(user1)
-   req.session.usersChoose.push(user2)
     res.render('index.ejs', {user: req.user})
   })
 

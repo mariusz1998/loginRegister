@@ -12,7 +12,7 @@
     <input type="text" readonly id="lastName" name="lastName"  value=<%- user.lastName %> >
   </div>
 
-<% if ( user.admin == true) { %>
+<% if ( user.admin == 'yes') { %>
     Admin <br>
     <label for="startDay">Start Day</label>
     <input type="text" readonly id="startDay" name="startDay" value=<%- user.adminDayStart %> >
@@ -22,9 +22,18 @@
     <input type="text" readonly id="endDay" name="endDay" value=<%- user.adminDayEnd %> >
   </div>
   
-  <% } else{ %>  
-This user is not an admin now and in the future.
-    <% } %>
+  <% } else if ( user.admin == 'after'){ %>  
+    Admin in the future<br>
+    <label for="startDay">Start Day</label>
+    <input type="text" readonly id="startDay" name="startDay" value=<%- user.adminDayStart %> >
+  </div>
+  <div>
+    <label for="endDay">End Day</label>
+    <input type="text" readonly id="endDay" name="endDay" value=<%- user.adminDayEnd %> >
+  </div>
+    <% } else if ( user.admin == 'no'){ %>  
+      This user is not an admin now and in the future.
+          <% } %>
     <br/><br/>
  
         <button type="submit">Set admin</button>
