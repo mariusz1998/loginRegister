@@ -1,0 +1,30 @@
+<div>
+    <label for="email">Email</label>
+    <input type="text" id="email"  readonly name="email" value=<%- user.email %> >
+  </div>
+  <div>
+    <label for="firstName">First Name</label>
+    <input type="text" readonly id="firstName" name="firstName"  value=<%- user.firstName %> >
+  </div>
+  <div>
+    <label for="lastName">Last Name</label>
+    <input type="text" readonly id="lastName" name="lastName"  value=<%- user.lastName %> >
+  </div>
+
+    <br/><br/>
+
+      <div>
+        <button type="submit" onclick="tempUserData()">Edit your data </button>
+      </div>
+      <div>
+        <button type="submit" onclick="tempUserPass()">Edit  your password </button>
+      </div>
+        <script>
+          function tempUserData(){
+             location='/user/edit/data'
+          }
+          function tempUserPass(){
+             location='/user/edit/password'
+          }
+        </script>
+

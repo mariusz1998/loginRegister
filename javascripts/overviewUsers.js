@@ -25,14 +25,17 @@ function overviewUsers(app,checkAuthenticated,sessionNeo)
     app.get('/user/showStatistics',checkAuthenticated,(req, res)=>{
       var obj = JSON.parse(req.query.JSONFrom);
     var  user = new Object();
-    user.email = obj["userToAdd"][0]["email"]
-    user.id =  obj["userToAdd"][0]["id"]
-    user.lastName =  obj["userToAdd"][0]["lastName"]
-    user.firstName =  obj["userToAdd"][0]["firstName"]
       sessionNeo
-      .run('MATCH (u:User{email:$emailParam}) OPTIONAL MATCH (u)-[:ADMIN]-(a:Admin) RETURN a'
-      ,{emailParam: obj["userToAdd"][0]["email"]}) 
-      .then(function(result){
+      .run('MATCH (u:User) WHERE id(u)=$idParam OPTIONAL MATCH (u)-[:ADMIN]-(a:Admin) RETURN a,u'
+      ,{idParam: parseInt(obj["userToAdd"][0]["id"])}) 
+      .then(function(result){ 
+       //  if(result.records.length>0){ //sprawdzenie czy jest jakiś user
+        user.id = result.records[0].get('u').identity.low
+       user.email=result.records[0].get('u').properties.email
+        user.password=result.records[0].get('u').properties.password
+        user.active = result.records[0].get('u').properties.active
+        user.firstName = result.records[0].get('u').properties.firstName
+        user.lastName = result.records[0].get('u').properties.lastName
         if(result.records[0].get('a')!=null){
           var d = new Date();
          user.adminDayStart = result.records[0].get('a').properties.startDay
@@ -85,7 +88,6 @@ function overviewUsers(app,checkAuthenticated,sessionNeo)
     res.render('adminUsers/setAdminDateRange.ejs',{user: req.session.selectUser,minDate:dateToday,startDay: startDayAdmin 
     , endDay:endDayAdmin })
    })
-
    app.get('/user/setAdmin/date',checkAuthenticated,(req, res)=>{
     var obj = JSON.parse(req.query.JSONFrom);
     console.log(obj["dateToSet"][0]["startDay"])
@@ -99,7 +101,7 @@ function overviewUsers(app,checkAuthenticated,sessionNeo)
       })  
   })
 
-  app.get('/user/showStatistics/new',checkAuthenticated,(req, res)=>{
+  app.get('/users/showStatistics/new',checkAuthenticated,(req, res)=>{
   var  user = new Object();
     sessionNeo
     .run('MATCH (u:User) WHERE id(u) = $idParam OPTIONAL MATCH (u)-[:ADMIN]-(a:Admin) RETURN a,u'
@@ -109,7 +111,7 @@ function overviewUsers(app,checkAuthenticated,sessionNeo)
     //  if(result.records.length>0){ //sprawdzenie czy jest jakiś user
         user.id = result.records[0].get('u').identity.low
        user.email=result.records[0].get('u').properties.email
-        user.password=result.records[0].get('u').properties.password
+      //  user.password=result.records[0].get('u').properties.password
         user.active = result.records[0].get('u').properties.active
         user.firstName = result.records[0].get('u').properties.firstName
         user.lastName = result.records[0].get('u').properties.lastName
@@ -133,5 +135,19 @@ function overviewUsers(app,checkAuthenticated,sessionNeo)
 
     })
    });  
+   app.get('/user/showStatistics/new',checkAuthenticated,(req, res)=>{
+      sessionNeo
+      .run('MATCH (u:User) WHERE id(u) = $idParam RETURN u'
+      ,{idParam: parseInt(req.user.id)}) 
+      .then(function(result){
+
+          req.user.email=result.records[0].get('u').properties.email
+          req.user.password=result.records[0].get('u').properties.password
+          req.user.firstName = result.records[0].get('u').properties.firstName
+          req.user.lastName = result.records[0].get('u').properties.lastName
+        res.render('editUser/editUser.ejs',{user:req.user})
+  
+      })
+     });  
 }
 module.exports =  overviewUsers

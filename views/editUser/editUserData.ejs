@@ -1,0 +1,19 @@
+<% if(typeof alert != 'undefined'){ %>
+   <%= alert %>
+<% } %>
+<form action="/user/editData" method="POST">
+  <div>
+    <label for="firstName">First Name</label>
+    <input type="text" id="firstName" name="firstName" value=<%- user.firstName %> required>
+  </div>
+  <div>
+    <label for="lastName">Last Name</label>
+    <input type="text"  id="lastNa" name="lastName" value=<%- user.lastName %> required>
+  </div>
+  <div>
+    <label for="email">Email</label>
+    <input type="email" id="email" name="email" value=<%- user.email %> required>
+  </div>
+
+  <button id="submit" type="submit">Edit</button>
+</form>
