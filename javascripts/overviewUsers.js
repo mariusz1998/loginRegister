@@ -1,5 +1,7 @@
 //const { compareSync } = require("bcrypt");
 
+const { integer } = require("neo4j-driver");
+
 function overviewUsers(app,checkAuthenticated,sessionNeo)
 {
     app.post('/users/overview',checkAuthenticated,(req, res)=>{
@@ -99,14 +101,19 @@ function overviewUsers(app,checkAuthenticated,sessionNeo)
 
   app.get('/user/showStatistics/new',checkAuthenticated,(req, res)=>{
   var  user = new Object();
-  user.email =  req.session.selectUser.email
-  user.id =   req.session.selectUser.id
-  user.lastName =   req.session.selectUser.lastName
-  user.firstName =   req.session.selectUser.firstName
     sessionNeo
-    .run('MATCH (u:User{email:$emailParam}) OPTIONAL MATCH (u)-[:ADMIN]-(a:Admin) RETURN a'
-    ,{emailParam: req.session.selectUser.email}) 
+    .run('MATCH (u:User) WHERE id(u) = $idParam OPTIONAL MATCH (u)-[:ADMIN]-(a:Admin) RETURN a,u'
+    ,{idParam: parseInt(req.session.selectUser.id)}) 
     .then(function(result){
+
+      console.log(result.records.length)
+    //  if(result.records.length>0){ //sprawdzenie czy jest jakiś user
+        user.id = result.records[0].get('u').identity.low
+       user.email=result.records[0].get('u').properties.email
+        user.password=result.records[0].get('u').properties.password
+        user.active = result.records[0].get('u').properties.active
+        user.firstName = result.records[0].get('u').properties.firstName
+        user.lastName = result.records[0].get('u').properties.lastName
       if(result.records[0].get('a')!=null){
         var d = new Date();
        user.adminDayStart = result.records[0].get('a').properties.startDay
@@ -124,6 +131,7 @@ function overviewUsers(app,checkAuthenticated,sessionNeo)
       user.admin = 'no'
       req.session.selectUser=user;  //
       res.render('statisticsUsers/statisticsUser.ejs',{user: user})
+
     })
    });  
 }

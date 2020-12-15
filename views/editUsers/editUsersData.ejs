@@ -1,0 +1,44 @@
+<% if(typeof alert != 'undefined'){ %>
+   <%= alert %>
+<% } %>
+<form action="/user/editData" method="POST">
+  <div>
+    <label for="firstName">First Name</label>
+    <input type="text" id="firstName" name="firstName" value=<%- user.firstName %> required>
+  </div>
+  <div>
+    <label for="lastName">Last Name</label>
+    <input type="text"  id="lastNa" name="lastName" value=<%- user.lastName %> required>
+  </div>
+  <div>
+    <label for="email">Email</label>
+    <input type="email" id="email" name="email" value=<%- user.email %> required>
+  </div>
+  <div>
+    <label for="password1">New Password</label>
+    <input type="password" onChange='checkPasswordMatch()' id="password1" name="password1" required>
+  </div>
+  <div>
+    <label for="password2">Repeat Password</label>
+    <input type="password" onChange='checkPasswordMatch()' id="password2" name="password2" required>  <l id="passwordError"></l>
+  </div>
+  <button id="submit" type="submit">Edit</button>
+</form>
+
+<script>
+function checkPasswordMatch()
+{
+  if(document.getElementById('password1').value !=document.getElementById('password2').value)
+  {
+    document.getElementById('password2').style = 'border-color:red'
+    document.getElementById("passwordError").innerHTML = " Password is not same"
+    document.getElementById('submit').disabled=true
+  }
+  else
+  {
+    document.getElementById('password2').style = 'border-color:black'
+    document.getElementById("passwordError").innerHTML = ""
+    document.getElementById('submit').disabled=false
+  }
+}
+</script>

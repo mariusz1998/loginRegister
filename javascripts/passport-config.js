@@ -8,8 +8,7 @@ function initialize(passport,sessionNeo) {
     sessionNeo
             .run('MATCH (u:User{email:$loginParam}) OPTIONAL MATCH (u)-[:ADMIN]-(a:Admin) RETURN u,a',
         {loginParam:email})
-        .then(result => {
-          console.log(email+" 1")
+        .then(result => {  
        if(result.records.length>0){ //sprawdzenie czy jest jakiś user
                     user.id = result.records[0].get('u').identity.low
                    user.email=result.records[0].get('u').properties.email
