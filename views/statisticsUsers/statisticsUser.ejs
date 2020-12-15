@@ -34,15 +34,24 @@
       This user is not an admin now and in the future.
           <% } %>
     <br/><br/>
- 
+    <div>
         <button type="submit" onclick="tempAdmin()">Edit admin date</button>
+      </div>
+      <div>
         <button type="submit" onclick="tempUserData()">Edit user data </button>
+      </div>
+      <div>
+        <button type="submit" onclick="tempUserPass()">Edit user password </button>
+      </div>
         <script>
           function tempAdmin(){
              location='/user/setAdmin'
           }
           function tempUserData(){
-             location='/user/edit'
+             location='/users/edit'
+          }
+          function tempUserPass(){
+             location='/users/edit/password'
           }
         </script>
 

@@ -106,7 +106,6 @@ function overviewUsers(app,checkAuthenticated,sessionNeo)
     ,{idParam: parseInt(req.session.selectUser.id)}) 
     .then(function(result){
 
-      console.log(result.records.length)
     //  if(result.records.length>0){ //sprawdzenie czy jest jakiś user
         user.id = result.records[0].get('u').identity.low
        user.email=result.records[0].get('u').properties.email
