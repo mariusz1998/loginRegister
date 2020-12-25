@@ -16,6 +16,8 @@ const session = require('express-session')
 const methodOverride = require('method-override')
 const neo4j = require('neo4j-driver');
 
+var formidable = require("formidable");
+
 const fs = require('fs');
 const readline = require('readline');
 const {google} = require('googleapis');
@@ -203,6 +205,16 @@ app.get('/',checkAuthenticated, (req, res) => {
           }
         });
       }
-
+      //dodawanie pliku
+      app.post("/add/file", function (req, res) {
+        var formData = new formidable.IncomingForm();
+        formData.parse(req, function (error, fields, files) {
+            var extension = files.file.name.substr(files.file.name.lastIndexOf("."));
+            var newPath = "C:/cos/" + fields.fileName + extension;
+            fs.rename(files.file.path, newPath, function (errorRename) {
+                res.send("File saved = " + newPath);
+            });
+        });
+    });
 
 app.listen(3000)
