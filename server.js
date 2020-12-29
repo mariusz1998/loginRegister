@@ -18,8 +18,14 @@ const neo4j = require('neo4j-driver');
 
 const fs = require('fs');
 const readline = require('readline');
-const { google } = require('googleapis');
+const {google} = require('googleapis');
+var formidable = require("formidable");
+let auth;
+// If modifying these scopes, delete token.json.
 const SCOPES = ['https://www.googleapis.com/auth/drive'];
+// The file token.json stores the user's access and refresh tokens, and is
+// created automatically when the authorization flow completes for the first
+// time.
 const TOKEN_PATH = 'token.json';
 
 var driver = neo4j.driver('bolt://100.25.182.48:33481', neo4j.auth.basic('neo4j', 'vector-confinements-extenuation'));
@@ -115,121 +121,140 @@ app.get('/',checkAuthenticated, (req, res) => {
       editUsers(app,checkAuthenticated,sessionNeo)
       editUser(app,checkAuthenticated,sessionNeo)
 
-
-// Load client secrets from a local file.
-fs.readFile('credentials.json', (err, content) => {
-  if (err) return console.log('Error loading client secret file:', err);
-  // Authorize a client with credentials, then call the Google Drive API.
-  authorize(JSON.parse(content), listFiles);
-});
-
-/**
- * Create an OAuth2 client with the given credentials, and then execute the
- * given callback function.
- * @param {Object} credentials The authorization client credentials.
- * @param {function} callback The callback to call with the authorized client.
- */
-function authorize(credentials, callback) {
-  const {client_secret, client_id, redirect_uris} = credentials.installed;
-  const oAuth2Client = new google.auth.OAuth2(
-      client_id, client_secret, redirect_uris[0]);
-
-  // Check if we have previously stored a token.
-  fs.readFile(TOKEN_PATH, (err, token) => {
-    if (err) return getAccessToken(oAuth2Client, callback);
-    oAuth2Client.setCredentials(JSON.parse(token));
-    callback(oAuth2Client);
-  });
-}
-
-/**
- * Get and store new token after prompting for user authorization, and then
- * execute the given callback with the authorized OAuth2 client.
- * @param {google.auth.OAuth2} oAuth2Client The OAuth2 client to get token for.
- * @param {getEventsCallback} callback The callback for the authorized client.
- */
-function getAccessToken(oAuth2Client, callback) {
-  const authUrl = oAuth2Client.generateAuthUrl({
-    access_type: 'offline',
-    scope: SCOPES,
-  });
-  console.log('Authorize this app by visiting this url:', authUrl);
-  const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
-  });
-  rl.question('Enter the code from that page here: ', (code) => {
-    rl.close();
-    oAuth2Client.getToken(code, (err, token) => {
-      if (err) return console.error('Error retrieving access token', err);
-      oAuth2Client.setCredentials(token);
-      // Store the token to disk for later program executions
-      fs.writeFile(TOKEN_PATH, JSON.stringify(token), (err) => {
-        if (err) return console.error(err);
-        console.log('Token stored to', TOKEN_PATH);
+      // Load client secrets from a local file.
+      fs.readFile('credentials.json', (err, content) => {
+        if (err) return console.log('Error loading client secret file:', err);
+        // Authorize a client with credentials, then call the Google Drive API.
+        authorize(JSON.parse(content));
       });
-      callback(oAuth2Client);
-    });
-  });
-}
-
-/**
- * Lists the names and IDs of up to 10 files.
- * @param {google.auth.OAuth2} auth An authorized OAuth2 client.
- */
-function listFiles(auth) {
-  const drive = google.drive({version: 'v3', auth});
-  drive.files.list({
-    pageSize: 10,
-    fields: 'nextPageToken, files(id, name)',
-  }, (err, res) => {
-    if (err) return console.log('The API returned an error: ' + err);
-    const files = res.data.files;
-    if (files.length) {
-      console.log('Files:');
-      files.map((file) => {
-        console.log(`${file.name} (${file.id})`);
-      });
-    } else {
-      console.log('No files found.');
-    }
-  });
-}
-app.post('/add/file', (req, res) => {
-  var fileMetadata = {
-    name: 'kamal-hossain', // file name that will be saved in google drive
-  };
-
-  var media = {
-    mimeType: 'image/jpg',
-    body: fs.createReadStream('C:/Users/mariu/Desktop/costamwp.jpg'), // Reading the file from our server
-  };
-
-  // Authenticating drive API
-  const drive = google.drive({ version: 'v3', auth });
-
-  // Uploading Single image to drive
-  drive.files.create(
-    {
-      resource: fileMetadata,
-      media: media,
-    },
-    async (err, file) => {
-      if (err) {
-        // Handle error
-        console.error(err.msg);
-
-        return res
-          .status(400)
-          .json({ errors: [{ msg: 'Server Error try again later' }] });
-      } else {
-        // if file upload success then return the unique google drive id
-        res.status(200).json({
-          fileID: file.data.id,
+      
+      /**
+       * Create an OAuth2 client with the given credentials, and then execute the
+       * given callback function.
+       * @param {Object} credentials The authorization client credentials.
+       * @param {function} callback The callback to call with the authorized client.
+       */
+      function authorize(credentials, callback) {
+        const {client_secret, client_id, redirect_uris} = credentials.installed;
+        const oAuth2Client = new google.auth.OAuth2(
+            client_id, client_secret, redirect_uris[0]);
+      
+        // Check if we have previously stored a token.
+        fs.readFile(TOKEN_PATH, (err, token) => {
+          if (err) return getAccessToken(oAuth2Client, callback);
+          oAuth2Client.setCredentials(JSON.parse(token));
+          auth = oAuth2Client;
         });
       }
-    }
-  );
-});
-      //dodawanie pliku
+      
+      /**
+       * Get and store new token after prompting for user authorization, and then
+       * execute the given callback with the authorized OAuth2 client.
+       * @param {google.auth.OAuth2} oAuth2Client The OAuth2 client to get token for.
+       * @param {getEventsCallback} callback The callback for the authorized client.
+       */
+      function getAccessToken(oAuth2Client, callback) {
+        const authUrl = oAuth2Client.generateAuthUrl({
+          access_type: 'offline',
+          scope: SCOPES,
+        });
+        console.log('Authorize this app by visiting this url:', authUrl);
+        const rl = readline.createInterface({
+          input: process.stdin,
+          output: process.stdout,
+        });
+        rl.question('Enter the code from that page here: ', (code) => {
+          rl.close();
+          oAuth2Client.getToken(code, (err, token) => {
+            if (err) return console.error('Error retrieving access token', err);
+            oAuth2Client.setCredentials(token);
+            // Store the token to disk for later program executions
+            fs.writeFile(TOKEN_PATH, JSON.stringify(token), (err) => {
+              if (err) return console.error(err);
+              console.log('Token stored to', TOKEN_PATH);
+            });
+            auth = authoAuth2Client;
+          });
+        });
+      }
+      app.post('/add/file', (req, res) => {
+        var formData = new formidable.IncomingForm();
+        formData.parse(req, function (error, fields, files) {
+
+        const fileMetadata = {
+              'name': files.file.name
+            };
+        const media = {
+          mimeType: files.file.type,
+          body: fs.createReadStream(files.file.path),
+        };
+      
+        // Authenticating drive API
+        const drive = google.drive({ version: 'v3', auth });
+      
+        // Uploading Single image to drive
+        drive.files.create(
+          {
+            resource: fileMetadata,
+            media: media,
+          },
+          async (err, file) => {
+            if (err) {
+              // Handle error
+              console.error(err.msg);
+      
+              return res
+                .status(400)
+                .json({ errors: [{ msg: 'Server Error try again later' }] });
+            } else {
+              // if file upload success then return the unique google drive id
+              console.log(file.data.id)
+            }
+          }
+        );
+      });
+      });
+      app.post('/showFile', (req, res) => {
+
+        const drive = google.drive({version: 'v3', auth});
+        drive.files.list({
+          pageSize: 10,
+          fields: 'nextPageToken, files(id, name)',
+        }, (err, res) => {
+          if (err) return console.log('The API returned an error: ' + err);
+          const files = res.data.files;
+          if (files.length) {
+            console.log('Files:');
+            files.map((file) => {
+              console.log(`${file.name} (${file.id})`);
+            });
+          } else {
+            console.log('No files found.');
+          }
+        });
+      });
+      function uploadFile() {
+          const drive = google.drive({ version: 'v3', auth });
+          var fileMetadata = {
+              'name': 'costamwp.jpg'
+          };
+          var media = {
+              mimeType: 'image/jpeg',
+              body: fs.createReadStream('costamwp.jpg')
+          };
+          drive.files.create({
+              resource: fileMetadata,
+              media: media,
+              fields: 'id'
+          }, function (err, res) {
+            
+              if (err) {
+                  // Handle error
+                  console.log(err);
+              } else {
+                  console.log('File Id: ', res.data.id);
+              }
+          });
+      }
+
 app.listen(3000)
