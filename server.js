@@ -28,7 +28,7 @@ const SCOPES = ['https://www.googleapis.com/auth/drive'];
 // time.
 const TOKEN_PATH = 'token.json';
 
-var driver = neo4j.driver('bolt://100.25.182.48:33481', neo4j.auth.basic('neo4j', 'vector-confinements-extenuation'));
+var driver = neo4j.driver('bolt://54.226.31.67:32834', neo4j.auth.basic('neo4j', 'cosal-clothes-core'));
 
 var sessionNeo = driver.session();
 
@@ -177,7 +177,7 @@ app.get('/',checkAuthenticated, (req, res) => {
           });
         });
       }
-      app.post('/add/file', (req, res) => {
+      app.post('/add/filee', (req, res) => {
         var formData = new formidable.IncomingForm();
         formData.parse(req, function (error, fields, files) {
 
@@ -257,4 +257,39 @@ app.get('/',checkAuthenticated, (req, res) => {
           });
       }
 
+      app.post('/add/file',checkAuthenticated,(req, res)=>{
+        res.render('selectFilePanel.ejs')
+    })
+    app.post('/get/file/property', (req, res) => {
+      var  addfile = new Object();
+      var formData = new formidable.IncomingForm();
+      formData.parse(req, function (error, fields, files) {
+     addfile.name=files.file.name
+     addfile.path=files.file.path
+     addfile.type=files.file.type
+     req.session.addfile=addfile
+   
+      res.render('addFileAttrPanel.ejs',{addFileProperty: addfile})
+    })
+  })
+    app.get('/attr/availble',checkAuthenticated,(req,res)=>{
+      //pobranie wszystkich atrybutów plików danego użytkonika?
+       var attributteArray = []
+       attributteArray.push("Wiatr")
+       attributteArray.push("Deszcz")
+       attributteArray.push("Cisnienie")
+       attributteArray.push("Wilgotnosc")
+      // sessionNeo
+      // .run('MATCH (n:User{active:false}) RETURN (n)') 
+      // .then(function(result){
+      //   result.records.forEach(function(record){
+      //     allUsersEmails.push(record._fields[0].identity.low+") "+record._fields[0].properties.email 
+      //     + " "+ record._fields[0].properties.firstName + " "+ record._fields[0].properties.lastName )
+      //   });
+      res.render('availableAttrFile.ejs',{attr: attributteArray})
+   // })
+  });
+  app.get('/attr/choosed',checkAuthenticated,(req,res)=>{
+    res.render('choosedAttrList.ejs')
+  })
 app.listen(3000)

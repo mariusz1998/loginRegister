@@ -1,0 +1,48 @@
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/CSS/style.css">
+    <title>Select attribute</title>
+ </head>
+<script>var toInit = "Attr";</script>
+<body onload="init(toInit);">
+<center>
+       Select attr :          
+        <br/><br/>
+        <div id="container">
+            <div id="avaible">
+               Avaible: 
+                <br/>
+                <iframe name="AvaibleAttr" id="AvaibleAttr" src="/attr/availble"></iframe>
+            </div>
+            <div id="added">
+                Selected:
+                <br/>
+                <iframe id="ChoosedAttr" src="/attr/choosed"></iframe>
+            </div>
+        </div>
+        <input type = "submit" value = "Zatwierdź" onclick="temp()">
+        <br/><br/>
+    <form action = "/" method="get">
+        <input type = "submit" value = "Back">
+    </form>
+        
+    <!--</form>-->
+
+</center>
+<script>
+    function temp()
+    {
+        submit();
+    }
+</script>
+<script type="text/javascript" src="/forLists/initFunction.js"></script>
+<script type="text/javascript" src="/forLists/addFunction.js"></script>
+<script type="text/javascript" src="/forLists/deleteFunction.js"></script>
+<script type="text/javascript" src="/forLists/optionsCounter.js"></script>
+<script type="text/javascript" src="/submits/activateUsers.js"></script>
+</body>
+
+</html>
+
+

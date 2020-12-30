@@ -15,7 +15,7 @@ function myCountingFunction(toCount) {
         var options2 = select2.getElementsByTagName('option');  
         iframe2.contentWindow.document.getElementById("amount").value = options2.length;
     }
-    
+    //?
     var iframe3 = document.getElementById(toCount);   //dobieram sie do iframe
     if(iframe3!=null)
     {
