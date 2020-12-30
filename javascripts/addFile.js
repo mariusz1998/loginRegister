@@ -15,20 +15,30 @@ function addFile(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google) {
   })
     app.get('/attr/availble',checkAuthenticated,(req,res)=>{
       //pobranie wszystkich atrybutów plików danego użytkonika?
-       var attributteArray = []
-       attributteArray.push("Wiatr")
-       attributteArray.push("Deszcz")
-       attributteArray.push("Cisnienie")
-       attributteArray.push("Wilgotnosc")
-      // sessionNeo
-      // .run('MATCH (n:User{active:false}) RETURN (n)') 
-      // .then(function(result){
-      //   result.records.forEach(function(record){
-      //     allUsersEmails.push(record._fields[0].identity.low+") "+record._fields[0].properties.email 
-      //     + " "+ record._fields[0].properties.firstName + " "+ record._fields[0].properties.lastName )
-      //   });
+       var tempArray = []
+       sessionNeo          
+       .run('MATCH (u:User{email:\'kamil@costam\'})OPTIONAL MATCH (u)-[r:OWNER]-(b:File) RETURN b.attribute as attr') 
+                 .then(result => {
+                if(result.records.length>0){
+                      result.records.forEach(function(record) {
+                          {
+                              for(var i=0;i<record.get('attr').length;i++)
+                              tempArray.push( record.get('attr')[i])
+                          }
+          })
+        }
+        else
+        {
+            tempArray.push("Wind speed")
+            tempArray.push("Rainfall")
+            tempArray.push("Pressure")
+            tempArray.push("Humidity")
+        }
+        })
+        setTimeout(async () =>{ 
+            let attributteArray = [...new Set(tempArray)] //usuwamy powtarzające się atrybuty
       res.render('addFile/availableAttrFile.ejs',{attr: attributteArray})
-   // })
+    },3000)
   });
   app.get('/attr/choosed',checkAuthenticated,(req,res)=>{
     res.render('addFile/choosedAttrList.ejs')
