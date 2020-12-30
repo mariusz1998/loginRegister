@@ -23,14 +23,22 @@
         </div>
         <input type = "submit" value = "Zatwierdź" onclick="temp()">
         <br/><br/>
-    <form action = "/" method="get">
-        <input type = "submit" value = "Back">
-    </form>
-        
+        <div>
+            <label for="newAttribute">Add attribute</label>
+            <input type="text" id="newAttribute" name="newAttribute" >
+            <input type = "submit" value = "Add attribute" onclick="addAttr()">
+          </div>
+          
+          <br/><br/>
+          
     <!--</form>-->
 
 </center>
 <script>
+      function addAttr()
+    {
+        addNewAttr('Attr');
+    }
     function temp()
     {
         submit();
@@ -40,7 +48,7 @@
 <script type="text/javascript" src="/forLists/addFunction.js"></script>
 <script type="text/javascript" src="/forLists/deleteFunction.js"></script>
 <script type="text/javascript" src="/forLists/optionsCounter.js"></script>
-<script type="text/javascript" src="/submits/activateUsers.js"></script>
+<script type="text/javascript" src="/submits/addAttributte.js"></script>
 </body>
 
 </html>
