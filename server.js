@@ -177,86 +177,6 @@ app.get('/',checkAuthenticated, (req, res) => {
           });
         });
       }
-      app.post('/add/filee', (req, res) => {
-        var formData = new formidable.IncomingForm();
-        formData.parse(req, function (error, fields, files) {
-
-        const fileMetadata = {
-              'name': files.file.name
-            };
-        const media = {
-          mimeType: files.file.type,
-          body: fs.createReadStream(files.file.path),
-        };
-      
-        // Authenticating drive API
-        const drive = google.drive({ version: 'v3', auth });
-      
-        // Uploading Single image to drive
-        drive.files.create(
-          {
-            resource: fileMetadata,
-            media: media,
-          },
-          async (err, file) => {
-            if (err) {
-              // Handle error
-              console.error(err.msg);
-      
-              return res
-                .status(400)
-                .json({ errors: [{ msg: 'Server Error try again later' }] });
-            } else {
-              // if file upload success then return the unique google drive id
-              console.log(file.data.id)
-            }
-          }
-        );
-      });
-      });
-      app.post('/showFile', (req, res) => {
-
-        const drive = google.drive({version: 'v3', auth});
-        drive.files.list({
-          pageSize: 10,
-          fields: 'nextPageToken, files(id, name)',
-        }, (err, res) => {
-          if (err) return console.log('The API returned an error: ' + err);
-          const files = res.data.files;
-          if (files.length) {
-            console.log('Files:');
-            files.map((file) => {
-              console.log(`${file.name} (${file.id})`);
-            });
-          } else {
-            console.log('No files found.');
-          }
-        });
-      });
-      function uploadFile() {
-          const drive = google.drive({ version: 'v3', auth });
-          var fileMetadata = {
-              'name': 'costamwp.jpg'
-          };
-          var media = {
-              mimeType: 'image/jpeg',
-              body: fs.createReadStream('costamwp.jpg')
-          };
-          drive.files.create({
-              resource: fileMetadata,
-              media: media,
-              fields: 'id'
-          }, function (err, res) {
-            
-              if (err) {
-                  // Handle error
-                  console.log(err);
-              } else {
-                  console.log('File Id: ', res.data.id);
-              }
-          });
-      }
-
       app.post('/add/file',checkAuthenticated,(req, res)=>{
         res.render('selectFilePanel.ejs')
     })
@@ -268,7 +188,6 @@ app.get('/',checkAuthenticated, (req, res) => {
      addfile.path=files.file.path
      addfile.type=files.file.type
      req.session.addfile=addfile
-   
       res.render('addFileAttrPanel.ejs',{addFileProperty: addfile})
     })
   })
@@ -292,4 +211,42 @@ app.get('/',checkAuthenticated, (req, res) => {
   app.get('/attr/choosed',checkAuthenticated,(req,res)=>{
     res.render('choosedAttrList.ejs')
   })
+   app.get('/add/file/attribute',checkAuthenticated, (req, res) => {
+    var obj = JSON.parse(req.query.JSONFrom);
+    var localization = obj["localization"]
+    var attrArray = obj["attrToAdd"]
+    const fileMetadata = {
+          'name': req.session.addfile.name
+        };
+    const media = {
+      mimeType: req.session.addfile.type,
+      body: fs.createReadStream(req.session.addfile.path),
+    };
+    // Authenticating drive API
+    const drive = google.drive({ version: 'v3', auth });
+    // Uploading Single image to drive
+    drive.files.create(
+      {
+        resource: fileMetadata,
+        media: media,
+      },
+      async (err, file) => {
+        if (err) {
+          // Handle error
+          console.error(err.msg);
+          return res
+            .status(400)
+            .json({ errors: [{ msg: 'Server Error try again later' }] });
+        } else {
+          // if file upload success then return the unique google drive id
+          sessionNeo
+          .run('CREATE(n:File {name:$nameParam, googleID:$googleIDParam, localization:$localizationParam, attribute:$attrParam}) WITH n MATCH (u:User {email:$emailParam}) MERGE(n)<-[r:OWNER]-(u)',
+          {nameParam:req.session.addfile.name,googleIDParam:file.data.id,localizationParam: localization, attrParam:attrArray,emailParam:req.user.email })
+          .then(function(){
+            res.render('addFileSucces.ejs'); //do przeglądu własnych plików?
+        })
+        }
+      }
+    );
+  });
 app.listen(3000)
