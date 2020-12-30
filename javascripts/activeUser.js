@@ -4,7 +4,7 @@ function activeUser(app,checkAuthenticated,sessionNeo) {
       res.render('activateUsers/activateUsers.ejs')
   })
   app.get('/users/activate/success',checkAuthenticated,(req,res)=>{
-    res.render(activateUsers/'activateUsers.ejs')
+    res.render('activateUsers/activateUsers.ejs')
   })
   app.get('/users/activate',checkAuthenticated,(req,res)=>{
     var allUsersEmails = []
@@ -15,7 +15,7 @@ function activeUser(app,checkAuthenticated,sessionNeo) {
         allUsersEmails.push(record._fields[0].identity.low+") "+record._fields[0].properties.email 
         + " "+ record._fields[0].properties.firstName + " "+ record._fields[0].properties.lastName )
       });
-    res.render('activateUsers/activate-users-list.ejs',{users: allUsersEmails})
+    res.render('activateUsers/activateUsersList.ejs',{users: allUsersEmails})
   })
 });
  app.get('/users/choosed',checkAuthenticated,(req,res)=>{
