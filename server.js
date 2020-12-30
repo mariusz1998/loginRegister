@@ -11,6 +11,7 @@ const activeUsers = require('./javascripts/activeUser')
 const overviewUsers = require('./javascripts/overviewUsers')
 const editUsers = require('./javascripts/editUsers')
 const editUser = require('./javascripts/editUser')
+const addFile = require('./javascripts/addFile')
 const flash = require('express-flash')
 const session = require('express-session')
 const methodOverride = require('method-override')
@@ -54,7 +55,6 @@ app.use(methodOverride('_method'))
 app.get('/',checkAuthenticated, (req, res) => {
     res.render('start/index.ejs', {user: req.user})
   })
-
  app.get('/login', checkNotAuthenticated, (req, res) => { //przejście do login
     res.render('start/login.ejs')
   })
@@ -178,7 +178,7 @@ app.get('/',checkAuthenticated, (req, res) => {
         });
       }
       app.post('/add/file',checkAuthenticated,(req, res)=>{
-        res.render('selectFilePanel.ejs')
+        res.render('addFile/selectFilePanel.ejs')
     })
     app.post('/get/file/property', (req, res) => {
       var  addfile = new Object();
@@ -188,7 +188,7 @@ app.get('/',checkAuthenticated, (req, res) => {
      addfile.path=files.file.path
      addfile.type=files.file.type
      req.session.addfile=addfile
-      res.render('addFileAttrPanel.ejs',{addFileProperty: addfile})
+      res.render('addFile/addFileAttrPanel.ejs',{addFileProperty: addfile})
     })
   })
     app.get('/attr/availble',checkAuthenticated,(req,res)=>{
@@ -205,11 +205,11 @@ app.get('/',checkAuthenticated, (req, res) => {
       //     allUsersEmails.push(record._fields[0].identity.low+") "+record._fields[0].properties.email 
       //     + " "+ record._fields[0].properties.firstName + " "+ record._fields[0].properties.lastName )
       //   });
-      res.render('availableAttrFile.ejs',{attr: attributteArray})
+      res.render('addFile/availableAttrFile.ejs',{attr: attributteArray})
    // })
   });
   app.get('/attr/choosed',checkAuthenticated,(req,res)=>{
-    res.render('choosedAttrList.ejs')
+    res.render('addFile/choosedAttrList.ejs')
   })
    app.get('/add/file/attribute',checkAuthenticated, (req, res) => {
     var obj = JSON.parse(req.query.JSONFrom);
@@ -243,7 +243,7 @@ app.get('/',checkAuthenticated, (req, res) => {
           .run('CREATE(n:File {name:$nameParam, googleID:$googleIDParam, localization:$localizationParam, attribute:$attrParam}) WITH n MATCH (u:User {email:$emailParam}) MERGE(n)<-[r:OWNER]-(u)',
           {nameParam:req.session.addfile.name,googleIDParam:file.data.id,localizationParam: localization, attrParam:attrArray,emailParam:req.user.email })
           .then(function(){
-            res.render('addFileSucces.ejs'); //do przeglądu własnych plików?
+            res.render('addFile/addFileSucces.ejs'); //do przeglądu własnych plików?
         })
         }
       }
