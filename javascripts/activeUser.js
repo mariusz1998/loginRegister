@@ -19,7 +19,7 @@ function activeUser(app,checkAuthenticated,sessionNeo) {
   })
 });
  app.get('/users/choosed',checkAuthenticated,(req,res)=>{
-    res.render('listUsers/choosed-users-list.ejs')
+    res.render('listUsers/choosedUsersList.ejs')
   })
   app.get('/users/activates',checkAuthenticated,(req, res)=>{
   var obj = JSON.parse(req.query.JSONFrom);

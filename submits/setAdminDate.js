@@ -1,7 +1,6 @@
 function submit(){
    var startDay = document.getElementById("startDay").value
    var endDay = document.getElementById("endDay").value
-   var email = document.getElementById("email").value
 
    var JSONToSend = "{\"dateToSet\": [{";
  // w req.session.select user mam req.session.selectUser

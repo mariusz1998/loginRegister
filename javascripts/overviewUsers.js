@@ -90,8 +90,8 @@ function overviewUsers(app,checkAuthenticated,sessionNeo)
    })
    app.get('/user/setAdmin/date',checkAuthenticated,(req, res)=>{
     var obj = JSON.parse(req.query.JSONFrom);
-    console.log(obj["dateToSet"][0]["startDay"])
-    console.log(obj["dateToSet"][0]["endDay"])
+   // console.log(obj["dateToSet"][0]["startDay"])
+   // console.log(obj["dateToSet"][0]["endDay"])
     sessionNeo
    .run('MATCH (u:User{email:$emailParam}) MERGE (u)-[r:ADMIN]-(b:Admin) Set   b.startDay=date($startDayParam), b.endDay=date($endDayParam)',
    {emailParam:req.session.selectUser.email ,startDayParam:obj["dateToSet"][0]["startDay"],endDayParam:obj["dateToSet"][0]["endDay"] })

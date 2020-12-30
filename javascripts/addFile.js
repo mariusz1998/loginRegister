@@ -72,8 +72,9 @@ function addFile(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google) {
         } else {
           // if file upload success then return the unique google drive id
           sessionNeo
-          .run('CREATE(n:File {name:$nameParam, googleID:$googleIDParam, localization:$localizationParam, attribute:$attrParam}) WITH n MATCH (u:User {email:$emailParam}) MERGE(n)<-[r:OWNER]-(u)',
-          {nameParam:req.session.addfile.name,googleIDParam:file.data.id,localizationParam: localization, attrParam:attrArray,emailParam:req.user.email })
+          .run('CREATE(n:File {name:$nameParam, googleID:$googleIDParam, localization:$localizationParam, attribute:$attrParam, firstDate:date($firstDayParam),lastDate:date($lastDayParam)}) WITH n MATCH (u:User {email:$emailParam}) MERGE(n)<-[r:OWNER]-(u)',
+          {nameParam:req.session.addfile.name,googleIDParam:file.data.id,localizationParam: localization, attrParam:attrArray,emailParam:req.user.email,
+            firstDayParam:obj["firstDay"], lastDayParam:obj["lastDay"] })
           .then(function(){
             res.render('addFile/addFileSucces.ejs'); //do przeglądu własnych plików?
         })
