@@ -1,6 +1,6 @@
 function submit()
 {
-    if(document.getElementById("localization").length<1)
+    if(document.getElementById("localization").value.length==0)
     {
         alert("Bad localization!")
         return;

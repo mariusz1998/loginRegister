@@ -1,5 +1,4 @@
-
-function addFile(app,checkAuthenticated,sessionNeo,auth) {
+function addFile(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google) {
     app.post('/add/file',checkAuthenticated,(req, res)=>{
         res.render('addFile/selectFilePanel.ejs')
     })
@@ -72,9 +71,5 @@ function addFile(app,checkAuthenticated,sessionNeo,auth) {
       }
     );
   });
-
-
-
-
 }
 module.exports = addFile

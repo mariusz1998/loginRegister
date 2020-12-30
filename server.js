@@ -51,8 +51,64 @@ app.use(session({
 app.use(passport.initialize())
 app.use(passport.session())
 app.use(methodOverride('_method'))
-
+  
 app.get('/',checkAuthenticated, (req, res) => {
+// Load client secrets from a local file.
+fs.readFile('credentials.json', (err, content) => {
+  if (err) return console.log('Error loading client secret file:', err);
+  // Authorize a client with credentials, then call the Google Drive API.
+  authorize(JSON.parse(content));
+});
+
+/**
+ * Create an OAuth2 client with the given credentials, and then execute the
+ * given callback function.
+ * @param {Object} credentials The authorization client credentials.
+ * @param {function} callback The callback to call with the authorized client.
+ */
+function authorize(credentials, callback) {
+  const {client_secret, client_id, redirect_uris} = credentials.installed;
+  const oAuth2Client = new google.auth.OAuth2(
+      client_id, client_secret, redirect_uris[0]);
+  // Check if we have previously stored a token.
+  fs.readFile(TOKEN_PATH, (err, token) => {
+    if (err) return getAccessToken(oAuth2Client, callback);
+    oAuth2Client.setCredentials(JSON.parse(token));
+    auth = oAuth2Client;
+    addFile(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
+  });
+}
+
+/**
+ * Get and store new token after prompting for user authorization, and then
+ * execute the given callback with the authorized OAuth2 client.
+ * @param {google.auth.OAuth2} oAuth2Client The OAuth2 client to get token for.
+ * @param {getEventsCallback} callback The callback for the authorized client.
+ */
+function getAccessToken(oAuth2Client, callback) {
+  const authUrl = oAuth2Client.generateAuthUrl({
+    access_type: 'offline',
+    scope: SCOPES,
+  });
+  console.log('Authorize this app by visiting this url:', authUrl);
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+  });
+  rl.question('Enter the code from that page here: ', (code) => {
+    rl.close();
+    oAuth2Client.getToken(code, (err, token) => {
+      if (err) return console.error('Error retrieving access token', err);
+      oAuth2Client.setCredentials(token);
+      // Store the token to disk for later program executions
+      fs.writeFile(TOKEN_PATH, JSON.stringify(token), (err) => {
+        if (err) return console.error(err);
+        console.log('Token stored to', TOKEN_PATH);
+      });
+      auth = authoAuth2Client;
+    });
+  });
+}
     res.render('start/index.ejs', {user: req.user})
   })
  app.get('/login', checkNotAuthenticated, (req, res) => { //przejście do login
@@ -63,7 +119,6 @@ app.get('/',checkAuthenticated, (req, res) => {
     failureRedirect: '/login',
     failureFlash: true 
   }))
-
   app.get('/register',checkNotAuthenticated, (req, res) => {
     res.render('start/register.ejs')
   })
@@ -108,8 +163,7 @@ app.get('/',checkAuthenticated, (req, res) => {
         }
       
         res.redirect('/login')
-      }
-      
+      }   
       function checkNotAuthenticated(req, res, next) {
         if (req.isAuthenticated()) {
           return res.redirect('/')
@@ -121,132 +175,4 @@ app.get('/',checkAuthenticated, (req, res) => {
       editUsers(app,checkAuthenticated,sessionNeo)
       editUser(app,checkAuthenticated,sessionNeo)
 
-      // Load client secrets from a local file.
-      fs.readFile('credentials.json', (err, content) => {
-        if (err) return console.log('Error loading client secret file:', err);
-        // Authorize a client with credentials, then call the Google Drive API.
-        authorize(JSON.parse(content));
-      });
-      
-      /**
-       * Create an OAuth2 client with the given credentials, and then execute the
-       * given callback function.
-       * @param {Object} credentials The authorization client credentials.
-       * @param {function} callback The callback to call with the authorized client.
-       */
-      function authorize(credentials, callback) {
-        const {client_secret, client_id, redirect_uris} = credentials.installed;
-        const oAuth2Client = new google.auth.OAuth2(
-            client_id, client_secret, redirect_uris[0]);
-      
-        // Check if we have previously stored a token.
-        fs.readFile(TOKEN_PATH, (err, token) => {
-          if (err) return getAccessToken(oAuth2Client, callback);
-          oAuth2Client.setCredentials(JSON.parse(token));
-          auth = oAuth2Client;
-        });
-      }
-      
-      /**
-       * Get and store new token after prompting for user authorization, and then
-       * execute the given callback with the authorized OAuth2 client.
-       * @param {google.auth.OAuth2} oAuth2Client The OAuth2 client to get token for.
-       * @param {getEventsCallback} callback The callback for the authorized client.
-       */
-      function getAccessToken(oAuth2Client, callback) {
-        const authUrl = oAuth2Client.generateAuthUrl({
-          access_type: 'offline',
-          scope: SCOPES,
-        });
-        console.log('Authorize this app by visiting this url:', authUrl);
-        const rl = readline.createInterface({
-          input: process.stdin,
-          output: process.stdout,
-        });
-        rl.question('Enter the code from that page here: ', (code) => {
-          rl.close();
-          oAuth2Client.getToken(code, (err, token) => {
-            if (err) return console.error('Error retrieving access token', err);
-            oAuth2Client.setCredentials(token);
-            // Store the token to disk for later program executions
-            fs.writeFile(TOKEN_PATH, JSON.stringify(token), (err) => {
-              if (err) return console.error(err);
-              console.log('Token stored to', TOKEN_PATH);
-            });
-            auth = authoAuth2Client;
-          });
-        });
-      }
-      app.post('/add/file',checkAuthenticated,(req, res)=>{
-        res.render('addFile/selectFilePanel.ejs')
-    })
-    app.post('/get/file/property', (req, res) => {
-      var  addfile = new Object();
-      var formData = new formidable.IncomingForm();
-      formData.parse(req, function (error, fields, files) {
-     addfile.name=files.file.name
-     addfile.path=files.file.path
-     addfile.type=files.file.type
-     req.session.addfile=addfile
-      res.render('addFile/addFileAttrPanel.ejs',{addFileProperty: addfile})
-    })
-  })
-    app.get('/attr/availble',checkAuthenticated,(req,res)=>{
-      //pobranie wszystkich atrybutów plików danego użytkonika?
-       var attributteArray = []
-       attributteArray.push("Wiatr")
-       attributteArray.push("Deszcz")
-       attributteArray.push("Cisnienie")
-       attributteArray.push("Wilgotnosc")
-      // sessionNeo
-      // .run('MATCH (n:User{active:false}) RETURN (n)') 
-      // .then(function(result){
-      //   result.records.forEach(function(record){
-      //     allUsersEmails.push(record._fields[0].identity.low+") "+record._fields[0].properties.email 
-      //     + " "+ record._fields[0].properties.firstName + " "+ record._fields[0].properties.lastName )
-      //   });
-      res.render('addFile/availableAttrFile.ejs',{attr: attributteArray})
-   // })
-  });
-  app.get('/attr/choosed',checkAuthenticated,(req,res)=>{
-    res.render('addFile/choosedAttrList.ejs')
-  })
-   app.get('/add/file/attribute',checkAuthenticated, (req, res) => {
-    var obj = JSON.parse(req.query.JSONFrom);
-    var localization = obj["localization"]
-    var attrArray = obj["attrToAdd"]
-    const fileMetadata = {
-          'name': req.session.addfile.name
-        };
-    const media = {
-      mimeType: req.session.addfile.type,
-      body: fs.createReadStream(req.session.addfile.path),
-    };
-    // Authenticating drive API
-    const drive = google.drive({ version: 'v3', auth });
-    // Uploading Single image to drive
-    drive.files.create(
-      {
-        resource: fileMetadata,
-        media: media,
-      },
-      async (err, file) => {
-        if (err) {
-          // Handle error
-          console.error(err.msg);
-          return res
-            .status(400)
-            .json({ errors: [{ msg: 'Server Error try again later' }] });
-        } else {
-          // if file upload success then return the unique google drive id
-          sessionNeo
-          .run('CREATE(n:File {name:$nameParam, googleID:$googleIDParam, localization:$localizationParam, attribute:$attrParam}) WITH n MATCH (u:User {email:$emailParam}) MERGE(n)<-[r:OWNER]-(u)',
-          {nameParam:req.session.addfile.name,googleIDParam:file.data.id,localizationParam: localization, attrParam:attrArray,emailParam:req.user.email })
-          .then(function(){
-            res.render('addFile/addFileSucces.ejs'); //do przeglądu własnych plików?
-        })
-        }
-      }
-    );
-  });
 app.listen(3000)
