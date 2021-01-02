@@ -12,6 +12,7 @@ const overviewUsers = require('./javascripts/overviewUsers')
 const editUsers = require('./javascripts/editUsers')
 const editUser = require('./javascripts/editUser')
 const addFile = require('./javascripts/addFile')
+const showUserFiles = require('./javascripts/showUserFiles')
 const flash = require('express-flash')
 const session = require('express-session')
 const methodOverride = require('method-override')
@@ -29,7 +30,7 @@ const SCOPES = ['https://www.googleapis.com/auth/drive'];
 // time.
 const TOKEN_PATH = 'token.json';
 
-var driver = neo4j.driver('bolt://54.226.31.67:32834', neo4j.auth.basic('neo4j', 'cosal-clothes-core'));
+var driver = neo4j.driver('bolt://34.232.69.121:32933', neo4j.auth.basic('neo4j', 'procurement-adherence-acid'));
 
 var sessionNeo = driver.session();
 
@@ -40,13 +41,15 @@ initializePassport(passport,sessionNeo)
 app.set('view-engine', 'ejs')
 app.use("/CSS", express.static(__dirname + "/CSS")); 
 app.use("/forLists", express.static(__dirname + "/forLists"));
+app.use("/forTables", express.static(__dirname + "/forTables"));
 app.use("/submits", express.static(__dirname + "/submits"));
 app.use(express.urlencoded({ extended: false }))
 app.use(flash())
 app.use(session({
   secret: process.env.SESSION_SECRET, 
   resave: false,  //bylo true przy aktywacji 
-  saveUninitialized: false   //bylo true przy aktywacji 
+  saveUninitialized: false,   //bylo true przy aktywacji 
+  cookie: { maxAge: 5 * 60 * 1000 } //5 minutes 
 }))
 app.use(passport.initialize())
 app.use(passport.session())
@@ -174,5 +177,5 @@ function getAccessToken(oAuth2Client, callback) {
       overviewUsers(app,checkAuthenticated,sessionNeo)
       editUsers(app,checkAuthenticated,sessionNeo)
       editUser(app,checkAuthenticated,sessionNeo)
-
+      showUserFiles(app,checkAuthenticated,sessionNeo)
 app.listen(3000)

@@ -1,0 +1,112 @@
+<!DOCTYPE html> 
+<html> 
+
+<head> 
+	<title>  My Files</title> 
+
+	<style type="text/css"> 
+.filesTable{
+    table-layout: fixed;
+    border-collapse: collapse;
+}
+
+.filesTable tbody{
+  display:block;
+  overflow: auto;
+  height: 350px;
+}
+.filesTable thead tr {
+   display: block;
+}
+
+.filesTable th, .filesTable td {
+  padding: 5px;
+  text-align: left;
+  width: 200px;
+}
+		/* CSS command for the row to highlight */ 
+		.highlight { 
+			background-color: #b8b8b8; 
+		} 
+	</style> 
+</head> 
+
+ <center>
+	 Sort by: <select name="sorting" size="1" style="width:10%;" id="sorting">
+                <option selected>Ascending</option>
+                <option>Descending</option>
+            </select>
+            <select name="option" size="1" style="width:10%;" id="option">
+                <option selected value="0">Id</option>
+                <option value="1">Name</option>
+				<option value="2">Localization</option>
+				<option value="3">Start day</option>
+				<option value="4">End day</option>
+            </select>
+		<div>
+            Filter by id: <input type = "number" name = "filterID" id="filterID"
+             onkeyup="myFilterFunction(0,'filterID')" placeholder="Search for id">
+            Filter by name: <input type = "text" name = "filterName" id="filterName"
+			 onkeyup="myFilterFunction(1,'filterName')" placeholder="Search for name">
+			 <br>
+			 Filter by localization: <input type = "text" name = "filterLocalization" id="filterLocalization"
+			 onkeyup="myFilterFunction(2,'filterLocalization')" placeholder="Search for localization">
+
+			 Filter by start day: <input type = "text" name = "filterStartDay" id="filterStartDay"
+			 onkeyup="myFilterFunction(3,'filterStartDay')" placeholder="Search for start day">
+			 Filter by end day: <input type = "text" name = "filterEndDay" id="filterEndDay"
+             onkeyup="myFilterFunction(4,'filterEndDay')" placeholder="Search for end day">
+			 </div>
+			 
+    
+	<table id="filesTable" class="filesTable">
+		<input type = "submit" value = "Zatwierdź" onclick="temp()">
+	
+	</table>
+</center>
+	<script type="text/javascript"> 
+		// JavaScript Code to Highlight any 
+		// row in the given table. 
+		document.getElementById('filesTable') 
+			.addEventListener('click', function (item) { 
+                var rows = document.getElementById("filesTable").rows;
+                for(var i=1;i<rows.length;i++){
+       
+				if( rows[i] == item.path[1]) 
+					rows[i].classList.add('highlight'); 
+					else
+					rows[i].classList.remove('highlight')  //tło 
+				}
+			}); 
+	</script> 
+       <script>
+        function temp() //wybór 
+        { var row_value = ""; 
+            var rows = document.getElementById("filesTable").rows;
+                for(var i=1;i<rows.length;i++)
+                if (rows[i].classList.contains('highlight')) 
+                {
+                    for (var j = 0; j < rows[i].cells.length; j++) { 
+  
+                     row_value += rows[i].cells[j].innerHTML; 
+                    row_value += " | "; 
+					} 
+					alert(row_value)
+                }
+            
+        }
+    </script>
+          <script src="/forTables/filterFunction.js"></script>
+          <script src="/forTables/sortFunction.js"></script>
+            <script>
+				var dataTable = "<%- tableData %>" //tutaj myślnik nie '='
+				document.getElementById("filesTable").innerHTML=dataTable
+                sort = document.getElementById("sorting");
+                option = document.getElementById("option");
+                sort.addEventListener("change", mySortingFunction.bind(this),false); 
+                option.addEventListener("change", mySortingFunction.bind(this),false); 
+                window.onload = mySortingFunction();
+            </script>
+</body> 
+
+</html> 

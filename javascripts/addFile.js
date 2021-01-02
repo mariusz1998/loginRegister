@@ -19,22 +19,19 @@ function addFile(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google) {
        sessionNeo          
        .run('MATCH (u:User{email:\'kamil@costam\'})OPTIONAL MATCH (u)-[r:OWNER]-(b:File) RETURN b.attribute as attr') 
                  .then(result => {
-                if(result.records.length>0){
                       result.records.forEach(function(record) {
                           {
+                            if( record.get('attr')!=null){
                               for(var i=0;i<record.get('attr').length;i++)
                               tempArray.push( record.get('attr')[i])
+                            }
+                                tempArray.push("Wind speed")
+                                tempArray.push("Rainfall")
+                                tempArray.push("Pressure")
+                                tempArray.push("Humidity")
                           }
+                          })
           })
-        }
-        else
-        {
-            tempArray.push("Wind speed")
-            tempArray.push("Rainfall")
-            tempArray.push("Pressure")
-            tempArray.push("Humidity")
-        }
-        })
         setTimeout(async () =>{ 
             let attributteArray = [...new Set(tempArray)] //usuwamy powtarzające się atrybuty
       res.render('addFile/availableAttrFile.ejs',{attr: attributteArray})
@@ -72,7 +69,7 @@ function addFile(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google) {
         } else {
           // if file upload success then return the unique google drive id
           sessionNeo
-          .run('CREATE(n:File {name:$nameParam, googleID:$googleIDParam, localization:$localizationParam, attribute:$attrParam, firstDate:date($firstDayParam),lastDate:date($lastDayParam)}) WITH n MATCH (u:User {email:$emailParam}) MERGE(n)<-[r:OWNER]-(u)',
+          .run('CREATE(n:File {name:$nameParam, googleID:$googleIDParam, localization:$localizationParam, attribute:$attrParam, firstDay:date($firstDayParam),lastDay:date($lastDayParam)}) WITH n MATCH (u:User {email:$emailParam}) MERGE(n)<-[r:OWNER]-(u)',
           {nameParam:req.session.addfile.name,googleIDParam:file.data.id,localizationParam: localization, attrParam:attrArray,emailParam:req.user.email,
             firstDayParam:obj["firstDay"], lastDayParam:obj["lastDay"] })
           .then(function(){
