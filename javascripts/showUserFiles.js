@@ -14,6 +14,8 @@ function showUserFiles(app,checkAuthenticated,sessionNeo) {
                             tableDataFile +="<td>"+record.get('f').properties.localization+"</td>";
                             tableDataFile +="<td>"+record.get('f').properties.firstDay+"</td>";
                             tableDataFile +="<td>"+record.get('f').properties.lastDay+"</td></tr>";
+
+                           // tableDataFile +="<td>"+record.get('f').properties.firstDay+"</td>";
                     })
                    // setTimeout(async () =>{ 
                      res.render('userFiles/files.ejs',{tableData: tableDataFile})  
