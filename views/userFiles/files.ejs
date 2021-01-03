@@ -28,8 +28,6 @@
 		.highlight { 
 			background-color: #b8b8b8; 
 		} 
-
-
 		body {font-family: Arial, Helvetica, sans-serif;}
 
 /* The Modal (background) */
@@ -45,6 +43,7 @@
   overflow: auto; /* Enable scroll if needed */
   background-color: rgb(0,0,0); /* Fallback color */
   background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+
 }
 
 /* Modal Content */
@@ -53,7 +52,8 @@
   margin: auto;
   padding: 20px;
   border: 1px solid #888;
-  width: 80%;
+  width: 30%;
+  white-space:pre-line;
 }
 
 /* The Close Button */
@@ -70,9 +70,6 @@
   text-decoration: none;
   cursor: pointer;
 }
-
-
-
 	</style> 
 </head> 
 
@@ -103,26 +100,25 @@
              onkeyup="myFilterFunction(4,'filterEndDay')" placeholder="Search for end day">
 			 </div>
 			 
-    
-	<table id="filesTable" class="filesTable">
-		<input type = "submit" value = "Show Attr" onclick="temp()">
-	
-	</table>
-	<!-- Trigger/Open The Modal -->
+    	<!-- Trigger/Open The Modal -->
 <button id="buttonAttr">Show attribute</button>
+
+	<table id="filesTable" class="filesTable">
+	</table>
 
 <!-- The Modal -->
 <div id="myModal" class="modal">
   <!-- Modal content -->
   <div class="modal-content">
-	<span class="close">&times;</span>
+<span class="close">  &times;</span>
 	<p id="fileAttrText"></p>
   </div>
-
+  <button id="buttonAttr">Show attribute</button>
 </div>
 </center>
-<script>
-var row_value = ""; 
+<script  type='text/javascript'>
+  var JSONFileAttr = '<%-arrayFilesAttr%>'
+       var obj = JSON.parse(JSONFileAttr);
 	// Get the modal
 	var modal = document.getElementById("myModal")
 	// Get the button that opens the modal
@@ -131,18 +127,25 @@ var row_value = "";
 	var span = document.getElementsByClassName("close")[0];
 	// When the user clicks the button, open the modal 
 	btn.onclick = function() {
+    var row_value = "Select a file!"; 
 	  modal.style.display = "block";
 	  var rows = document.getElementById("filesTable").rows;
                 for(var i=1;i<rows.length;i++)
                 if (rows[i].classList.contains('highlight')) 
                 {
-                    for (var j = 0; j < rows[i].cells.length; j++) { 
-  
-                     row_value += rows[i].cells[j].innerHTML; 
-                    row_value += " | "; 
+                  row_value=""
+                    for (var j = 0; j < rows.length-1; j++) { 
+                    
+                    if( obj[j]["id"] == rows[i].cells[0].innerHTML)
+                    {
+                      row_value=""
+                      for (var a = 0; a < obj[j]["arrayAttrFile"].length; a++) { 
+                          row_value+=obj[j]["arrayAttrFile"][a]+"\n"
+                      }
+                    }
 					} 
-					document.getElementById("fileAttrText").innerHTML=row_value
                 }
+                document.getElementById("fileAttrText").innerHTML=row_value
 	}
 	// When the user clicks on <span> (x), close the modal
 	span.onclick = function() {
@@ -170,23 +173,6 @@ var row_value = "";
 				}
 			}); 
 	</script> 
-       <script>
-        function temp() //wybór 
-        { var row_value = ""; 
-            var rows = document.getElementById("filesTable").rows;
-                for(var i=1;i<rows.length;i++)
-                if (rows[i].classList.contains('highlight')) 
-                {
-                    for (var j = 0; j < rows[i].cells.length; j++) { 
-  
-                     row_value += rows[i].cells[j].innerHTML; 
-                    row_value += " | "; 
-					} 
-					alert(row_value)
-                }
-            
-        }
-    </script>
           <script src="/forTables/filterFunction.js"></script>
           <script src="/forTables/sortFunction.js"></script>
             <script>
