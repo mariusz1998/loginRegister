@@ -1,0 +1,17 @@
+function colorOption(optionArray)
+{
+    var iframe = document.getElementById("Avaible"+toAdd);   //dobieram sie do iframe
+    var select = iframe.contentWindow.document.getElementById("choosed"+toAdd);   
+    var options = select.getElementsByTagName('option');    //pobieram opcje z listy
+
+    var iframe2 = document.getElementById("Choosed"+toAdd);   //dobieram sie do iframe
+    var select2 = iframe2.contentWindow.document.getElementById("choosed"+toAdd);  
+    var option = document.createElement("option");
+    option.text = options[select.selectedIndex].text;
+    
+    
+    select2.add(option);
+
+    select.remove(select.selectedIndex);
+    myCountingFunction(toAdd);
+}

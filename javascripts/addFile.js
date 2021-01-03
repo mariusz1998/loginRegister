@@ -14,10 +14,10 @@ function addFile(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google) {
     })
   })
     app.get('/attr/availble',checkAuthenticated,(req,res)=>{
-      //pobranie wszystkich atrybutów plików danego użytkonika?
        var tempArray = []
        sessionNeo          
-       .run('MATCH (u:User{email:\'kamil@costam\'})OPTIONAL MATCH (u)-[r:OWNER]-(b:File) RETURN b.attribute as attr') 
+       .run('MATCH (u:User{email:$emailParam}) OPTIONAL MATCH (u)-[r:OWNER]-(b:File) RETURN b.attribute as attr',
+       {emailParam:req.user.email }) 
                  .then(result => {
                       result.records.forEach(function(record) {
                           {
@@ -35,7 +35,7 @@ function addFile(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google) {
         setTimeout(async () =>{ 
             let attributteArray = [...new Set(tempArray)] //usuwamy powtarzające się atrybuty
       res.render('addFile/availableAttrFile.ejs',{attr: attributteArray})
-    },3000)
+    },2000)
   });
   app.get('/attr/choosed',checkAuthenticated,(req,res)=>{
     res.render('addFile/choosedAttrList.ejs')

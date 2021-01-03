@@ -45,11 +45,12 @@
 <span class="close">  &times;</span>
 	<p id="fileAttrText"></p>
   </div>
-  <button id="buttonAttr">Show attribute</button>
+  <button disabled=false id="buttonEditAttr" onclick="temp()">Edit attribute</button>
 </div>
 </center>
 <script  type='text/javascript'>
   var JSONFileAttr = '<%-arrayFilesAttr%>'
+  var arrayFilesNumber
        var obj = JSON.parse(JSONFileAttr);
 	// Get the modal
 	var modal = document.getElementById("myModal")
@@ -70,6 +71,7 @@
                     
                     if( obj[j]["id"] == rows[i].cells[0].innerHTML)
                     {
+						arrayFilesNumber=j;
                       row_value=""
                       for (var a = 0; a < obj[j]["arrayAttrFile"].length; a++) { 
                           row_value+=obj[j]["arrayAttrFile"][a]+"\n"
@@ -89,16 +91,34 @@
 		modal.style.display = "none";
 	  }
 	}
+	
 	</script>
+	<script type="text/javascript"> 
+	function temp()
+	  {
+		var rows = document.getElementById("filesTable").rows;
+
+                for(var i=1;i<rows.length;i++){
+				if( rows[i].classList.contains('highlight'))
+					location="/edit/file/attr?JSONFrom=[{\"id\":"+rows[i].cells[0].innerHTML+",\"nameFile\":\""+
+					rows[i].cells[1].innerHTML+"\"}]&attrArray="+'<%-arrayFilesAttr%>&choice='+arrayFilesNumber
+			//	console.log(obj)
+				//	location="/edit/file/attr?JSONFrom=[{\"id\":21}]"
+	  }
+	}
+	</script>
+	
 	<script type="text/javascript"> 
 		document.getElementById('filesTable') 
 			.addEventListener('click', function (item) { 
-                var rows = document.getElementById("filesTable").rows;
+				var rows = document.getElementById("filesTable").rows;
+				document.getElementById('buttonEditAttr').disabled=true
                 for(var i=1;i<rows.length;i++){
-       
 				if( rows[i] == item.path[1]) 
+				{
 					rows[i].classList.add('highlight'); 
-					else
+					document.getElementById('buttonEditAttr').disabled=false
+				}	else
 					rows[i].classList.remove('highlight')  //tło 
 				}
 			}); 
