@@ -1,5 +1,5 @@
 function showUserFiles(app,checkAuthenticated,sessionNeo) {
-    app.post('/show/your/files',checkAuthenticated,(req, res)=>{
+    app.get('/show/your/files',checkAuthenticated,(req, res)=>{
         var tableDataFile=""
         var  attrFiles="["
             // req.user.email=req.body.email

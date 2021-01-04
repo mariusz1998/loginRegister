@@ -45,5 +45,17 @@ app.get('/attr/edit/availble',checkAuthenticated,(req,res)=>{
  },2000)
 
 });
+app.get('/edit/file/attribute',checkAuthenticated, (req, res) => {
+  var obj = JSON.parse(req.query.JSONFrom);
+  var attrArray = obj["attrToEdit"]
+        sessionNeo
+        .run('MATCH (n:File) where id(n)=$idParam  SET n.attribute=$attrParam',
+        { attrParam:attrArray,idParam: req.session.editfile.id })
+        .then(function(){
+          res.redirect('/show/your/files'); //do przeglądu własnych plików?
+      })
+      
+    
+});
 }
 module.exports = editAttrFile
