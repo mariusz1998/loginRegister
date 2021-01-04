@@ -4,8 +4,13 @@
     <link rel="stylesheet" href="/CSS/style.css">
     <title>Select attribute</title>
  </head>
-<script>var toInit = "Attr";</script>
-<body onload="init(toInit);">
+<script> 
+    var arrayAttrFile =[] 
+    '<% for(var j=0; j<attr.length; j++) { %>'
+        arrayAttrFile.push('<%- attr[j]%>');
+       ' <%}%>'
+var toInit = "Attr";</script>
+<body onload="init(toInit,arrayAttrFile);">
 <center>
     You change attr for <%=id%>)<%=nameFile %><br>
        Select attr :          
@@ -44,13 +49,19 @@
         submit();
     }
 </script>
-<script type="text/javascript" src="/forLists/initFunction.js"></script>
-<script type="text/javascript" src="/forLists/addFunction.js"></script>
-<script type="text/javascript" src="/forLists/deleteFunction.js"></script>
+
+<script type="text/javascript" src="/forLists/initFunction&Color.js"></script>
+<script type="text/javascript" src="/forLists//addFunction&Color.js"></script>
+<script type="text/javascript" src="/forLists/deleteFunction&Color.js"></script>
 <script type="text/javascript" src="/forLists/optionsCounter.js"></script>
 <script type="text/javascript" src="/submits/addAttribute.js"></script>
 <script type="text/javascript" src="/submits/sendFileAttribute.js"></script>
-<script type="text/javascript" src="/forLists/temp.js"></script>
+<script src="/forLists/setOptionsColor.js"></script>
+<script>
+ setTimeout(async () =>{ 
+    window.onload = colorOption(arrayAttrFile,"Attr")
+},3000)
+</script>
 </body>
 
 </html>

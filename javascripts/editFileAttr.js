@@ -13,7 +13,7 @@ app.get('/edit/file/attr',checkAuthenticated,(req, res)=>{ //id przekazać
     editfile.id=obj[0]["id"]
     editfile.attr=tempArray
    req.session.editfile=editfile
-    res.render('userFiles/editAttrFile.ejs',{id:obj[0]["id"],nameFile:obj[0]["nameFile"]})
+    res.render('userFiles/editAttrFile.ejs',{id:obj[0]["id"],nameFile:obj[0]["nameFile"],attr: req.session.editfile.attr})
 })
 app.get('/attr/edit/choosed',checkAuthenticated,(req,res)=>{
     res.render('userFiles/editAttrChoosedFile.ejs',{attr: req.session.editfile.attr})
