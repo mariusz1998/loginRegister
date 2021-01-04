@@ -33,8 +33,10 @@
 			 </div>
 			 
     	<!-- Trigger/Open The Modal -->
-<button id="buttonAttr">Show attribute</button>
-
+<button id="buttonAttr">Show attribute</button> 
+<div>
+<button id="buttonDateRange" onclick="editDate()">Edit date range</button>
+</div>
 	<table id="filesTable" class="filesTable">
 	</table>
 
@@ -102,12 +104,24 @@
 				if( rows[i].classList.contains('highlight'))
 					location="/edit/file/attr?JSONFrom=[{\"id\":"+rows[i].cells[0].innerHTML+",\"nameFile\":\""+
 					rows[i].cells[1].innerHTML+"\"}]&attrArray="+'<%-arrayFilesAttr%>&choice='+arrayFilesNumber
-			//	console.log(obj)
-				//	location="/edit/file/attr?JSONFrom=[{\"id\":21}]"
 	  }
 	}
 	</script>
+	<script type="text/javascript"> 
+		function editDate()
+		  {
+			var rows = document.getElementById("filesTable").rows;
 	
+					for(var i=1;i<rows.length;i++){
+					if( rows[i].classList.contains('highlight'))
+						location="/edit/file/date?JSONFrom=[{\"id\":"+rows[i].cells[0].innerHTML+",\"nameFile\":\""+
+						rows[i].cells[1].innerHTML+"\",\"dateStart\":\""
+					   +rows[i].cells[3].innerHTML+"\",\"dateEnd\":\""+rows[i].cells[4].innerHTML
+						+"\",\"localization\":\""+rows[i].cells[2].innerHTML+
+						"\"}]"
+		}
+	}
+		</script>
 	<script type="text/javascript"> 
 		document.getElementById('filesTable') 
 			.addEventListener('click', function (item) { 

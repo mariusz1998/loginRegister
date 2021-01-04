@@ -1,0 +1,52 @@
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/CSS/style.css">
+    <title>Edit date range</title>
+ </head>
+<center>
+  <% if(typeof alert != 'undefined'){ %>
+    <%= alert %>
+   <% } %>
+    You change properties for <%=id%> - <%=nameFile %><br>  
+        <br/><br/>
+        <div>
+            <label for="localization">Localization</label>
+            <input type="text" id="localization" name="localization"  value=<%-localization %> >
+          </div>
+          <div>
+            <label for="startDay">Start day:</label>
+          <input type="date" id="startDay" name="startDay" onchange="startDayChange()" form="YYYY-MM-DD" value=<%-  dateStart %>  > 
+        </div>
+        <div>
+            <label for="endDay">End day:</label>
+          <input type="date" id="endDay" name="endDay" onchange="endDayChange()" form="DD-MM-YYYY" value=<%-  dateEnd %> >
+        </div>
+        <div>
+            <input type = "submit" value = "Edit file properties" onclick="temp()">
+          </div>
+      
+    <!--</form>-->
+
+</center>
+<script>
+    function temp()
+    {
+        submit();
+    }
+function startDayChange(){
+document.getElementById("endDay").setAttribute("min", document.getElementById("startDay").value);
+}
+function endDayChange(){
+document.getElementById("startDay").setAttribute("max", document.getElementById("endDay").value);
+}
+function temp(){
+
+  submit();
+}
+  </script>
+
+<script type="text/javascript" src="/submits/editFileProperties.js"></script>
+</html>
+
+
