@@ -10,7 +10,10 @@ function addFile(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google) {
      addfile.path=files.file.path
      addfile.type=files.file.type
      req.session.addfile=addfile
-      res.render('addFile/addFileAttrPanel.ejs',{addFileProperty: addfile})
+      res.render('addFile/addFileAttrPanel.ejs')
+    })
+    app.get('/get/file/property', (req, res) => {
+      res.render('addFile/addFileAttrPanel.ejs')
     })
   })
     app.get('/attr/availble',checkAuthenticated,(req,res)=>{
@@ -44,6 +47,13 @@ function addFile(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google) {
     var obj = JSON.parse(req.query.JSONFrom);
     var localization = obj["localization"]
     var attrArray = obj["attrToAdd"]
+    sessionNeo          
+    .run('MATCH (u:User{email:$emailParam}) OPTIONAL MATCH (u)-[r:OWNER]-(b:File) Where b.localization=$localizationParam AND NOT (date(b.firstDay)>date($dateEndParam) OR date(b.lastDay)<date($dateStartParam)) RETURN b',
+    {emailParam:req.user.email,localizationParam:localization,dateStartParam:obj["firstDay"] 
+    ,dateEndParam:obj["lastDay"] }) 
+              .then(result => {
+                  if(result.records[0].get('b')==null)
+                  {
     const fileMetadata = {
           'name': req.session.addfile.name
         };
@@ -78,6 +88,10 @@ function addFile(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google) {
         }
       }
     );
+                  }
+                  else
+                    res.render('addFile/addFileFailed.ejs',{localization:localization,firstDay:obj["firstDay"],lastDay:obj["lastDay"]});
+                });
   });
 }
 module.exports = addFile
