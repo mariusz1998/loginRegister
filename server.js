@@ -32,7 +32,7 @@ const SCOPES = ['https://www.googleapis.com/auth/drive'];
 // time.
 const TOKEN_PATH = 'token.json';
 
-var driver = neo4j.driver('bolt://34.232.69.121:32933', neo4j.auth.basic('neo4j', 'procurement-adherence-acid'));
+var driver = neo4j.driver('bolt://34.207.227.36:32874', neo4j.auth.basic('neo4j', 'layer-road-vibration'));
 
 var sessionNeo = driver.session();
 

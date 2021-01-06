@@ -7,7 +7,10 @@ function showUserFiles(app,checkAuthenticated,sessionNeo) {
                  .run('MATCH (u:User ) WHERE id(u)=$idParam OPTIONAL MATCH (f:File)<-[:OWNER]-(u) RETURN f',
                  { idParam: parseInt(req.user.id) })
                  .then(function(result){   
-                   // record.get('f').properties.name
+                 if(result.records[0].get('f')==null)
+                  res.render('userFiles/noFilesUser.ejs')
+                 else
+                 {
                     tableDataFile +="<tr><th>Id</th> <th>Name</th> <th>Localization</th> <th>First Day</th> <th>Last Day</th> </tr>"
                     result.records.forEach(function(record) {
                             tableDataFile +="<tr><td>"+record.get('f').identity.low+" </td>";
@@ -30,7 +33,8 @@ function showUserFiles(app,checkAuthenticated,sessionNeo) {
                    // setTimeout(async () =>{ 
                     res.render('userFiles/files.ejs',{tableData: tableDataFile,arrayFilesAttr:attrFiles})  
                   //  }  ,2000)
-                })
+                  }
+                  })
                
     })
    
