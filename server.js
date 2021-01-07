@@ -12,6 +12,7 @@ const overviewUsers = require('./javascripts/overviewUsers')
 const editUsers = require('./javascripts/editUsers')
 const editUser = require('./javascripts/editUser')
 const addFile = require('./javascripts/addFile')
+const updateFile = require('./javascripts/updateFile')
 const editAttrFile = require('./javascripts/editFileAttr')
 const editDatesFile = require('./javascripts/editFileDates')
 const showUserFiles = require('./javascripts/showUserFiles')
@@ -81,6 +82,7 @@ function authorize(credentials, callback) {
     oAuth2Client.setCredentials(JSON.parse(token));
     auth = oAuth2Client;
     addFile(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
+    updateFile(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
   });
 }
 
