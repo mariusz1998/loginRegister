@@ -40,6 +40,10 @@
 <div>
 	<button id="buttonFileUpdate" onclick="editFile()">Update file</button>
 	</div>
+	<div>
+		<button id="buttonFileDelete">Delete file</button>
+		</div>
+		
 	<table id="filesTable" class="filesTable">
 	</table>
 
@@ -52,6 +56,20 @@
   </div>
   <button disabled=false id="buttonEditAttr" onclick="temp()">Edit attribute</button>
 </div>
+
+<!-- The Modal Delte -->
+<div id="deleteModal" class="modal">
+	<!-- Modal content -->
+	<div class="modal-content">
+  <span class="closeDeleteModal">  &times;</span>
+	  <p id="questionText"></p>
+	  <div class="clearfix">
+        <button type="button" style="display: none;" onclick="document.getElementById('deleteModal').style.display='none'" class="cancelbtn">Cancel</button>
+        <button type="button" style="display: none;" onclick="deleteFile()" class="deletebtn">Delete</button>
+      </div>
+	</div>
+  </div>
+
 </center>
 <script  type='text/javascript'>
   var JSONFileAttr = '<%-arrayFilesAttr%>'
@@ -98,6 +116,38 @@
 	}
 	
 	</script>
+
+<script  type='text/javascript'>
+		 var obj = JSON.parse(JSONFileAttr);
+	  var modalDelete = document.getElementById("deleteModal")
+	  var buttonDelete = document.getElementById("buttonFileDelete");
+	  var spanDelete = document.getElementsByClassName("closeDeleteModal")[0];
+	  buttonDelete.onclick = function() {
+	  var row_value = "Select a file!"; 
+	  modalDelete.style.display = "block";
+		var rows = document.getElementById("filesTable").rows;
+				  for(var i=1;i<rows.length;i++)
+				  if (rows[i].classList.contains('highlight')) 
+				  {
+					row_value="You sure delete "+rows[i].cells[1].innerHTML+"?"
+					  } 
+				  document.getElementById("questionText").innerHTML=row_value
+	  }
+	  // When the user clicks on <span> (x), close the modal
+		spanDelete.onclick = function() {
+		modalDelete.style.display = "none";
+	  }
+	  // When the user clicks anywhere outside of the modal, close it
+	  window.onclick = function(event) {
+		if (event.target == modalDelete) {
+			modalDelete.style.display = "none";
+		}
+	  }
+	  
+	  </script>
+
+
+
 	<script type="text/javascript"> 
 	function temp()
 	  {
@@ -137,6 +187,19 @@
 				}
 			}
 				</script>
+					<script type="text/javascript"> 
+						function deleteFile()
+						  {
+							  //czy na pewno te okno zrób 
+							var rows = document.getElementById("filesTable").rows;
+					
+									for(var i=1;i<rows.length;i++){
+									if( rows[i].classList.contains('highlight'))
+										location="/set/upload/file?JSONFrom=[{\"id\":"+rows[i].cells[0].innerHTML+
+										",\"nameFile\":\""+rows[i].cells[1].innerHTML+"\"}]";
+						}
+					}
+						</script>
 	<script type="text/javascript"> 
 		document.getElementById('filesTable') 
 			.addEventListener('click', function (item) { 

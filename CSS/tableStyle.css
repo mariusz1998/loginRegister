@@ -63,3 +63,16 @@
   text-decoration: none;
   cursor: pointer;
 }
+.closeDeleteModal{
+  color: #aaaaaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.closeDeleteModal:hover,
+.closeDeleteModal:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
