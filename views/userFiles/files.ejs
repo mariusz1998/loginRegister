@@ -63,10 +63,8 @@
 	<div class="modal-content">
   <span class="closeDeleteModal">  &times;</span>
 	  <p id="questionText"></p>
-	  <div class="clearfix">
-        <button type="button" style="display: none;" onclick="document.getElementById('deleteModal').style.display='none'" class="cancelbtn">Cancel</button>
-        <button type="button" style="display: none;" onclick="deleteFile()" class="deletebtn">Delete</button>
-      </div>
+        <button type="button" id="closebtn" style="display: none;" onclick="document.getElementById('deleteModal').style.display='none'" class="cancelbtn">Cancel</button>
+        <button type="button" id="deletebtn" style="display: none;" onclick="deleteFile()" class="deletebtn">Delete</button>
 	</div>
   </div>
 
@@ -123,15 +121,17 @@
 	  var buttonDelete = document.getElementById("buttonFileDelete");
 	  var spanDelete = document.getElementsByClassName("closeDeleteModal")[0];
 	  buttonDelete.onclick = function() {
-	  var row_value = "Select a file!"; 
+	  var questionValue = "Select a file!"; 
 	  modalDelete.style.display = "block";
 		var rows = document.getElementById("filesTable").rows;
 				  for(var i=1;i<rows.length;i++)
 				  if (rows[i].classList.contains('highlight')) 
 				  {
-					row_value="You sure delete "+rows[i].cells[1].innerHTML+"?"
+					questionValue="You sure delete "+rows[i].cells[1].innerHTML+"?"
+					document.getElementById("closebtn").style.display=""
+					document.getElementById("deletebtn").style="display:;"
 					  } 
-				  document.getElementById("questionText").innerHTML=row_value
+				  document.getElementById("questionText").innerHTML=questionValue
 	  }
 	  // When the user clicks on <span> (x), close the modal
 		spanDelete.onclick = function() {
