@@ -1,0 +1,45 @@
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/CSS/style.css">
+    <title>Select attribute</title>
+ </head>
+<script>var toInit = "Attr";</script>
+<body onload="init(toInit);">
+<center>
+    You set access for <%=id%>) <%=nameFile%>
+       Select users:          
+        <br/><br/>
+        <div id="container">
+            <div id="avaible">
+               Avaible: 
+                <br/>
+                <iframe name="AvaibleAttr" id="AvaibleAttr" src="/set/access/user/availble"></iframe>
+            </div>
+            <div id="added">
+                Selected:
+                <br/>
+                <iframe id="ChoosedAttr" src="/set/access/user/choosed"></iframe>
+            </div>
+           
+        </div>
+        <input type = "submit" value = "Set access" onclick="temp()">
+        <br/><br/>
+      
+</center>
+<script>
+    function temp()
+    {
+        submit();
+    }
+</script>
+<script type="text/javascript" src="/forLists/initFunction.js"></script>
+<script type="text/javascript" src="/forLists/addFunction.js"></script>
+<script type="text/javascript" src="/forLists/deleteFunction.js"></script>
+<script type="text/javascript" src="/forLists/optionsCounter.js"></script>
+<script type="text/javascript" src="/submits/setFileAccess.js"></script>
+</body>
+
+</html>
+
+

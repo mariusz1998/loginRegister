@@ -17,6 +17,7 @@ const deleteFile=require('./javascripts/deleteFile')
 const editAttrFile = require('./javascripts/editFileAttr')
 const editDatesFile = require('./javascripts/editFileDates')
 const showUserFiles = require('./javascripts/showUserFiles')
+const editFileAccess = require('./javascripts/editFileAccess')
 const flash = require('express-flash')
 const session = require('express-session')
 const methodOverride = require('method-override')
@@ -34,8 +35,9 @@ const SCOPES = ['https://www.googleapis.com/auth/drive'];
 // time.
 const TOKEN_PATH = 'token.json';
 
-var driver = neo4j.driver('bolt://34.207.227.36:32874', neo4j.auth.basic('neo4j', 'layer-road-vibration'));
-
+const driver = neo4j.driver('bolt://18.234.192.219:32879',
+                  neo4j.auth.basic('neo4j', 'table-evacuations-nails'), 
+                  {/* encrypted: 'ENCRYPTION_OFF' */});
 var sessionNeo = driver.session();
 
 initializePassport(passport,sessionNeo)
@@ -186,4 +188,5 @@ function getAccessToken(oAuth2Client, callback) {
       showUserFiles(app,checkAuthenticated,sessionNeo)
       editAttrFile(app,checkAuthenticated,sessionNeo)
       editDatesFile(app,checkAuthenticated,sessionNeo)
+      editFileAccess(app,checkAuthenticated,sessionNeo)
 app.listen(3000)
