@@ -7,8 +7,8 @@
     </head>
     <body>
         
-        <script>var toFilter="Attr"</script>
-        Filter: <input type = "text" name = "searchAttr" id="searchAttr" onkeyup="myFilterFunction(toFilter)">
+        <script>var toFilter="Users"</script>
+        Filter: <input type = "text" name = "searchUsers" id="searchUsers" onkeyup="myFilterFunction(toFilter)">
         
         <center>
             <select name="sorting" size="1" style="width:40%;" id="sorting">
@@ -19,7 +19,7 @@
         </center>
                 
 
-                    <select name="choosedAttr" size="6" style="width:100%;" id="choosedAttr">
+                    <select name="choosedUsers" size="6" style="width:100%;" id="choosedUsers">
                         <% users.forEach(function(user){%>
                             <option> <%=user %>  </option>
                      <% }); %> 
@@ -31,7 +31,7 @@
  
         <script>
             sort = document.getElementById("sorting");
-            var toSort = "Attr";
+            var toSort = "Users";
             sort.addEventListener("change", mySortingFunction.bind(this,toSort),false); 
             window.onload = mySortingFunction(toSort);
         </script>

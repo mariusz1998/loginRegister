@@ -1,5 +1,6 @@
 function init(toInit,optionArray)
 {
+    console.log(toInit+" "+optionArray+"asdas")
     var iframe = document.getElementById("Avaible"+toInit);   //dobieram sie do iframe
     var select = iframe.contentWindow.document.getElementById("choosed"+toInit);
     select.addEventListener("click", addFunction.bind(this,toInit,optionArray),false);

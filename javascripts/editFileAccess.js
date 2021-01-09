@@ -7,9 +7,28 @@ function editFileAccess(app,checkAuthenticated,sessionNeo) {
         editfile.localization=obj[0]["localization"]
         editfile.startDay=obj[0]["dateStart"]
         editfile.endDay=obj[0]["dateEnd"]
-        console.log(editfile)
-       req.session.editfile=editfile
-        res.render('userFiles/setFileAccess.ejs',{id:obj[0]["id"],nameFile:obj[0]["nameFile"]})
+     //  req.session.editfile=editfile
+       var userArray = [] 
+         sessionNeo       
+       .run('MATCH (n:User),(f:File) Where id(f)=$idFileParam and id(n)<>$idUserParam MATCH(f)<-[r:GETACCESS]-(n) Return n',
+       {idFileParam: editfile.id,idUserParam:req.user.id}) 
+                 .then(result => {
+                            result.records.forEach(function(record) {
+                          {
+                           userArray.push( record.get('n').properties.email +" - "+record.get('n').properties.lastName+" "+
+                           record.get('n').properties.firstName)
+                           userArray.push( record.get('n').properties.email +" - "+record.get('n').properties.lastName+" "+
+                           record.get('n').properties.firstName)
+                          }
+                          })
+                          setTimeout(async () =>{ 
+                            console.log("11")
+                            editfile.accessArray=userArray
+                            req.session.editfile=editfile
+                            console.log(userArray)
+                            res.render('userFiles/setFileAccess.ejs',{id:obj[0]["id"],nameFile:obj[0]["nameFile"],users:userArray})
+                     },2000)
+          })
     })
     app.get('/set/access/user/availble',checkAuthenticated,(req,res)=>{
         var userArray = []
@@ -27,7 +46,6 @@ function editFileAccess(app,checkAuthenticated,sessionNeo) {
                   .then(result => {
                        result.records.forEach(function(record) {
                            {
-                             console.log(record.get('u').properties.email)
                                 userArray.push( record.get('u').properties.email +" - "+record.get('u').properties.lastName+" "+
                                 record.get('u').properties.firstName)
                            }
@@ -40,24 +58,8 @@ function editFileAccess(app,checkAuthenticated,sessionNeo) {
      },1000)
     });
     app.get('/set/access/user/choosed',checkAuthenticated,(req,res)=>{
-      var userArray = []
-      console.log(req.session.editfile.id+" "+req.user.id)
       setTimeout(async () =>{   
-        sessionNeo       
-      .run('MATCH (n:User),(f:File) Where id(f)=$idFileParam and id(n)<>$idUserParam MATCH(f)<-[r:GETACCESS]-(n) Return n',
-      {idFileParam: req.session.editfile.id,idUserParam:req.user.id}) 
-                .then(result => {
-                           result.records.forEach(function(record) {
-                         {
-                          console.log(record.get('n'))
-                          userArray.push( record.get('n').properties.email +" - "+record.get('n').properties.lastName+" "+
-                          record.get('n').properties.firstName)
-                         }
-                         })
-         })
-         setTimeout(async () =>{ 
-          res.render('userFiles/editAccessFileUsersChoosed.ejs',{users: userArray})
-   },1000)
+          res.render('userFiles/editAccessFileUsersChoosed.ejs',{users:req.session.editfile.accessArray})
         },2000)
     });
     app.get('/set/file/access',checkAuthenticated, (req, res) => {

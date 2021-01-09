@@ -2,10 +2,16 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/CSS/style.css">
-    <title>Select attribute</title>
+    <title>Select users</title>
  </head>
-<script>var toInit = "Attr";</script>
-<body onload="init(toInit);">
+<script>
+    var arrayUsersFile =[] 
+    console.log('<%- users%>')
+    '<% for(var j=0; j<users.length; j++) { %>'
+        arrayUsersFile.push('<%- users[j]%>');
+       ' <%}%>'
+var toInit = "Users";</script>
+<body  onload="init(toInit,arrayUsersFile);">
 <center>
     You set access for <%=id%>) <%=nameFile%>
        Select users:          
@@ -14,12 +20,12 @@
             <div id="avaible">
                Avaible: 
                 <br/>
-                <iframe name="AvaibleAttr" id="AvaibleAttr" src="/set/access/user/availble"></iframe>
+                <iframe name="AvaibleUsers" id="AvaibleUsers" src="/set/access/user/availble"></iframe>
             </div>
             <div id="added">
                 Selected:
                 <br/>
-                <iframe id="ChoosedAttr" src="/set/access/user/choosed"></iframe>
+                <iframe id="ChoosedUsers" src="/set/access/user/choosed"></iframe>
             </div>
            
         </div>
@@ -33,11 +39,18 @@
         submit();
     }
 </script>
-<script type="text/javascript" src="/forLists/initFunction.js"></script>
-<script type="text/javascript" src="/forLists/addFunction.js"></script>
-<script type="text/javascript" src="/forLists/deleteFunction.js"></script>
+<script type="text/javascript" src="/forLists/initFunction&Color.js"></script>
+<script type="text/javascript" src="/forLists//addFunction&Color.js"></script>
+<script type="text/javascript" src="/forLists/deleteFunction&Color.js"></script>
 <script type="text/javascript" src="/forLists/optionsCounter.js"></script>
 <script type="text/javascript" src="/submits/setFileAccess.js"></script>
+<script src="/forLists/setOptionsColor.js"></script>
+<script>
+   setTimeout(async () =>{ 
+    window.onload = colorOption(arrayUsersFile,"Users")
+},2000) 
+</script>
+
 </body>
 
 </html>
