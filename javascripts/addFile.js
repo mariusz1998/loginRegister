@@ -48,11 +48,13 @@ function addFile(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google) {
     var localization = obj["localization"]
     var attrArray = obj["attrToAdd"]
     sessionNeo          
-    .run('MATCH (u:User{email:$emailParam}) OPTIONAL MATCH (u)-[r:OWNER]-(b:File) Where b.localization=$localizationParam AND NOT (date(b.firstDay)>date($dateEndParam) OR date(b.lastDay)<date($dateStartParam)) RETURN b',
+    
+    .run('MATCH (u:User{email:$emailParam}),(b:File{localization:$localizationParam}) Where(u)-[:OWNER|GETACCESS]->(b) and NOT (date(b.firstDay)>date($dateEndParam) OR date(b.lastDay)<date($dateStartParam)) RETURN b',
     {emailParam:req.user.email,localizationParam:localization,dateStartParam:obj["firstDay"] 
     ,dateEndParam:obj["lastDay"] }) 
               .then(result => {
-                  if(result.records[0].get('b')==null)
+                console.log(result.records.length)
+                  if(result.records.length==0)
                   {
     const fileMetadata = {
           'name': req.session.addfile.name
