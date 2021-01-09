@@ -18,12 +18,13 @@ function editDatesFile(app,checkAuthenticated,sessionNeo) {
       //     console.log(obj["dateToEdit"][0]["startDay"])
       //     console.log(obj["dateToEdit"][0]["endDay"])
       //     console.log(obj["localization"])
-      //      console.log(req.session.editfile.id)
-           sessionNeo          
-           .run('MATCH (u:User{email:$emailParam}) OPTIONAL MATCH (u)-[r:OWNER]-(b:File) Where id(b)<>$idFileParam AND b.localization=$localizationParam AND NOT (date(b.firstDay)>date($dateEndParam) OR date(b.lastDay)<date($dateStartParam)) RETURN b',
+       //     console.log(req.session.editfile.id)
+           sessionNeo     
+           .run('MATCH (u:User{email:$emailParam}),(b:File{localization:$localizationParam}) Where(u)-[:OWNER|GETACCESS]->(b) and id(b)<>$idFileParam and NOT (date(b.firstDay)>date($dateEndParam) OR date(b.lastDay)<date($dateStartParam)) RETURN b',
            {emailParam:req.user.email,idFileParam: parseInt(req.session.editfile.id),localizationParam:obj["localization"],dateStartParam:obj["dateToEdit"][0]["startDay"] ,dateEndParam:obj["dateToEdit"][0]["endDay"]}) 
                      .then(result => {
-                        if(result.records[0].get('b')==null)
+                    //   console.log(result.records.length)
+                        if(result.records.length==0)
                          {
                 sessionNeo
           .run('MATCH(n:File) where id(n)=$idParam SET n.localization=$localizationParam, n.firstDay=date($firstDayParam), n.lastDay=date($lastDayParam)',
