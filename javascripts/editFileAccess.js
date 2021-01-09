@@ -14,21 +14,29 @@ function editFileAccess(app,checkAuthenticated,sessionNeo) {
     app.get('/set/access/user/availble',checkAuthenticated,(req,res)=>{
         var userArray = []
         sessionNeo  
-             
-        .run('MATCH (u:User) Where id(u)<>$idUserParam MATCH (b:File) Where not (b.localization=$localizationParam  AND NOT (date(b.firstDay)>date($dateEndParam) OR date(b.lastDay)<date($dateStartParam)))   OPTIONAL MATCH (u)-[r:GETACCESS]-(b) OPTIONAL MATCH (u)-[r:GETACCESS]-(b) Return u',
 
-        {idUserParam: parseInt(req.user.id),localizationParam: req.session.editfile.localization,
+        .run( 'MATCH (u:User),(b:File{localization:$localizationParam}) Where id(u)<>$idUserParam and (not (u)-[:OWNER|GETACCESS]->() or'+ 
+        '(u)-[:OWNER|GETACCESS]->(b) and id(b)<>$idFileParam and  (date(b.firstDay)>=date($dateStartParam) '+
+        'AND date(b.lastDay)<=date($dateEndParam) or date(b.firstDay)<=date($dateStartParam)'+
+       ' AND date(b.lastDay)>=date($dateEndParam)  or date(b.firstDay)<=date($dateStartParam)'+ 
+        'AND date(b.lastDay)<=date($dateEndParam) or date(b.firstDay)>=date($dateStartParam) '+
+        'AND date(b.lastDay)<=date($dateEndParam))) RETURN u',
+
+        {idUserParam: parseInt(req.user.id),localizationParam: req.session.editfile.localization,idFileParam:req.session.editfile.id,
          dateStartParam:req.session.editfile.startDay,dateEndParam:req.session.editfile.endDay}) 
                   .then(result => {
                        result.records.forEach(function(record) {
                            {
+                             console.log(record.get('u').properties.email)
                                 userArray.push( record.get('u').properties.email +" - "+record.get('u').properties.lastName+" "+
                                 record.get('u').properties.firstName)
                            }
+                         
                            })
            })
          setTimeout(async () =>{ 
-            res.render('userFiles/editAccessFileUsersAvailable.ejs',{users: userArray})
+          let userArrayTemp = [...new Set(userArray)]
+            res.render('userFiles/editAccessFileUsersAvailable.ejs',{users: userArrayTemp})
      },1000)
     });
     app.get('/set/access/user/choosed',checkAuthenticated,(req,res)=>{
