@@ -8,23 +8,9 @@ function editFileAccess(app,checkAuthenticated,sessionNeo) {
         editfile.startDay=obj[0]["dateStart"]
         editfile.endDay=obj[0]["dateEnd"]
      //  req.session.editfile=editfile
-       var userArray = [] 
-         sessionNeo       
-       .run('MATCH (n:User),(f:File) Where id(f)=$idFileParam and id(n)<>$idUserParam MATCH(f)<-[r:GETACCESS]-(n) Return n',
-       {idFileParam: editfile.id,idUserParam:req.user.id}) 
-                 .then(result => {
-                            result.records.forEach(function(record) {
-                          {
-                           userArray.push( record.get('n').properties.email +" - "+record.get('n').properties.lastName+" "+
-                           record.get('n').properties.firstName)
-                          }
-                          })
-                          setTimeout(async () =>{ 
-                            editfile.accessArray=userArray
-                            req.session.editfile=editfile
-                            res.render('userFiles/setFileAccess.ejs',{id:obj[0]["id"],nameFile:obj[0]["nameFile"],users:userArray})
-                     },2000)
-          })
+                       req.session.editfile=editfile
+                        res.render('userFiles/setFileAccess.ejs',{id:obj[0]["id"],nameFile:obj[0]["nameFile"]})
+          
     })
     app.get('/set/access/user/availble',checkAuthenticated,(req,res)=>{
         var userArray = []
@@ -36,12 +22,19 @@ function editFileAccess(app,checkAuthenticated,sessionNeo) {
                        result.records.forEach(function(record) {
                            {
                             userArray.push(record.get('u').properties.email)
-                            if((record.get('b').properties.firstDay>=(req.session.editfile.startDay) && record.get('b').properties.lastDay<=(req.session.editfile.endDay)) ||			
-                            (record.get('b').properties.firstDay<=(req.session.editfile.startDay)&& record.get('b').properties.lastDay>=(req.session.editfile.endDay))  ||			
-                            (record.get('b').properties.firstDay<=(req.session.editfile.startDay)&& record.get('b').properties.lastDay<=(req.session.editfile.endDay)) ||
+                            if((record.get('b').properties.firstDay<=(req.session.editfile.startDay) && record.get('b').properties.lastDay>=(req.session.editfile.startDay)) ||			
+                            (record.get('b').properties.firstDay<=(req.session.editfile.endDay)&& record.get('b').properties.lastDay>=(req.session.editfile.endDay))  ||			
+                            (record.get('b').properties.firstDay<=(req.session.editfile.startDay)&& record.get('b').properties.lastDay>=(req.session.editfile.endDay)) ||
                             (record.get('b').properties.firstDay>=(req.session.editfile.startDay)&& record.get('b').properties.lastDay<=(req.session.editfile.endDay)))
-                            userToDelete.push( record.get('u').properties.email)
-                           }
+                           {
+                              userToDelete.push( record.get('u').properties.email )
+                    //   console.log(record.get('u').properties.email +" "+ record.get('b').properties.firstDay+" "+record.get('b').properties.lastDay)
+                        //  console.log((record.get('b').properties.firstDay>=(req.session.editfile.startDay) && record.get('b').properties.lastDay<=(req.session.editfile.endDay)))
+                        //  console.log((record.get('b').properties.firstDay<=(req.session.editfile.startDay) && record.get('b').properties.lastDay>=(req.session.editfile.endDay)) )
+                        //  console.log((record.get('b').properties.firstDay<=(req.session.editfile.startDay) && record.get('b').properties.lastDay<=(req.session.editfile.endDay))) 
+                        //  console.log( (record.get('b').properties.firstDay>=(req.session.editfile.startDay) && record.get('b').properties.lastDay<=(req.session.editfile.endDay))) 
+                        }
+                          }
                           })
                            sessionNeo  
         .run( 'MATCH (u:User),(b:File{localization:$localizationParam}) Where id(u)<>$idUserParam and not (u)-[:OWNER|GETACCESS]->() RETURN u',
@@ -55,6 +48,8 @@ function editFileAccess(app,checkAuthenticated,sessionNeo) {
            })
           })
          setTimeout(async () =>{ 
+           console.log(userArray)
+           console.log(userToDelete)
           let  userArrayTemp = [...new Set(userArray)]
           let usersArray= userArrayTemp.filter(x => ! userToDelete.includes(x)); 
             res.render('userFiles/editAccessFileUsersAvailable.ejs',{users: usersArray})
@@ -62,7 +57,7 @@ function editFileAccess(app,checkAuthenticated,sessionNeo) {
     });
     app.get('/set/access/user/choosed',checkAuthenticated,(req,res)=>{
       setTimeout(async () =>{   
-          res.render('userFiles/editAccessFileUsersChoosed.ejs',{users:req.session.editfile.accessArray})
+          res.render('userFiles/editAccessFileUsersChoosed.ejs')
         },2000)
     });
     app.get('/set/file/access',checkAuthenticated, (req, res) => {

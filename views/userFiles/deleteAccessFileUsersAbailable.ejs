@@ -19,8 +19,12 @@
         </center>
                 
 
-        <select name="choosedUsers" size="6" style="width:100%;" id="choosedUsers">
+                    <select name="choosedUsers" size="6" style="width:100%;" id="choosedUsers">
+                        <% users.forEach(function(user){%>
+                            <option> <%=user %>  </option>
+                     <% }); %> 
         </select>
+
         <script src="/forLists/filterFunction.js"></script>
         <script src="/forLists/sortingFunction.js"></script>
 
