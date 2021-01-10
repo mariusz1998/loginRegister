@@ -1,7 +1,7 @@
 function submit()
 {
-  var iframe = document.getElementById("ChoosedAttr");   //dobieram sie do iframe
-  var select = iframe.contentWindow.document.getElementById("choosedAttr");
+  var iframe = document.getElementById("ChoosedUsers");   //dobieram sie do iframe
+  var select = iframe.contentWindow.document.getElementById("choosedUsers");
   var options = select.getElementsByTagName('option');    //pobieram opcje z listy
 if(options.length==0){
   alert("Bad numbers of users")

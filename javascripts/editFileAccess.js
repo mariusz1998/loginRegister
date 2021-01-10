@@ -17,44 +17,47 @@ function editFileAccess(app,checkAuthenticated,sessionNeo) {
                           {
                            userArray.push( record.get('n').properties.email +" - "+record.get('n').properties.lastName+" "+
                            record.get('n').properties.firstName)
-                           userArray.push( record.get('n').properties.email +" - "+record.get('n').properties.lastName+" "+
-                           record.get('n').properties.firstName)
                           }
                           })
                           setTimeout(async () =>{ 
-                            console.log("11")
                             editfile.accessArray=userArray
                             req.session.editfile=editfile
-                            console.log(userArray)
                             res.render('userFiles/setFileAccess.ejs',{id:obj[0]["id"],nameFile:obj[0]["nameFile"],users:userArray})
                      },2000)
           })
     })
     app.get('/set/access/user/availble',checkAuthenticated,(req,res)=>{
         var userArray = []
+        var userToDelete = []
         sessionNeo  
-
-        .run( 'MATCH (u:User),(b:File{localization:$localizationParam}) Where id(u)<>$idUserParam and (not (u)-[:OWNER|GETACCESS]->() or'+ 
-        '(u)-[:OWNER|GETACCESS]->(b) and id(b)<>$idFileParam and  (date(b.firstDay)>=date($dateStartParam) '+
-        'AND date(b.lastDay)<=date($dateEndParam) or date(b.firstDay)<=date($dateStartParam)'+
-       ' AND date(b.lastDay)>=date($dateEndParam)  or date(b.firstDay)<=date($dateStartParam)'+ 
-        'AND date(b.lastDay)<=date($dateEndParam) or date(b.firstDay)>=date($dateStartParam) '+
-        'AND date(b.lastDay)<=date($dateEndParam))) RETURN u',
-
-        {idUserParam: parseInt(req.user.id),localizationParam: req.session.editfile.localization,idFileParam:req.session.editfile.id,
-         dateStartParam:req.session.editfile.startDay,dateEndParam:req.session.editfile.endDay}) 
+        .run( 'MATCH (u:User),(b:File{localization:$localizationParam}) Where id(u)<>$idUserParam and (u)-[:OWNER|GETACCESS]->(b) RETURN u,b',
+        {idUserParam: parseInt(req.user.id),localizationParam: req.session.editfile.localization}) 
                   .then(result => {
                        result.records.forEach(function(record) {
                            {
-                                userArray.push( record.get('u').properties.email +" - "+record.get('u').properties.lastName+" "+
-                                record.get('u').properties.firstName)
+                            userArray.push(record.get('u').properties.email)
+                            if((record.get('b').properties.firstDay>=(req.session.editfile.startDay) && record.get('b').properties.lastDay<=(req.session.editfile.endDay)) ||			
+                            (record.get('b').properties.firstDay<=(req.session.editfile.startDay)&& record.get('b').properties.lastDay>=(req.session.editfile.endDay))  ||			
+                            (record.get('b').properties.firstDay<=(req.session.editfile.startDay)&& record.get('b').properties.lastDay<=(req.session.editfile.endDay)) ||
+                            (record.get('b').properties.firstDay>=(req.session.editfile.startDay)&& record.get('b').properties.lastDay<=(req.session.editfile.endDay)))
+                            userToDelete.push( record.get('u').properties.email)
                            }
-                         
-                           })
+                          })
+                           sessionNeo  
+        .run( 'MATCH (u:User),(b:File{localization:$localizationParam}) Where id(u)<>$idUserParam and not (u)-[:OWNER|GETACCESS]->() RETURN u',
+        {idUserParam: parseInt(req.user.id),localizationParam: req.session.editfile.localization}) 
+        .then(result => {
+          result.records.forEach(function(record) {
+              {
+               userArray.push(record.get('u').properties.email)
+              }                    
+      })
            })
+          })
          setTimeout(async () =>{ 
-          let userArrayTemp = [...new Set(userArray)]
-            res.render('userFiles/editAccessFileUsersAvailable.ejs',{users: userArrayTemp})
+          let  userArrayTemp = [...new Set(userArray)]
+          let usersArray= userArrayTemp.filter(x => ! userToDelete.includes(x)); 
+            res.render('userFiles/editAccessFileUsersAvailable.ejs',{users: usersArray})
      },1000)
     });
     app.get('/set/access/user/choosed',checkAuthenticated,(req,res)=>{
