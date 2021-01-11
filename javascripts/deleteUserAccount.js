@@ -1,5 +1,3 @@
-const activeUser = require("./activeUser")
-
 function deleteUserAccount(app,checkAuthenticated,sessionNeo) {
     app.get('/user/delete/account',checkAuthenticated,(req, res)=>{ //imie email nazwisko
         

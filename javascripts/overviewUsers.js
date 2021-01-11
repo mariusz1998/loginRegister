@@ -4,6 +4,11 @@ const { integer } = require("neo4j-driver");
 
 function overviewUsers(app,checkAuthenticated,sessionNeo)
 {
+  app.get('/users/overview/after/delete',checkAuthenticated,(req, res)=>{
+    // console.log ( "Dlugosc: ")
+    // console.log( req.session.usersChoose.length)
+     res.render('listUsers/overviewUsers.ejs')
+ })
     app.post('/users/overview',checkAuthenticated,(req, res)=>{
        // console.log ( "Dlugosc: ")
        // console.log( req.session.usersChoose.length)

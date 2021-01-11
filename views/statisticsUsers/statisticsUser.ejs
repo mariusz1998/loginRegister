@@ -1,3 +1,8 @@
+<head> 
+  <title> Edit other account</title> 
+  <link rel="stylesheet" href="/CSS/tableStyle.css">
+</head>
+<center> 
 <div>
     <label for="email">Email</label>
     <input type="text" id="email"  readonly name="email" value=<%- user.email %> >
@@ -43,6 +48,19 @@
       <div>
         <button type="submit" onclick="tempUserPass()">Edit user password </button>
       </div>
+      <div>
+        <button id="buttonFileDelete">Delete this account</button>
+            </div>
+      <!-- The Modal Delte -->
+<div id="deleteModal" class="modal">
+	<!-- Modal content -->
+	<div class="modal-content">
+  <span class="closeDeleteModal">  &times;</span>
+	  <p id="questionText"></p>
+        <button type="button" id="closebtn"  onclick="document.getElementById('deleteModal').style.display='none'" class="cancelbtn">Cancel</button>
+        <button type="button" id="deletebtn" onclick="deleteOtherAccount()" class="deletebtn">Delete</button>
+	</div>
+</center> 
         <script>
           function tempAdmin(){
              location='/user/setAdmin'
@@ -53,5 +71,29 @@
           function tempUserPass(){
              location='/users/edit/password'
           }
-        </script>
+          function deleteOtherAccount()
+            {
+              location='/user/delete/other/account?email='+'<%- user.email %>'
+        }
+          </script>
+          <script  type='text/javascript'>
+            var modalDelete = document.getElementById("deleteModal")
+            var buttonDelete = document.getElementById("buttonFileDelete");
+            var spanDelete = document.getElementsByClassName("closeDeleteModal")[0];
+            buttonDelete.onclick = function() {
+            modalDelete.style.display = "block";
+                  document.getElementById("questionText").innerHTML="You sure delete this account?"
+            }
+            // When the user clicks on <span> (x), close the modal
+            spanDelete.onclick = function() {
+            modalDelete.style.display = "none";
+            }
+            // When the user clicks anywhere outside of the modal, close it
+            window.onclick = function(event) {
+            if (event.target == modalDelete) {
+              modalDelete.style.display = "none";
+            }
+            }
+            
+            </script>
 
