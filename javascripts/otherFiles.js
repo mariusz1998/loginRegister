@@ -4,8 +4,7 @@ function otherFiles(app,checkAuthenticated,sessionNeo) {
         var  attrFiles="["
             // req.user.email=req.body.email
              sessionNeo
-                 .run('MATCH (f:File) WHERE NOT (f)-[]-() RETURN f',
-                 { idParam: parseInt(req.user.id) })
+                 .run('MATCH (f:File) WHERE NOT (f)-[]-() RETURN f')
                  .then(function(result){   
                  if(result.records.length ==0 || result.records[0].get('f')==null)
                   res.render('otherFiles/noFiles.ejs')

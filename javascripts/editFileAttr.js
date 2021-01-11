@@ -59,8 +59,6 @@ app.get('/edit/file/attribute',checkAuthenticated, (req, res) => {
           else
           res.redirect('/files/other'); //to other files
       })
-      
-    
 });
 }
 module.exports = editAttrFile

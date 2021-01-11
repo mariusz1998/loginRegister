@@ -1,0 +1,70 @@
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/CSS/style.css">
+    <title>Select attribute</title>
+ </head>
+<script> 
+    var arrayAttrFile =[] 
+    console.log('<%- attr%>')
+    '<% for(var j=0; j<attr.length; j++) { %>'
+        arrayAttrFile.push('<%- attr[j]%>');
+       ' <%}%>'
+var toInit = "Attr";</script>
+<body onload="init(toInit,arrayAttrFile);">
+<center>
+    You change attr for <%=id%> - <%=nameFile %> Owned: <%= user%><br>
+       Select attr :          
+        <br/><br/>
+        <div id="container">
+            <div id="avaible">
+               Avaible: 
+                <br/>
+                <iframe name="AvaibleAttr" id="AvaibleAttr" src="/attr/edit/file/owned/availble"></iframe>
+            </div>
+            <div id="added">
+                Selected:
+                <br/>
+                <iframe id="ChoosedAttr" src="/attr/edit/file/owned/choosed"></iframe>
+            </div>
+           
+        </div>
+        <br>
+        <div>
+            <label for="newAttribute">Add attribute</label>
+            <input type="text" id="newAttribute" name="newAttribute" >
+            <input type = "submit" value = "Add attribute" onclick="addAttr()">
+            <input type = "submit" value = "Edit file attribute" onclick="temp()">
+          </div>
+      
+    <!--</form>-->
+
+</center>
+<script>
+      function addAttr()
+    {
+        addNewAttr('Attr');
+    }
+    function temp()
+    {
+        submit();
+    }
+</script>
+
+<script type="text/javascript" src="/forLists/initFunction&Color.js"></script>
+<script type="text/javascript" src="/forLists//addFunction&Color.js"></script>
+<script type="text/javascript" src="/forLists/deleteFunction&Color.js"></script>
+<script type="text/javascript" src="/forLists/optionsCounter.js"></script>
+<script type="text/javascript" src="/submits/addAttribute.js"></script>
+<script type="text/javascript" src="/submits/editFileOwnedAttr.js"></script>
+<script src="/forLists/setOptionsColor.js"></script>
+<script>
+ setTimeout(async () =>{ 
+    window.onload = colorOption(arrayAttrFile,"Attr")
+},3000)
+</script>
+</body>
+
+</html>
+
+
