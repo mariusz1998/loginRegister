@@ -44,7 +44,10 @@ function updateFile(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
            .run('MATCH (n:File) Where id(n)=$idParam SET n.name=$nameParam',
            {idParam: req.session.editfile.id ,nameParam:files.file.name})
            .then(function(){
-             res.render('userFiles/updateFileSucces.ejs'); //do przeglądu własnych plików?
+            if(req.session.editfile.otherFiles==false)
+            res.render('userFiles/updateFileSucces.ejs'); //do przeglądu własnych plików?
+            else
+            res.render('otherFiles/updateOtherFileSuccess.ejs');
          })
          }
        }
