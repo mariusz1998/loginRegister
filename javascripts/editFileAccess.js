@@ -16,7 +16,7 @@ function editFileAccess(app,checkAuthenticated,sessionNeo) {
         var userArray = []
         var userToDelete = []
         sessionNeo  
-        .run( 'MATCH (u:User),(b:File{localization:$localizationParam}) Where id(u)<>$idUserParam and (u)-[:OWNER|GETACCESS]->(b) RETURN u,b',
+        .run( 'MATCH (u:User{active:true}),(b:File{localization:$localizationParam}) Where id(u)<>$idUserParam and (u)-[:OWNER|GETACCESS]->(b) RETURN u,b',
         {idUserParam: parseInt(req.user.id),localizationParam: req.session.editfile.localization}) 
                   .then(result => {
                        result.records.forEach(function(record) {

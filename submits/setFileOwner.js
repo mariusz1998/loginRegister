@@ -3,7 +3,7 @@ function submit()
   var iframe = document.getElementById("AvaibleUsers");   //dobieram sie do iframe
   var select = iframe.contentWindow.document.getElementById("choosedUser");
 
-  if( select.selectedIndex ==-1)
+ if( select.selectedIndex ==-1)
  { alert("Select one user!")
     return;
  }
@@ -17,6 +17,6 @@ var JSONToSend ="{\"userToAdd\": [{";
    // JSONToSend = JSONToSend  + "\"firstName\":\"" + optionsToAdd[2] + "\"}]}"
 //JSONArrayOfUsersToAdd = JSONArrayOfUsersToAdd.substring(0, JSONArrayOfUsersToAdd.length - 1); //usunięcie przecinka
  console.log(JSONToSend)
-  location='/user/showStatistics?JSONFrom='+JSONToSend
+  location='/set/File/Owner?JSONFrom='+JSONToSend
 
 }

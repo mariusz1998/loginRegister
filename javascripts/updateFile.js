@@ -57,9 +57,11 @@ function updateFile(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
   })
   app.get('/set/upload/file',checkAuthenticated,(req, res)=>{ 
     var obj = JSON.parse(req.query.JSONFrom);
+    var otherFiles = JSON.parse(req.query.otherFiles)
     var  editfile = new Object();
     editfile.name=obj[0]["nameFile"]
     editfile.id=obj[0]["id"]
+    editfile.otherFiles= otherFiles
    req.session.editfile=editfile
    res.render('userFiles/selectFileUpdate.ejs',{id:obj[0]["id"],nameFile:obj[0]["nameFile"]})
    })

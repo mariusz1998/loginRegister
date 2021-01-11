@@ -5,29 +5,25 @@
         <link rel="stylesheet" href="/CSS/style.css" type="text/css"/>
     </head>
     <body>
-        
-        <script>var toFilter="Users"</script>
-       Filter: <input type = "text" name = "searchUsers" id="searchUsers" onkeyup="myFilterFunction(toFilter)">
-        
-        <center>
+        <center></center>
+        <script>var toFilter="User"</script>
+        Filter: <input type = "text" name = "searchUser" id="searchUser" onkeyup="myFilterFunction(toFilter)">
             <select name="sorting" size="1" style="width:40%;" id="sorting">
                 <option selected>A-Z</option>
                 <option>Z-A</option>
             </select>
-            Number: <input type="text" id="amount" value="" style="width:20%;" readonly>
         </center>
-                
-
-                    <select name="choosedUsers" size="6" style="width:100%;" id="choosedUsers">
+                    <select name="choosedUser" size="7" style="width:100%;" id="choosedUser">
+                        <% users.forEach(function(user){%>
+                            <option> <%= user %>  </option>
+                     <% }); %> 
         </select>
-
         <script src="/forLists/filterFunction.js"></script>
         <script src="/forLists/sortingFunction.js"></script>
         <script>
             sort = document.getElementById("sorting");
-            var toSort = "Users";
+            var toSort = "User";
             sort.addEventListener("change", mySortingFunction.bind(this,toSort),false); 
-            window.onload = mySortingFunction(toSort);
         </script>
     </body>
 </html>

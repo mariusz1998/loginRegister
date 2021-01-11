@@ -43,11 +43,8 @@
 	<div>
 		<button id="buttonFileDelete">Delete file</button>
 		</div>
-		<div>
-			<button id="buttonEditAccess" onclick="editAcess()">Set accesss</button>
-			</div>
 			<div>
-				<button id="buttonDeleteAccess" onclick="deleteAcess()">Delete accesss</button>
+				<button id="buttonDeleteAccess" onclick="setOwner()">Set owner</button>
 				</div>
 		
 	<table id="filesTable" class="filesTable">
@@ -208,30 +205,17 @@
 						}
 					}
 						</script>
-						<script type="text/javascript"> 
-							function editAcess()
-							  {
-								var rows = document.getElementById("filesTable").rows;
-						
-										for(var i=1;i<rows.length;i++){
-										if( rows[i].classList.contains('highlight'))
-											location="/edit/file/access?JSONFrom=[{\"id\":"+rows[i].cells[0].innerHTML+",\"nameFile\":\""+
-											rows[i].cells[1].innerHTML+"\",\"dateStart\":\""
-										   +rows[i].cells[3].innerHTML+"\",\"dateEnd\":\""+rows[i].cells[4].innerHTML
-											+"\",\"localization\":\""+rows[i].cells[2].innerHTML+
-											"\"}]"
-							}
-						}
-							</script>
 							<script type="text/javascript"> 
-								function deleteAcess()
+								function setOwner() 
 								  {
 									var rows = document.getElementById("filesTable").rows;
 							
 											for(var i=1;i<rows.length;i++){
 											if( rows[i].classList.contains('highlight'))
-												location="/delete/file/access?JSONFrom=[{\"id\":"+rows[i].cells[0].innerHTML+",\"nameFile\":\""+
-												rows[i].cells[1].innerHTML+"\"}]"
+												location="/set/owner/file?JSONFrom=[{\"id\":"+rows[i].cells[0].innerHTML+",\"nameFile\":\""+
+								rows[i].cells[1].innerHTML+"\",\"dateStart\":\""
+					 			  +rows[i].cells[3].innerHTML+"\",\"dateEnd\":\""+rows[i].cells[4].innerHTML
+									+"\",\"localization\":\""+rows[i].cells[2].innerHTML+"\"}]"+"&otherFiles=true"
 								}
 							}
 								</script>

@@ -27,7 +27,10 @@ function initialize(passport,sessionNeo) {
                     user.admin =false       
                 console.log(user)
        }
-            });
+            })
+            .catch(error => {
+              console.log("Bład w łaczeniu ")  //brak połączenia
+            })
             setTimeout(async () =>{ 
     if (typeof (user.id)=='undefined') {
       return done(null, false, { message: 'No user with that email' }) //parametr 1 ->błąd , parametr 2 czy zwracamy użytkownika 
