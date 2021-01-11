@@ -38,9 +38,6 @@
     	<!-- Trigger/Open The Modal -->
 <button id="buttonAttr">Show attribute</button> 
 <div>
-<button id="buttonDateRange" onclick="editDate()">Edit date range</button>
-</div>
-<div>
 	<button id="buttonFileUpdate" onclick="editFile()">Update file</button>
 	</div>
 	<div>
@@ -167,21 +164,6 @@
 	  }
 	}
 	</script>
-	<script type="text/javascript"> 
-		function editDate()
-		  {
-			var rows = document.getElementById("filesTable").rows;
-	
-					for(var i=1;i<rows.length;i++){
-					if( rows[i].classList.contains('highlight'))
-						location="/edit/file/date?JSONFrom=[{\"id\":"+rows[i].cells[0].innerHTML+",\"nameFile\":\""+
-						rows[i].cells[1].innerHTML+"\",\"dateStart\":\""
-					   +rows[i].cells[3].innerHTML+"\",\"dateEnd\":\""+rows[i].cells[4].innerHTML
-						+"\",\"localization\":\""+rows[i].cells[2].innerHTML+
-						"\"}]"+"&otherFiles=true"
-		}
-	}
-		</script>
 			<script type="text/javascript"> 
 				function editFile()
 				  {
@@ -189,8 +171,8 @@
 			
 							for(var i=1;i<rows.length;i++){
 							if( rows[i].classList.contains('highlight'))
-								location="/set/upload/file?JSONFrom=[{\"id\":"+rows[i].cells[0].innerHTML+
-								",\"nameFile\":\""+rows[i].cells[1].innerHTML+"\"}]"+"&otherFiles=true"
+								location="/set/upload/file/owned?JSONFrom=[{\"id\":"+rows[i].cells[0].innerHTML+
+								",\"nameFile\":\""+rows[i].cells[1].innerHTML+"\"}]"
 				}
 			}
 				</script>
