@@ -1,0 +1,134 @@
+<!DOCTYPE html> 
+<html> 
+
+<head> 
+  <title> Access Files</title> 
+  <link rel="stylesheet" href="/CSS/tableStyle.css">
+</head> 
+ <center>
+	 Sort by: <select name="sorting" size="1" style="width:10%;" id="sorting">
+                <option selected>Ascending</option>
+                <option>Descending</option>
+            </select>
+            <select name="option" size="1" style="width:10%;" id="option">
+                <option selected value="0">Id</option>
+                <option value="1">Name</option>
+				<option value="2">Localization</option>
+				<option value="3">Start day</option>
+                <option value="4">End day</option>
+                <option value="5">Owner</option>
+            </select>
+		<div>
+            Filter by id: <input type = "number" name = "filterID" id="filterID"
+             onkeyup="myFilterFunction(0,'filterID')" placeholder="Search for id">
+            Filter by name: <input type = "text" name = "filterName" id="filterName"
+			 onkeyup="myFilterFunction(1,'filterName')" placeholder="Search for name">
+			 <br>
+			 Filter by localization: <input type = "text" name = "filterLocalization" id="filterLocalization"
+			 onkeyup="myFilterFunction(2,'filterLocalization')" placeholder="Search for localization">
+
+			 Filter by start day: <input type = "text" name = "filterStartDay" id="filterStartDay"
+			 onkeyup="myFilterFunction(3,'filterStartDay')" placeholder="Search for start day">
+			 Filter by end day: <input type = "text" name = "filterEndDay" id="filterEndDay"
+             onkeyup="myFilterFunction(4,'filterEndDay')" placeholder="Search for end day">
+             Filter by onwer: <input type = "text" name = "filterOwner" id="filterOwner"
+             onkeyup="myFilterFunction(5,'filterOwner')" placeholder="Search for owner">
+			 </div>
+			 
+	<div>
+		<button id="buttonFileDelete">Delete access</button>
+        </div>
+        <table id="filesTable" class="filesTable">
+        </table>
+<!-- The Modal Delte -->
+<div id="deleteModal" class="modal">
+	<!-- Modal content -->
+	<div class="modal-content">
+  <span class="closeDeleteModal">  &times;</span>
+	  <p id="questionText"></p>
+        <button type="button" id="closebtn" style="display: none;" onclick="document.getElementById('deleteModal').style.display='none'" class="cancelbtn">Cancel</button>
+        <button type="button" id="deletebtn" style="display: none;" onclick="deleteFile()" class="deletebtn">Delete</button>
+	</div>
+  </div>
+
+</center>
+<script  type='text/javascript'>
+	  var modalDelete = document.getElementById("deleteModal")
+	  var buttonDelete = document.getElementById("buttonFileDelete");
+	  var spanDelete = document.getElementsByClassName("closeDeleteModal")[0];
+	  buttonDelete.onclick = function() {
+      var questionValue = "Select a file!"; 
+      var values=""
+	  modalDelete.style.display = "block";
+		var rows = document.getElementById("filesTable").rows;
+				  for(var i=1;i<rows.length;i++)
+				  if (rows[i].classList.contains('highlight')) 
+				  {
+					values+=rows[i].cells[1].innerHTML+"\n"
+					document.getElementById("closebtn").style.display=""
+					document.getElementById("deletebtn").style="display:;"
+                      } 
+                      if(values!="")
+                      questionValue="You sure delete access to:\n"+values+"?"
+				  document.getElementById("questionText").innerHTML=questionValue
+	  }
+	  // When the user clicks on <span> (x), close the modal
+		spanDelete.onclick = function() {
+		modalDelete.style.display = "none";
+	  }
+	  // When the user clicks anywhere outside of the modal, close it
+	  window.onclick = function(event) {
+		if (event.target == modalDelete) {
+			modalDelete.style.display = "none";
+		}
+	  }
+	  
+	  </script>
+					<script type="text/javascript"> 
+						function deleteFile()
+						  {
+							var rows = document.getElementById("filesTable").rows;
+					var JSONToSend="{\"idFiles\": [";
+					var JSONArrayOfUsersToAdd = "";
+									for(var i=1;i<rows.length;i++){
+                                    if( rows[i].classList.contains('highlight'))
+									JSONArrayOfUsersToAdd = JSONArrayOfUsersToAdd+rows[i].cells[0].innerHTML+","
+						}
+JSONArrayOfUsersToAdd = JSONArrayOfUsersToAdd.substring(0, JSONArrayOfUsersToAdd.length - 1); //usunięcie przecinka
+JSONToSend = JSONToSend + JSONArrayOfUsersToAdd +"] }";
+
+                        //json=json.substring(0,json.length - 1)
+						console.log(JSONToSend)
+						//console.log("/access/file/delete?JSONFrom={\"filesToDelete\": [" + json +"]}")
+                        location="/access/file/delete?JSONFrom="+JSONToSend 
+					}
+						</script>
+	<script type="text/javascript"> 
+		document.getElementById('filesTable') 
+			.addEventListener('click', function (item) { 
+				var rows = document.getElementById("filesTable").rows;
+                for(var i=1;i<rows.length;i++)
+				if( rows[i] == item.path[1]) 
+				{
+                    if(!rows[i].classList.contains('highlight'))
+                    rows[i].classList.add('highlight'); 
+                    else
+					rows[i].classList.remove('highlight')  //tło 
+                }
+                 
+			}); 
+	</script> 
+          <script src="/forTables/filterFunction.js"></script>
+          <script src="/forTables/sortFunction.js"></script>
+            <script>
+				var dataTable = "<%- tableData %>" //tutaj myślnik nie '='
+				document.getElementById("filesTable").innerHTML=dataTable
+                sort = document.getElementById("sorting");
+                option = document.getElementById("option");
+                sort.addEventListener("change", mySortingFunction.bind(this),false); 
+                option.addEventListener("change", mySortingFunction.bind(this),false); 
+                window.onload = mySortingFunction();
+            </script>
+</body> 
+
+</html> 
