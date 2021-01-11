@@ -197,10 +197,10 @@
 							
 									for(var i=1;i<rows.length;i++){
 									if( rows[i].classList.contains('highlight'))
-								location="/set/owner/file?JSONFrom=[{\"id\":"+rows[i].cells[0].innerHTML+",\"nameFile\":\""+
-								rows[i].cells[1].innerHTML+"\",\"dateStart\":\""
+								location="/set/owner/file/owned?JSONFrom=[{\"id\":"+rows[i].cells[0].innerHTML+",\"nameFile\":\""+
+								rows[i].cells[1].innerHTML+"\",\"email\":\""+ rows[i].cells[5].innerHTML+"\",\"dateStart\":\""
 					 			  +rows[i].cells[3].innerHTML+"\",\"dateEnd\":\""+rows[i].cells[4].innerHTML
-									+"\",\"localization\":\""+rows[i].cells[2].innerHTML+"\"}]"+"&otherFiles=true"
+									+"\",\"localization\":\""+rows[i].cells[2].innerHTML+"\"}]"
 								}
 							}
 								</script>

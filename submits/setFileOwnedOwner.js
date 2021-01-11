@@ -17,6 +17,6 @@ var JSONToSend ="{";
    // JSONToSend = JSONToSend  + "\"firstName\":\"" + optionsToAdd[2] + "\"}]}"
 //JSONArrayOfUsersToAdd = JSONArrayOfUsersToAdd.substring(0, JSONArrayOfUsersToAdd.length - 1); //usunięcie przecinka
  //console.log(JSONToSend)
-  location='/set/file/owner?JSONFrom='+JSONToSend
+  location='/set/file/owned/owner?JSONFrom='+JSONToSend
 
 }

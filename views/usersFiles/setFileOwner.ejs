@@ -1,0 +1,40 @@
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/CSS/style.css">
+    <title>User list</title>
+ </head>
+<script>var toInit = "Users";</script>
+<center>
+       Select one user for <%=id%>)<%=nameFile%>:          
+        <br/><br/>
+        <div id="container">
+            <div id="avaible">
+                <br/>
+                <iframe name="AvaibleUsers" id="AvaibleUsers" src="/users/to/owner/file/owned"></iframe>
+            </div>
+        </div>
+        <div>
+            <input type = "submit" value = "Set Owner" onclick="temp()">
+        </div>
+        
+        <br/><br/>
+    <form action = "/" method="get">
+        <input type = "submit" value = "Back">
+    </form>
+        
+    <!--</form>-->
+
+</center>
+<script>
+    function temp()
+    {
+        submit();
+    }
+</script>
+<script type="text/javascript" src="/submits/setFileOwnedOwner.js"></script>
+</body>
+
+</html>
+
+

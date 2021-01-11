@@ -1,5 +1,6 @@
 function setFileOwner(app,checkAuthenticated,sessionNeo)
 {
+  //other
    // /set/owner/file
    app.get('/set/owner/file',checkAuthenticated,(req, res)=>{ 
     var obj = JSON.parse(req.query.JSONFrom);
@@ -25,12 +26,12 @@ function setFileOwner(app,checkAuthenticated,sessionNeo)
                        result.records.forEach(function(record) {
                            console.log(result.records)
                            {
-                            // userArray.push(record.get('u').properties.email)
-                            // console.log((record.get('b').properties.firstDay+" " +(req.session.editfile.startDay)+ " "+record.get('b').properties.lastDay+" "+(req.session.editfile.startDay))) 	
-                            // console.log((record.get('b').properties.firstDay<=(req.session.editfile.startDay) && record.get('b').properties.lastDay>=(req.session.editfile.startDay))) 			
-                            // console.log((record.get('b').properties.firstDay<=(req.session.editfile.endDay)&& record.get('b').properties.lastDay>=(req.session.editfile.endDay)))  		
-                            // console.log((record.get('b').properties.firstDay<=(req.session.editfile.startDay)&& record.get('b').properties.lastDay>=(req.session.editfile.endDay))) 
-                            // console.log((record.get('b').properties.firstDay>=(req.session.editfile.startDay)&& record.get('b').properties.lastDay<=(req.session.editfile.endDay)))
+                             userArray.push(record.get('u').properties.email)
+                             console.log((record.get('b').properties.firstDay+" " +(req.session.editfile.startDay)+ " "+record.get('b').properties.lastDay+" "+(req.session.editfile.startDay))) 	
+                             console.log((record.get('b').properties.firstDay<=(req.session.editfile.startDay) && record.get('b').properties.lastDay>=(req.session.editfile.startDay))) 			
+                             console.log((record.get('b').properties.firstDay<=(req.session.editfile.endDay)&& record.get('b').properties.lastDay>=(req.session.editfile.endDay)))  		
+                             console.log((record.get('b').properties.firstDay<=(req.session.editfile.startDay)&& record.get('b').properties.lastDay>=(req.session.editfile.endDay))) 
+                             console.log((record.get('b').properties.firstDay>=(req.session.editfile.startDay)&& record.get('b').properties.lastDay<=(req.session.editfile.endDay)))
 
 
                             if((record.get('b').properties.firstDay<=(req.session.editfile.startDay) && record.get('b').properties.lastDay>=(req.session.editfile.startDay)) ||			

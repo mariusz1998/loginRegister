@@ -187,5 +187,83 @@ function ownedFiles(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
      );
     })
   })
+
+    // /set/owner/file
+    app.get('/set/owner/file/owned',checkAuthenticated,(req, res)=>{ 
+      var obj = JSON.parse(req.query.JSONFrom);
+      var  editfile = new Object();
+      editfile.name=obj[0]["nameFile"]
+      editfile.id=obj[0]["id"]
+      editfile.startDay=obj[0]["dateStart"]
+      editfile.endDay=obj[0]["dateEnd"]
+      editfile.localization = obj[0]["localization"]
+      editfile.owner= obj[0]["email"]
+     req.session.editfile=editfile
+      res.render('usersFiles/setFileOwner.ejs',{id:obj[0]["id"],nameFile:obj[0]["nameFile"]})
+      })
+  
+      app.get('/users/to/owner/file/owned',checkAuthenticated,(req,res)=>{
+           var userArray = []
+          var userToDelete = []
+          sessionNeo  
+          .run( 'MATCH (u:User{active:true}),(b:File{localization:$localizationParam}) Where u.email<>$emailParam and (u)-[:OWNER|GETACCESS]->(b) RETURN u,b',
+          {localizationParam: req.session.editfile.localization,emailParam:req.session.editfile.owner}) 
+                    .then(result => {
+                         result.records.forEach(function(record) {
+                             console.log(result.records)
+                             {
+                               userArray.push(record.get('u').properties.email)
+                               console.log(record.get('u').properties.email)
+                               console.log((record.get('b').properties.firstDay+" " +(req.session.editfile.startDay)+ " "+record.get('b').properties.lastDay+" "+(req.session.editfile.startDay))) 	
+                               console.log((record.get('b').properties.firstDay<=(req.session.editfile.startDay) && record.get('b').properties.lastDay>=(req.session.editfile.startDay))) 			
+                               console.log((record.get('b').properties.firstDay<=(req.session.editfile.endDay)&& record.get('b').properties.lastDay>=(req.session.editfile.endDay)))  		
+                               console.log((record.get('b').properties.firstDay<=(req.session.editfile.startDay)&& record.get('b').properties.lastDay>=(req.session.editfile.endDay))) 
+                               console.log((record.get('b').properties.firstDay>=(req.session.editfile.startDay)&& record.get('b').properties.lastDay<=(req.session.editfile.endDay)))
+  
+  
+                              if((record.get('b').properties.firstDay<=(req.session.editfile.startDay) && record.get('b').properties.lastDay>=(req.session.editfile.startDay)) ||			
+                              (record.get('b').properties.firstDay<=(req.session.editfile.endDay)&& record.get('b').properties.lastDay>=(req.session.editfile.endDay))  ||			
+                              (record.get('b').properties.firstDay<=(req.session.editfile.startDay)&& record.get('b').properties.lastDay>=(req.session.editfile.endDay)) ||
+                              (record.get('b').properties.firstDay>=(req.session.editfile.startDay)&& record.get('b').properties.lastDay<=(req.session.editfile.endDay)))
+                             {
+                              //   console.log(record.get('u').properties.email)
+                                userToDelete.push( record.get('u').properties.email )
+                          }
+                            }
+                            })
+                             sessionNeo  
+          .run( 'MATCH (u:User),(b:File{localization:$localizationParam}) Where not (u)-[:OWNER|GETACCESS]->() RETURN u',
+          {localizationParam: req.session.editfile.localization}) 
+          .then(result => {
+            result.records.forEach(function(record) {
+                {
+                 userArray.push(record.get('u').properties.email)
+                }                    
+        })
+             })
+            })
+           setTimeout(async () =>{ 
+             console.log(userArray)
+             console.log(userToDelete)
+            let  userArrayTemp = [...new Set(userArray)]
+            let usersArray= userArrayTemp.filter(x => ! userToDelete.includes(x)); 
+              res.render('usersFiles/setFileOwnerChoosed.ejs',{users: usersArray})
+       },1000)
+      });
+      app.get('/set/file/owned/owner',checkAuthenticated,(req, res)=>{ 
+          var obj = JSON.parse(req.query.JSONFrom);
+         // .run('MATCH (u:User {email:$emailParam}),(f:File) Where id(f)=$idFileParam MERGE(f)<-[r:OWNER]-(u)',
+          sessionNeo
+     
+          .run('MATCH (u:User {email:$oldemailParam})-[r:OWNER]->(f:File),(a:User {email:$newEmailParam})'+
+          'Where id(f)=$idFileParam '+
+        ' CREATE (a)-[p:OWNER]->(f) '+
+        'SET p=r '+
+        'DELETE r',
+          { oldemailParam: req.session.editfile.owner, newEmailParam:obj["email"],idFileParam: req.session.editfile.id})
+          .then(function(){
+           res.redirect('/files/owned');
+        })
+      })
 }
 module.exports = ownedFiles
