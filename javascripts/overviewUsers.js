@@ -57,6 +57,7 @@ function overviewUsers(app,checkAuthenticated,sessionNeo)
      });  
 
      app.get('/user/setAdmin',checkAuthenticated,(req, res)=>{
+      
      var today = new Date();
   var dd = today.getDate();
   var mm = today.getMonth()+1; 
@@ -66,7 +67,7 @@ function overviewUsers(app,checkAuthenticated,sessionNeo)
   if(mm<10) 
     mm='0'+mm; 
     var dateToday = yyyy+"-"+mm+"-"+dd;
-
+    if( req.session.selectUser.admin!='no'){
    dd= req.session.selectUser.adminDayStart.day.low
    mm= req.session.selectUser.adminDayStart.month.low
    yyyy= req.session.selectUser.adminDayStart.year.low
@@ -84,7 +85,12 @@ function overviewUsers(app,checkAuthenticated,sessionNeo)
     if(mm<10) 
     mm='0'+mm;
      var endDayAdmin = yyyy+"-"+mm+"-"+dd;
-
+    }
+    else
+    {
+      var startDayAdmin=yyyy+"-"+mm+"-"+dd;
+      var endDayAdmin=yyyy+"-"+mm+"-"+dd;
+    }
     res.render('adminUsers/setAdminDateRange.ejs',{user: req.session.selectUser,minDate:dateToday,startDay: startDayAdmin 
     , endDay:endDayAdmin })
    })
@@ -93,11 +99,11 @@ function overviewUsers(app,checkAuthenticated,sessionNeo)
    // console.log(obj["dateToSet"][0]["startDay"])
    // console.log(obj["dateToSet"][0]["endDay"])
     sessionNeo
-   .run('MATCH (u:User{email:$emailParam}) MERGE (u)-[r:ADMIN]-(b:Admin) Set   b.startDay=date($startDayParam), b.endDay=date($endDayParam)',
+   .run('MATCH (u:User{email:$emailParam}) MERGE (u)<-[r:ADMIN]-(b:Admin) Set   b.startDay=date($startDayParam), b.endDay=date($endDayParam)',
    {emailParam:req.session.selectUser.email ,startDayParam:obj["dateToSet"][0]["startDay"],endDayParam:obj["dateToSet"][0]["endDay"] })
     .then(function(result){
 
-    res.redirect('/user/showStatistics/new')
+    res.redirect('/users/showStatistics/new')
       })  
   })
 
