@@ -8,15 +8,15 @@ function submit()
     return;
  }
   var option = select.options[select.selectedIndex].text;    //pobieram opcje z listy
-var JSONToSend ="{\"userToAdd\": [{";
+var JSONToSend ="{";
 
   var optionsToAdd = option.split(' ') 
-    JSONToSend = JSONToSend + "\"id\":\"" + optionsToAdd[0].substring(0, optionsToAdd[0].length - 1) + "\"}]}"
+    JSONToSend = JSONToSend + "\"email\":\"" + optionsToAdd[0] + "\"}"
   //  JSONToSend = JSONToSend  + "\"email\":\"" + optionsToAdd[1] + "\", "
   //  JSONToSend = JSONToSend  + "\"lastName\":\"" + optionsToAdd[3] + "\", "  
    // JSONToSend = JSONToSend  + "\"firstName\":\"" + optionsToAdd[2] + "\"}]}"
 //JSONArrayOfUsersToAdd = JSONArrayOfUsersToAdd.substring(0, JSONArrayOfUsersToAdd.length - 1); //usunięcie przecinka
- console.log(JSONToSend)
-  location='/set/File/Owner?JSONFrom='+JSONToSend
+ //console.log(JSONToSend)
+  location='/set/file/Owner?JSONFrom='+JSONToSend
 
 }
