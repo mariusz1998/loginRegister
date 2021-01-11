@@ -7,7 +7,7 @@ function otherFiles(app,checkAuthenticated,sessionNeo) {
                  .run('MATCH (f:File) WHERE NOT (f)-[]-() RETURN f',
                  { idParam: parseInt(req.user.id) })
                  .then(function(result){   
-                 if(result.records[0].get('f')==null)
+                 if(result.records.length ==0 || result.records[0].get('f')==null)
                   res.render('otherFiles/noFiles.ejs')
                  else
                  {
