@@ -20,6 +20,7 @@ const showUserFiles = require('./javascripts/showUserFiles')
 const editFileAccess = require('./javascripts/editFileAccess')
 const deleteFileAccess = require('./javascripts/deleteFileAccess')
 const showUserAccessFiles = require('./javascripts/showUserAccessFiles')
+const deleteUserAccount = require('./javascripts/deleteUserAccount')
 const flash = require('express-flash')
 const session = require('express-session')
 const methodOverride = require('method-override')
@@ -169,6 +170,13 @@ function getAccessToken(oAuth2Client, callback) {
         res.redirect('/')
   //  });
     });
+    app.get('/logout', (req, res) => {
+      //   req.session.destroy(function() {
+   
+         req.logOut()
+           res.redirect('/')
+     //  });
+       });
 
     function checkAuthenticated(req, res, next) {
         if (req.isAuthenticated()) { 
@@ -193,4 +201,5 @@ function getAccessToken(oAuth2Client, callback) {
       editFileAccess(app,checkAuthenticated,sessionNeo)
       deleteFileAccess(app,checkAuthenticated,sessionNeo)
       showUserAccessFiles(app,checkAuthenticated,sessionNeo)
+      deleteUserAccount(app,checkAuthenticated,sessionNeo)
 app.listen(3000)
