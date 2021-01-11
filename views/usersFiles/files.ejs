@@ -44,7 +44,7 @@
 		<button id="buttonFileDelete">Delete file</button>
 		</div>
 			<div>
-				<button id="buttonDeleteAccess" onclick="setOwner()">Set owner</button>
+				<button id="buttonDeleteAccess" onclick="changeOwner()">Change owner</button>
 				</div>
 		
 	<table id="filesTable" class="filesTable">
@@ -185,19 +185,19 @@
 					
 									for(var i=1;i<rows.length;i++){
 									if( rows[i].classList.contains('highlight'))
-										location="/delete/file?JSONFrom=[{\"id\":"+rows[i].cells[0].innerHTML+
+										location="/delete/file/owned?JSONFrom=[{\"id\":"+rows[i].cells[0].innerHTML+
 										",\"nameFile\":\""+rows[i].cells[1].innerHTML+"\"}]"+"&otherFiles=true"
 						}
 					}
 						</script>
 							<script type="text/javascript"> 
-								function setOwner() 
+								function changeOwner() 
 								  {
 									var rows = document.getElementById("filesTable").rows;
 							
-											for(var i=1;i<rows.length;i++){
-											if( rows[i].classList.contains('highlight'))
-												location="/set/owner/file?JSONFrom=[{\"id\":"+rows[i].cells[0].innerHTML+",\"nameFile\":\""+
+									for(var i=1;i<rows.length;i++){
+									if( rows[i].classList.contains('highlight'))
+								location="/set/owner/file?JSONFrom=[{\"id\":"+rows[i].cells[0].innerHTML+",\"nameFile\":\""+
 								rows[i].cells[1].innerHTML+"\",\"dateStart\":\""
 					 			  +rows[i].cells[3].innerHTML+"\",\"dateEnd\":\""+rows[i].cells[4].innerHTML
 									+"\",\"localization\":\""+rows[i].cells[2].innerHTML+"\"}]"+"&otherFiles=true"
