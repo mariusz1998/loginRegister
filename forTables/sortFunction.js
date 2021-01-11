@@ -21,6 +21,32 @@ function mySortingFunction() {
         x = rows[i].getElementsByTagName("TD")[choice]; //0 - kolumna 
         y = rows[i + 1].getElementsByTagName("TD")[choice];
         //check if the two rows should switch place:
+
+      
+
+        if(choice==0) //for id 
+    {
+      var numberX = parseInt(x.innerHTML)
+      var numberY = parseInt(y.innerHTML)
+
+      if(typeOfSorting.localeCompare("Ascending")==0)
+      {
+          if (numberX  > numberY) { //ascending
+              //if so, mark as a switch and break the loop:
+          shouldSwitch = true;
+          break;
+          }
+      }
+      else if(typeOfSorting.localeCompare("Descending")==0)
+      {
+          if (numberX  < numberY ) { //descending
+          shouldSwitch = true;
+          break;
+          }
+      }
+    }
+    else
+    {
         if(typeOfSorting.localeCompare("Ascending")==0)
         {
             if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) { //ascending
@@ -35,6 +61,7 @@ function mySortingFunction() {
             shouldSwitch = true;
             break;
             }
+        }
       }
     }
       if (shouldSwitch) {
