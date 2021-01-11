@@ -2,6 +2,7 @@ function editAttrFile(app,checkAuthenticated,sessionNeo) {
 app.get('/edit/file/attr',checkAuthenticated,(req, res)=>{ //id przekazać 
     var obj = JSON.parse(req.query.JSONFrom);
     var objAttr = JSON.parse(req.query.attrArray);
+   var otherFiles = JSON.parse(req.query.otherFiles)
     var tempArray = []
     var choiceArray= req.query.choice
     for(var i=0;i<objAttr[choiceArray]["arrayAttrFile"].length;i++)
@@ -12,6 +13,7 @@ app.get('/edit/file/attr',checkAuthenticated,(req, res)=>{ //id przekazać
     editfile.name=obj[0]["nameFile"]
     editfile.id=obj[0]["id"]
     editfile.attr=tempArray
+    editfile.otherFiles= otherFiles
    req.session.editfile=editfile
     res.render('userFiles/editAttrFile.ejs',{id:obj[0]["id"],nameFile:obj[0]["nameFile"],attr: req.session.editfile.attr})
 })
@@ -52,7 +54,10 @@ app.get('/edit/file/attribute',checkAuthenticated, (req, res) => {
         .run('MATCH (n:File) where id(n)=$idParam  SET n.attribute=$attrParam',
         { attrParam:attrArray,idParam: req.session.editfile.id })
         .then(function(){
-          res.redirect('/show/your/files'); //do przeglądu własnych plików?
+          if(req.session.editfile.otherFiles==false)
+          res.redirect('/show/your/files'); //to user files
+          else
+          res.redirect('/files/other'); //to other files
       })
       
     
