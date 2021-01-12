@@ -25,6 +25,7 @@ const deleteOtherUserAccount = require('./javascripts/deleteOtherUserAccount')
 const otherFiles = require('./javascripts/otherFiles')
 const setFileOwner = require('./javascripts/setFileOwner')
 const ownedFiles = require('./javascripts/ownedFiles')
+const downloadFile = require('./javascripts/downloadFile')
 const flash = require('express-flash')
 const session = require('express-session')
 const methodOverride = require('method-override')
@@ -95,6 +96,7 @@ function authorize(credentials, callback) {
     updateFile(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
     deleteFile(app,checkAuthenticated,sessionNeo,auth,google)
     ownedFiles(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
+    downloadFile(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
   });
 }
 

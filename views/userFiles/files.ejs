@@ -50,6 +50,9 @@
 			<div>
 				<button id="buttonDeleteAccess" onclick="deleteAcess()">Delete accesss</button>
 				</div>
+				<div>
+					<button id="buttonDeleteAccess" onclick="downloadFile()">Download File</button>
+					</div>
 		
 	<table id="filesTable" class="filesTable">
 	</table>
@@ -236,6 +239,21 @@
 								}
 							}
 								</script>
+
+
+<script type="text/javascript"> 
+	function downloadFile()
+	  {
+		var rows = document.getElementById("filesTable").rows;
+
+				for(var i=1;i<rows.length;i++){
+				if( rows[i].classList.contains('highlight'))
+					location="/downoad/my/file?JSONFrom=[{\"id\":"+rows[i].cells[0].innerHTML+",\"nameFile\":\""+
+					rows[i].cells[1].innerHTML+"\"}]"
+	}
+}
+	</script>
+
 	<script type="text/javascript"> 
 		document.getElementById('filesTable') 
 			.addEventListener('click', function (item) { 
