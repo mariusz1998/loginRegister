@@ -1,0 +1,40 @@
+<head> 
+    <title> Create question</title> 
+    <link rel="stylesheet" href="/CSS/style.css">
+  </head> 
+   <center>
+       Select localization:
+       <select name="optionLocalization" size="1" style="width:10%;" id="optionLocalization">
+        <% for(var i = 0; i < localizations.length ; i++) { %>
+          <option value='<%= localizations[i]%>'><%=localizations[i] %></option>
+        <% } %>
+      </select>
+              Select attributte:
+              <select name="optionAttr" size="1" style="width:10%;" id="optionAttr">
+                <% for(var i = 0; i < attr.length ; i++) { %>
+                  <option value='<%= attr[i]%>'><%=attr[i] %></option>
+                <% } %>
+              </select>
+              <div>
+                <label for="firstDay">First day:</label>
+              <input type="date" id="firstDay" name="firstDay" onchange="firstDayChange()" > 
+            </div>
+              <div>
+                <label for="lastDay">Last day:</label>
+              <input type="date" id="lastDay" name="lastDay" onchange="lastDayChange()" >
+            </div>
+            <input type = "submit" value = "Get answer" onclick="temp()">
+              </center>
+              <script>
+              function temp()
+              {
+                  submit();
+              }
+              function firstDayChange(){
+               document.getElementById("lastDay").setAttribute("min", document.getElementById("firstDay").value);
+              }
+              function lastDayChange(){
+                  document.getElementById("firstDay").setAttribute("max", document.getElementById("lastDay").value);
+              }
+          </script>
+          <script type="text/javascript" src="/submits/makeQuestion.js"></script>

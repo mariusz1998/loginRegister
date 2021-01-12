@@ -20,7 +20,7 @@ function addNewAttr(toAdd)
         }
     }
     for (i = 0; i < options2.length; i++)  {
-        if( options2[i].text ==option.text){
+        if( options2[i].text ==option.text){ //upper
               alert('Attribute exists!')
               return
            }

@@ -25,8 +25,8 @@ function editFileAccess(app,checkAuthenticated,sessionNeo) {
                             userArray.push(record.get('u').properties.email)
                             if((record.get('b').properties.firstDay<=(req.session.editfile.startDay) && record.get('b').properties.lastDay>=(req.session.editfile.startDay)) ||			
                             (record.get('b').properties.firstDay<=(req.session.editfile.endDay)&& record.get('b').properties.lastDay>=(req.session.editfile.endDay))  ||			
-                            (record.get('b').properties.firstDay<=(req.session.editfile.startDay)&& record.get('b').properties.lastDay>=(req.session.editfile.endDay)) ||
-                            (record.get('b').properties.firstDay>=(req.session.editfile.startDay)&& record.get('b').properties.lastDay<=(req.session.editfile.endDay)))
+                            (record.get('b').properties.firstDay<=(req.session.editfile.startDay)&& record.get('b').properties.lastDay>=(req.session.editfile.endDay)) || //środek
+                            (record.get('b').properties.firstDay>=(req.session.editfile.startDay)&& record.get('b').properties.lastDay<=(req.session.editfile.endDay))) //całość
                            {
                               userToDelete.push( record.get('u').properties.email )
                     //   console.log(record.get('u').properties.email +" "+ record.get('b').properties.firstDay+" "+record.get('b').properties.lastDay)
