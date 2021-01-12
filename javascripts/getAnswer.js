@@ -25,14 +25,25 @@ function getAnswer(app,checkAuthenticated,sessionNeo)
     })
     app.get('/create/question',checkAuthenticated,(req, res)=>{ 
         var obj = JSON.parse(req.query.JSONFrom);
-        console.log(obj["attribute"])
-        console.log(obj["localization"])
+       // console.log(obj["attribute"])
+        //console.log(obj["localization"])
         console.log(obj["firstDay"])
-    
+        console.log(obj["lastDay"])
         var lastDay=(obj["lastDay"])
         var firstDay=obj["firstDay"]
         var localization = obj["localization"]
         var attribute = obj["attribute"]
+
+       // var  editfile = new Object(); //?
+        var filesArray = []
+        var  dateRangeFile= []
+       var  dateRangeCheck = []
+       var dateRangeStart = new Date(firstDay);
+       var dateRangeEnd = new Date(lastDay);
+       while(dateRangeEnd>=dateRangeStart){ //uzupełnianie tablicy każdym dniem 
+        dateRangeCheck.push(new Date(dateRangeStart))
+        dateRangeStart.setDate(dateRangeStart.getDate() + 1)
+    }
         sessionNeo
         .run('MATCH (b:File{localization:$localizationParam}),(u:User) Where any(x IN b.attribute WHERE x =$attributeParam)'+
          'and (u)-[:OWNER|GETACCESS]-(b) and id(u)=$idParam'+
@@ -46,10 +57,42 @@ function getAnswer(app,checkAuthenticated,sessionNeo)
          if(result.records.length!=0)
          {
             result.records.forEach(function(record){
-               
-              console.log(record.get('b'))
-               
+             console.log(record.get('b'))
+             // console.log(record.get('b').properties.firstDay) 
+              //console.log(record.get('b').properties.lastDay) 
+              var dateFileStart = new Date(record.get('b').properties.firstDay);
+              var dateFileEnd = new Date(record.get('b').properties.lastDay);
+              while(dateFileEnd>=dateFileStart ){ //uzupełnianie tablicy każdym dniem 
+                dateRangeFile.push(new Date(dateFileStart))
+                dateFileStart.setDate(dateFileStart.getDate() + 1)
+           }
+           var dateRageFileSizeBeforeDelete = dateRangeCheck.length
+         //  console.log(dateRangeCheck.length)
+           for (var i=0; i< dateRangeFile.length;i++)
+           for(var j=0;j<dateRangeCheck.length;j++) {
+               if(dateRangeCheck[j].getTime()===dateRangeFile[i].getTime()){ //jeśli dni równe to odemujemy{  
+              //   console.log(dateRangeCheck[j])
+                dateRangeCheck.pop(j);//clean date range who need calculate
+                j--;
+             }
+            } 
+          // console.log(dateRangeCheck.length)
+           dateRangeFile=[]
+           console.log(dateRangeFile.length)
+            if(dateRageFileSizeBeforeDelete>dateRangeCheck.length)
+            {
+                var file = new Object();
+                file.id= record.get('b').identity.low
+                file.googleId= record.get('b').properties.googleID
+                file.name =  record.get('b').properties.name
+                filesArray.push(file)
+            }
               });
+              if(dateRangeCheck.length==0)
+              console.log("czytamy")
+              else
+              console.log("nie czytamy") //można przekazać jako argument tą tablicę
+              //jeżeli puste to czytamy jeśli nie to strona 
             //  let attributteArray = [...new Set(attrArry)] //usuwamy powtarzające się atrybuty
              // let placesArray = [...new Set( localizationArray)] 
               //console.log(attributteArray)
