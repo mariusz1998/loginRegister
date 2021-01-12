@@ -78,7 +78,6 @@ function getAnswer(app,checkAuthenticated,sessionNeo)
             } 
           // console.log(dateRangeCheck.length)
            dateRangeFile=[]
-           console.log(dateRangeFile.length)
             if(dateRageFileSizeBeforeDelete>dateRangeCheck.length)
             {
                 var file = new Object();
@@ -91,7 +90,8 @@ function getAnswer(app,checkAuthenticated,sessionNeo)
               if(dateRangeCheck.length==0)
               console.log("czytamy")
               else
-              console.log("nie czytamy") //można przekazać jako argument tą tablicę
+              res.render('makeQuestion/noDatesToQuestion.ejs',{dates:dateRangeCheck})
+              //console.log("nie czytamy",{dates:dateRangeCheck}) //można przekazać jako argument tą tablicę
               //jeżeli puste to czytamy jeśli nie to strona 
             //  let attributteArray = [...new Set(attrArry)] //usuwamy powtarzające się atrybuty
              // let placesArray = [...new Set( localizationArray)] 
