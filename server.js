@@ -98,6 +98,7 @@ function authorize(credentials, callback) {
     deleteFile(app,checkAuthenticated,sessionNeo,auth,google)
     ownedFiles(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
     downloadFile(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
+    getAnswer(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
   });
 }
 
@@ -213,5 +214,5 @@ function getAccessToken(oAuth2Client, callback) {
       deleteOtherUserAccount(app,checkAuthenticated,sessionNeo)
       otherFiles(app,checkAuthenticated,sessionNeo)
       setFileOwner(app,checkAuthenticated,sessionNeo)
-      getAnswer(app,checkAuthenticated,sessionNeo)
+ 
 app.listen(3000)
