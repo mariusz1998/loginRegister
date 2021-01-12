@@ -248,8 +248,11 @@
 
 				for(var i=1;i<rows.length;i++){
 				if( rows[i].classList.contains('highlight'))
-					location="/downoad/my/file?JSONFrom=[{\"id\":"+rows[i].cells[0].innerHTML+",\"nameFile\":\""+
-					rows[i].cells[1].innerHTML+"\"}]"
+					location="/download/file?JSONFrom=[{\"id\":"+rows[i].cells[0].innerHTML+",\"nameFile\":\""+
+					rows[i].cells[1].innerHTML+"\"}]"+"&myFiles=true"
+		
+		
+		
 	}
 }
 	</script>
