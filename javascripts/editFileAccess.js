@@ -15,6 +15,7 @@ function editFileAccess(app,checkAuthenticated,sessionNeo) {
     app.get('/set/access/user/availble',checkAuthenticated,(req,res)=>{
         var userArray = []
         var userToDelete = []
+        console.log(req.user.id)
         sessionNeo  
         .run( 'MATCH (u:User{active:true}),(b:File{localization:$localizationParam}) Where id(u)<>$idUserParam and (u)-[:OWNER|GETACCESS]->(b) RETURN u,b',
         {idUserParam: parseInt(req.user.id),localizationParam: req.session.editfile.localization}) 
@@ -37,7 +38,7 @@ function editFileAccess(app,checkAuthenticated,sessionNeo) {
                           }
                           })
                            sessionNeo  
-        .run( 'MATCH (u:User),(b:File{localization:$localizationParam}) Where id(u)<>$idUserParam and not (u)-[:OWNER|GETACCESS]->() RETURN u',
+        .run( 'MATCH (u:User),(b:File{localization:$localizationParam}) Where id(u)<>$idUserParam and (not (u)-[:OWNER|GETACCESS]->() or not (u)-[:OWNER|GETACCESS]->(b)) RETURN u',
         {idUserParam: parseInt(req.user.id),localizationParam: req.session.editfile.localization}) 
         .then(result => {
           result.records.forEach(function(record) {
