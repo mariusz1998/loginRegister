@@ -5,10 +5,10 @@ function getAnswer(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
   var attribute;
   var attributeWithoutUnit;
   var functionOption;
-  var max=-9999.9; //reset variables
-  var min=9999.9;
-  var avg=0;
-  var counter=0;
+  max=-9999.9; //reset variables
+  min=9999.9;
+  avg=0;
+  counter=0;
   var day;
   var time;
   var showResults =  false;
@@ -39,6 +39,10 @@ function getAnswer(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
       })
     })
     app.get('/create/question',checkAuthenticated,(req, res)=>{ 
+      max=-9999.9; //reset variables
+      min=9999.9;
+      avg=0;
+      counter=0;
         var obj = JSON.parse(req.query.JSONFrom);
        // console.log(obj["attribute"])
         //console.log(obj["localization"])
@@ -372,6 +376,9 @@ attributeWithoutUnit=attribute.substring(0,attribute.lastIndexOf(" ") ); //przyc
     else
     console.log("Nie wygenerowano wyniku")
 
+  var rimraf = require("rimraf");
+      rimraf(desktopDir, function () { console.log("done"); });
     }
+ 
 }
 module.exports = getAnswer
