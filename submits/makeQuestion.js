@@ -9,6 +9,7 @@ if(firstDay=="" || lastDay =="")
 }
 var JSONToSend ="{\"localization\":\""+document.getElementById("optionLocalization").value+"\","
 JSONToSend = JSONToSend  + "\"attribute\":\"" +  document.getElementById("optionAttr").value + "\", "
+JSONToSend = JSONToSend  + "\"function\":\"" +  document.getElementById("optionFunction").value + "\", "
 JSONToSend = JSONToSend  + "\"firstDay\":\"" +  firstDay + "\", "
 JSONToSend = JSONToSend  + "\"lastDay\":\"" +  lastDay + "\"}"
   //console.log(JSONToSend)

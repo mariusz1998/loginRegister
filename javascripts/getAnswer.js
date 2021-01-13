@@ -2,9 +2,15 @@
 
 function getAnswer(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google) 
 { 
+  var attribute;
+  var functionOption;
   var max=-9999.9;
+  var min=9999.9;
+  var avg=0;
+  var counter=0;
   var day;
   var time;
+  var showResults =  false;
   const homeDir = require('os').homedir();
   const desktopDir = homeDir+`\\Desktop`+"\\DataLakeFiles";
   app.get('/get/question',checkAuthenticated,(req, res)=>{ 
@@ -40,7 +46,8 @@ function getAnswer(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
         var lastDay=(obj["lastDay"])
         var firstDay=obj["firstDay"]
         var localization = obj["localization"]
-        var attribute = obj["attribute"]
+        attribute = obj["attribute"]
+        functionOption =  obj["function"]
         var dateFileStart;
         var dateFileStartCopy;
         var dateFileEnd;
@@ -110,7 +117,7 @@ function getAnswer(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
            {
             
                // console.log(filesArray)
-                downloadFiles(filesArray,attribute)
+                downloadFiles(filesArray)
             //  console.log("koniec")
 
 
@@ -129,7 +136,7 @@ function getAnswer(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
             res.render('makeQuestion/noFilesToQuestion.ejs')
       })
     })
-    function downloadFiles(filesArray,attribute)
+    function downloadFiles(filesArray)
     {
         //pobiermay pliki które bd czytane do folderu 
         console.log(filesArray.length)
@@ -148,7 +155,7 @@ function getAnswer(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
                   console.log('Done');
                   counterFiles++;
                   if(filesArray.length==counterFiles)
-                  generateAnswer(filesArray,attribute)
+                  generateAnswer(filesArray)
               })
               .on('error', err => {
                   console.log('Error', err);
@@ -158,12 +165,12 @@ function getAnswer(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
       );
     });
     }
-    function convert(date){
+    function convertDate(date){
       var datearray = date.split("-");
       var newdate = datearray[2] + '-' + datearray[1] + '-' + datearray[0];
       return newdate;
     }
-    function readCSV(file,attribute)
+    function readCSV(file)
     {
       var attrNumber=-1;
       try{
@@ -174,9 +181,9 @@ function getAnswer(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
         console.log("Nie ma takeigo pliku")
       }
       console.log(file.dayStart)
-      var dateTemp = new Date(convert("08-01-2021"))
+     /// var dateTemp = new Date(convert("08-01-2021"))
      // console.log(typeof(dateTemp))
-      console.log(dateTemp>(file.dayStart))
+    //  console.log(dateTemp>(file.dayStart))
      
             //console.log(array[1]);
     for(var i=0;i<array.length;i++){
@@ -189,22 +196,39 @@ function getAnswer(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
           }
       }
       else{
-        if ( isNaN(line[attrNumber])  || ((new Date(convert(line[0])))<(file.dayStart) ||
-        (new Date(convert(line[0])))>(file.dayEnd))) {
+        if ( isNaN(line[attrNumber])  || ((new Date(convertDate(line[0])))<(file.dayStart) ||
+        (new Date(convertDate(line[0])))>(file.dayEnd))) {
         continue;
         }   
+        switch (functionOption){
+          case "MAX":
         if (parseFloat(line[attrNumber]) > max) {
           max = parseFloat(line[attrNumber]);
           day=line[0];
           time=line[1];
-            // showResults=true;
-      }
+           showResults=true;
+        }
+          break;
+          case "MIN":
+            if (parseFloat(line[attrNumber]) <min) {
+              min = parseFloat(line[attrNumber]);
+              day=line[0];
+              time=line[1];
+                 showResults=true;
+            }
+              break;
+              case "AVERAGE":
+              avg+=  parseFloat(line[attrNumber]);
+              counter++;
+                   showResults=true;
+                  break;
     }
     
       }  
 
     }
-    function generateAnswer(filesArray,attribute)
+  }
+    function generateAnswer(filesArray)
     {
       
 var attrSplit=attribute.split(' ')
@@ -218,7 +242,7 @@ console.log(attrSplit[attrSplit.length-1]) //jednostka
     
         var extensionFile = (file.name.split(".")[1])
         if(extensionFile=="csv"||extensionFile=="txt")
-        readCSV(file,attribute)
+        readCSV(file)
       //  fs.promises.mkdir(desktopDir, { recursive: true }
      // var reader = new BufferedReader(new FileReader(desktopDir+"/"+file.name));
   //   var readline = require('readline');
@@ -227,7 +251,22 @@ console.log(attrSplit[attrSplit.length-1]) //jednostka
   //txt and csv
  
     });
-    console.log("Max is : "+max+" " + attrSplit[attrSplit.length-1] +" Day and time "+ day+" "+time)
+    if(showResults==true)
+    switch (functionOption){
+      case "MAX":
+        console.log("Max is : "+max+" " + attrSplit[attrSplit.length-1] +" Day and time "+ day+" "+time)
+      break;
+      case "MIN":
+      
+    console.log("Min is : "+min+" " + attrSplit[attrSplit.length-1] +" Day and time "+ day+" "+time)
+          break;
+          case "AVERAGE":    
+    console.log("Average is : "+(avg/counter).toFixed(2)+" " + attrSplit[attrSplit.length-1])
+              break;
+    }
+    else
+    console.log("Nie wygenerowano wyniku")
+
     }
 }
 module.exports = getAnswer
