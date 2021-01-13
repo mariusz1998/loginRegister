@@ -35,13 +35,16 @@ function getAnswer(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
         var firstDay=obj["firstDay"]
         var localization = obj["localization"]
         var attribute = obj["attribute"]
-
+        var dateFileStart;
+        var dateFileStartCopy;
+        var dateFileEnd;
        // var  editfile = new Object(); //?
        var fileNumber=0;
         var filesArray = []
         var  dateRangeFile= []
        var  dateRangeCheck = []
        var dateRangeStart = new Date(firstDay);
+       //var dateRangeStartCopy= new Date(firstDay);
        var dateRangeEnd = new Date(lastDay);
        while(dateRangeEnd>=dateRangeStart){ //uzupełnianie tablicy każdym dniem 
         dateRangeCheck.push(new Date(dateRangeStart))
@@ -63,8 +66,9 @@ function getAnswer(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
             console.log(record.get('b').properties.name)
              // console.log(record.get('b').properties.firstDay) 
               //console.log(record.get('b').properties.lastDay) 
-              var dateFileStart = new Date(record.get('b').properties.firstDay);
-              var dateFileEnd = new Date(record.get('b').properties.lastDay);
+              dateFileStart = new Date(record.get('b').properties.firstDay);
+              dateFileStartCopy= new Date(record.get('b').properties.firstDay);
+             dateFileEnd = new Date(record.get('b').properties.lastDay);
               while(dateFileEnd>=dateFileStart ){ //uzupełnianie tablicy każdym dniem 
                 dateRangeFile.push(new Date(dateFileStart))
                 dateFileStart.setDate(dateFileStart.getDate() + 1)
@@ -85,6 +89,8 @@ function getAnswer(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
                 file.id= record.get('b').identity.low
                 file.googleId= record.get('b').properties.googleID
                 file.name = + fileNumber.toString() + record.get('b').properties.name 
+                file.dayStart =dateFileStartCopy
+                file.dayEnd = dateFileEnd
                 filesArray.push(file)
             }
             fileNumber++;
@@ -141,8 +147,16 @@ function getAnswer(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
       );
     });
     }
+    function convert(date){
+      var datearray = date.split("-");
+      var newdate = datearray[2] + '-' + datearray[1] + '-' + datearray[0];
+      return newdate;
+    }
     function generateAnswer(filesArray,attribute)
     {
+      var max=-9999.9;
+      var day;
+      var time;
 var attrSplit=attribute.split(' ')
 console.log(attrSplit[attrSplit.length-1])
  attribute=attribute.substring(0,attribute.lastIndexOf(" ") ); //przycinam jednostkę 
@@ -155,8 +169,10 @@ console.log(attrSplit[attrSplit.length-1])
         const desktopDir = homeDir+`\\Desktop`+"\\DataLakeFiles";
       //  fs.promises.mkdir(desktopDir, { recursive: true }
      // var reader = new BufferedReader(new FileReader(desktopDir+"/"+file.name));
- //   var lines =[]
   //   var readline = require('readline');
+
+  //sprawdzanie rozszerzenia 
+  //txt and csv
   var attrNumber=-1;
   try{
     var array = fs.readFileSync(desktopDir+"/"+file.name,'ascii').toString().split("\n");
@@ -165,20 +181,37 @@ console.log(attrSplit[attrSplit.length-1])
   {
     console.log("Nie ma takeigo pliku")
   }
-        console.log(array[1]);
+  console.log(file.dayStart)
+  var dateTemp = new Date(convert("08-01-2021"))
+ // console.log(typeof(dateTemp))
+  console.log(dateTemp>(file.dayStart))
+ 
+        //console.log(array[1]);
 for(var i=0;i<array.length;i++){
   var line = array[i].split(';')
   if(attrNumber==-1){
       for (var j=0;j<line.length;j++){
-        if(line[j].search(attribute)!=-1)
-        attrNumber=j;
+        if(line[j].search(attribute)!=-1){
+        attrNumber=j; 
+      }
       }
   }
-}  
+  else{
+    if ( isNaN(line[attrNumber])  || ((new Date(convert(line[0])))<(file.dayStart) ||
+    (new Date(convert(line[0])))>(file.dayEnd))) {
+    continue;
+    }   
+    if (parseFloat(line[attrNumber]) > max) {
+      max = parseFloat(line[attrNumber]);
+      day=line[0];
+      time=line[1];
+        // showResults=true;
+  }
+}
 
-
-        
+  }  
     });
+    console.log("Max is : "+max+" Day and time "+ day+" "+time)
     }
 }
 module.exports = getAnswer
