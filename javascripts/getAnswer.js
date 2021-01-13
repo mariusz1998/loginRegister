@@ -237,8 +237,8 @@ function getAnswer(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
    //console.log(obj[0]["Data"])
   // console.log(obj[0][attribute])
   for(var i=0;i<obj.length;i++){
-      if ( isNaN(obj[i][attribute])  || ((new Date(convertDate(obj[i]["Data"])))<(file.dayStart) ||
-      (new Date(convertDate(obj[i]["Data"])))>(file.dayEnd))) {
+      if ( isNaN(obj[i][attribute])  || (new Date(convertDate(obj[i]["Data"])))<(file.dayStart) ||
+      (new Date(convertDate(obj[i]["Data"])))>(file.dayEnd)) {
       continue;
       }   
       switch (functionOption){
@@ -283,15 +283,50 @@ xmlReader.readXML(fs.readFileSync(desktopDir+"/"+file.name), function(err, data)
  if (err) {
    console.error(err);
  }
-
-// console.log('xml encoding:', data.encoding);
-// console.log('Decoded xml:', data.content);
 var obj = xmlParser.toJson( data.content)
 var objJson = JSON.parse(obj);
-console.log(typeof(objJson))
+//console.log(typeof(objJson))
 console.log('JSON output',objJson["document"]["Dane"][0]["Pogoda"]["Czas"])
 //var nodeList = data.content.getElementsByTagName("Pogoda");  
- console.log("Odczyt ")
+console.log(objJson["document"]["Dane"].length)
+
+//console.log(attrSplit[attrSplit.length-1]) //jednostka
+
+var nazwa="asd asd a"
+console.log(nazwa.replace(/ /g, '')) //wszytkie spacje usuwamy
+
+for(var i=0;i<objJson["document"]["Dane"].length;i++){
+  if ( isNaN(objJson["document"]["Dane"][i]["Pogoda"][attributeWithoutUnit])  
+  || (new Date(convertDate(objJson["document"]["Dane"][i]["Pogoda"]["Data"])))<(file.dayStart) ||
+  (new Date(convertDate(objJson["document"]["Dane"][i]["Pogoda"]["Data"])))>(file.dayEnd)) {
+  continue;
+  }   
+  switch (functionOption){
+    case "MAX":
+  if (parseFloat(objJson["document"]["Dane"][i]["Pogoda"][attributeWithoutUnit]) > max) {
+    max = parseFloat(objJson["document"]["Dane"][i]["Pogoda"][attributeWithoutUnit]);
+    day=objJson["document"]["Dane"][i]["Data"];
+    time=objJson["document"]["Dane"][i]["Czas"];
+     showResults=true;
+  }
+    break;
+    case "MIN":
+      if (parseFloat(objJson["document"]["Dane"][i]["Pogoda"][attributeWithoutUnit]) <min) {
+        min = parseFloat(objJson["document"]["Dane"][i]["Pogoda"][attributeWithoutUnit]);
+        day=objJson["document"]["Dane"][i]["Data"];
+        time=objJson["document"]["Dane"][i]["Czas"];
+           showResults=true;
+      }
+        break;
+        case "AVERAGE":
+        avg+=  parseFloat(objJson["document"]["Dane"][i]["Pogoda"][attributeWithoutUnit]);
+        counter++;
+        showResults=true;
+            break;
+}
+
+}  
+
 });
 
 }
