@@ -1,3 +1,5 @@
+const { RSA_NO_PADDING } = require('constants');
+
 function getAnswer(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google) 
 {  app.get('/get/question',checkAuthenticated,(req, res)=>{ 
    var attrArry = []
@@ -35,6 +37,7 @@ function getAnswer(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
         var attribute = obj["attribute"]
 
        // var  editfile = new Object(); //?
+       var fileNumber=0;
         var filesArray = []
         var  dateRangeFile= []
        var  dateRangeCheck = []
@@ -57,7 +60,6 @@ function getAnswer(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
          if(result.records.length!=0)
          {
             result.records.forEach(function(record){
-              console.log("rozpoczynam")
             console.log(record.get('b').properties.name)
              // console.log(record.get('b').properties.firstDay) 
               //console.log(record.get('b').properties.lastDay) 
@@ -68,30 +70,31 @@ function getAnswer(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
                 dateFileStart.setDate(dateFileStart.getDate() + 1)
            }
            var dateRageFileSizeBeforeDelete = dateRangeCheck.length
-          console.log(dateRangeCheck.length)
+        //  console.log(dateRangeCheck.length)
            for (var i=0; i< dateRangeFile.length;i++)
            for(var j=0;j<dateRangeCheck.length;j++) {
                if(dateRangeCheck[j].getTime()===dateRangeFile[i].getTime()){ //jeśli dni równe to odemujemy{  
                 dateRangeCheck.splice(j, 1);
              }
             } 
-           console.log(dateRangeCheck.length)
+         //  console.log(dateRangeCheck.length)
            dateRangeFile=[]
             if(dateRageFileSizeBeforeDelete>dateRangeCheck.length)
             {
                 var file = new Object();
                 file.id= record.get('b').identity.low
                 file.googleId= record.get('b').properties.googleID
-                file.name =  record.get('b').properties.name
+                file.name = + fileNumber.toString() + record.get('b').properties.name 
                 filesArray.push(file)
             }
-
+            fileNumber++;
               });
               if(dateRangeCheck.length==0)
            {
+            
                // console.log(filesArray)
-                downloadFiles(filesArray)
-
+                downloadFiles(filesArray,attribute)
+            //  console.log("koniec")
 
 
            }
@@ -109,10 +112,11 @@ function getAnswer(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
             res.render('makeQuestion/noFilesToQuestion.ejs')
       })
     })
-    function downloadFiles(filesArray)
+    function downloadFiles(filesArray,attribute)
     {
         //pobiermay pliki które bd czytane do folderu 
-        console.log(filesArray)
+        console.log(filesArray.length)
+     var counterFiles=0
       filesArray.forEach(function(file){
             const homeDir = require('os').homedir();
             const desktopDir = homeDir+`\\Desktop`+"\\DataLakeFiles";
@@ -125,6 +129,9 @@ function getAnswer(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
             response.data
               .on('end', () => {
                   console.log('Done');
+                  counterFiles++;
+                  if(filesArray.length==counterFiles)
+                  generateAnswer(filesArray,attribute)
               })
               .on('error', err => {
                   console.log('Error', err);
@@ -132,6 +139,45 @@ function getAnswer(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
               .pipe(dest);
           }
       );
+    });
+    }
+    function generateAnswer(filesArray,attribute)
+    {
+var attrSplit=attribute.split(' ')
+console.log(attrSplit[attrSplit.length-1])
+ attribute=attribute.substring(0,attribute.lastIndexOf(" ") ); //przycinam jednostkę 
+ console.log(attribute)
+        //pobiermay pliki które bd czytane do folderu 
+      //  console.log(filesArray)
+      filesArray.forEach(function(file){
+        console.log("zaczynam")
+        const homeDir = require('os').homedir();
+        const desktopDir = homeDir+`\\Desktop`+"\\DataLakeFiles";
+      //  fs.promises.mkdir(desktopDir, { recursive: true }
+     // var reader = new BufferedReader(new FileReader(desktopDir+"/"+file.name));
+ //   var lines =[]
+  //   var readline = require('readline');
+  var attrNumber=-1;
+  try{
+    var array = fs.readFileSync(desktopDir+"/"+file.name,'ascii').toString().split("\n");
+  }
+  catch(err)
+  {
+    console.log("Nie ma takeigo pliku")
+  }
+        console.log(array[1]);
+for(var i=0;i<array.length;i++){
+  var line = array[i].split(';')
+  if(attrNumber==-1){
+      for (var j=0;j<line.length;j++){
+        if(line[j].search(attribute)!=-1)
+        attrNumber=j;
+      }
+  }
+}  
+
+
+        
     });
     }
 }
