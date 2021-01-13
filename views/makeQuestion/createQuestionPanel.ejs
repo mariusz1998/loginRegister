@@ -4,17 +4,25 @@
   </head> 
    <center>
        Select localization:
-       <select name="optionLocalization" size="1" style="width:10%;" id="optionLocalization">
+       <select name="optionLocalization" size="1" style="width: auto;" id="optionLocalization">
         <% for(var i = 0; i < localizations.length ; i++) { %>
           <option value='<%= localizations[i]%>'><%=localizations[i] %></option>
         <% } %>
       </select>
               Select attributte:
-              <select name="optionAttr" size="1" style="width:10%;" id="optionAttr">
+              <select name="optionAttr" size="1"  style="width: auto;"  id="optionAttr">
                 <% for(var i = 0; i < attr.length ; i++) { %>
                   <option value='<%= attr[i]%>'><%=attr[i] %></option>
                 <% } %>
               </select>
+              <div>
+                <label for="firstDay">Select function:</label>
+              <select name="option" size="1" style="width:10%;" id="option">
+                <option selected value="0">MIN</option>
+                <option value="1">MAX</option>
+			        	<option value="2">AVERAGE</option>
+            </select>
+          </div>
               <div>
                 <label for="firstDay">First day:</label>
               <input type="date" id="firstDay" name="firstDay" onchange="firstDayChange()" > 

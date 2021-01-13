@@ -1,7 +1,13 @@
-const { RSA_NO_PADDING } = require('constants');
+//const { RSA_NO_PADDING } = require('constants');
 
 function getAnswer(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google) 
-{  app.get('/get/question',checkAuthenticated,(req, res)=>{ 
+{ 
+  var max=-9999.9;
+  var day;
+  var time;
+  const homeDir = require('os').homedir();
+  const desktopDir = homeDir+`\\Desktop`+"\\DataLakeFiles";
+  app.get('/get/question',checkAuthenticated,(req, res)=>{ 
    var attrArry = []
    var localizationArray = []
         sessionNeo
@@ -44,7 +50,7 @@ function getAnswer(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
         var  dateRangeFile= []
        var  dateRangeCheck = []
        var dateRangeStart = new Date(firstDay);
-       //var dateRangeStartCopy= new Date(firstDay);
+       var dateRangeStartCopy= new Date(firstDay);
        var dateRangeEnd = new Date(lastDay);
        while(dateRangeEnd>=dateRangeStart){ //uzupełnianie tablicy każdym dniem 
         dateRangeCheck.push(new Date(dateRangeStart))
@@ -85,6 +91,11 @@ function getAnswer(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
            dateRangeFile=[]
             if(dateRageFileSizeBeforeDelete>dateRangeCheck.length)
             {
+
+              if(dateFileStartCopy<dateRangeStartCopy)
+              dateFileStartCopy=dateRangeStartCopy
+              if(dateFileEnd>dateRangeEnd)
+              dateFileEnd=dateRangeEnd
                 var file = new Object();
                 file.id= record.get('b').identity.low
                 file.googleId= record.get('b').properties.googleID
@@ -124,8 +135,8 @@ function getAnswer(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
         console.log(filesArray.length)
      var counterFiles=0
       filesArray.forEach(function(file){
-            const homeDir = require('os').homedir();
-            const desktopDir = homeDir+`\\Desktop`+"\\DataLakeFiles";
+         //   const homeDir = require('os').homedir();
+        //    const desktopDir = homeDir+`\\Desktop`+"\\DataLakeFiles";
             fs.promises.mkdir(desktopDir, { recursive: true })
             const dest = fs.createWriteStream(desktopDir+"/"+file.name);
           // Authenticating drive API
@@ -152,66 +163,70 @@ function getAnswer(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
       var newdate = datearray[2] + '-' + datearray[1] + '-' + datearray[0];
       return newdate;
     }
+    function readCSV(file,attribute)
+    {
+      var attrNumber=-1;
+      try{
+        var array = fs.readFileSync(desktopDir+"/"+file.name,'ascii').toString().split("\n");
+      }
+      catch(err)
+      {
+        console.log("Nie ma takeigo pliku")
+      }
+      console.log(file.dayStart)
+      var dateTemp = new Date(convert("08-01-2021"))
+     // console.log(typeof(dateTemp))
+      console.log(dateTemp>(file.dayStart))
+     
+            //console.log(array[1]);
+    for(var i=0;i<array.length;i++){
+      var line = array[i].split(';')
+      if(attrNumber==-1){
+          for (var j=0;j<line.length;j++){
+            if(line[j].search(attribute)!=-1){
+            attrNumber=j; 
+          }
+          }
+      }
+      else{
+        if ( isNaN(line[attrNumber])  || ((new Date(convert(line[0])))<(file.dayStart) ||
+        (new Date(convert(line[0])))>(file.dayEnd))) {
+        continue;
+        }   
+        if (parseFloat(line[attrNumber]) > max) {
+          max = parseFloat(line[attrNumber]);
+          day=line[0];
+          time=line[1];
+            // showResults=true;
+      }
+    }
+    
+      }  
+
+    }
     function generateAnswer(filesArray,attribute)
     {
-      var max=-9999.9;
-      var day;
-      var time;
+      
 var attrSplit=attribute.split(' ')
-console.log(attrSplit[attrSplit.length-1])
+console.log(attrSplit[attrSplit.length-1]) //jednostka
  attribute=attribute.substring(0,attribute.lastIndexOf(" ") ); //przycinam jednostkę 
- console.log(attribute)
+ //console.log(attribute)
         //pobiermay pliki które bd czytane do folderu 
       //  console.log(filesArray)
       filesArray.forEach(function(file){
         console.log("zaczynam")
-        const homeDir = require('os').homedir();
-        const desktopDir = homeDir+`\\Desktop`+"\\DataLakeFiles";
+    
+        console.log(file.name.split(".")[1])
+        readCSV(file,attribute)
       //  fs.promises.mkdir(desktopDir, { recursive: true }
      // var reader = new BufferedReader(new FileReader(desktopDir+"/"+file.name));
   //   var readline = require('readline');
 
   //sprawdzanie rozszerzenia 
   //txt and csv
-  var attrNumber=-1;
-  try{
-    var array = fs.readFileSync(desktopDir+"/"+file.name,'ascii').toString().split("\n");
-  }
-  catch(err)
-  {
-    console.log("Nie ma takeigo pliku")
-  }
-  console.log(file.dayStart)
-  var dateTemp = new Date(convert("08-01-2021"))
- // console.log(typeof(dateTemp))
-  console.log(dateTemp>(file.dayStart))
  
-        //console.log(array[1]);
-for(var i=0;i<array.length;i++){
-  var line = array[i].split(';')
-  if(attrNumber==-1){
-      for (var j=0;j<line.length;j++){
-        if(line[j].search(attribute)!=-1){
-        attrNumber=j; 
-      }
-      }
-  }
-  else{
-    if ( isNaN(line[attrNumber])  || ((new Date(convert(line[0])))<(file.dayStart) ||
-    (new Date(convert(line[0])))>(file.dayEnd))) {
-    continue;
-    }   
-    if (parseFloat(line[attrNumber]) > max) {
-      max = parseFloat(line[attrNumber]);
-      day=line[0];
-      time=line[1];
-        // showResults=true;
-  }
-}
-
-  }  
     });
-    console.log("Max is : "+max+" Day and time "+ day+" "+time)
+    console.log("Max is : "+max+" " + attrSplit[attrSplit.length-1] +" Day and time "+ day+" "+time)
     }
 }
 module.exports = getAnswer
