@@ -216,7 +216,8 @@ console.log(attrSplit[attrSplit.length-1]) //jednostka
       filesArray.forEach(function(file){
         console.log("zaczynam")
     
-        console.log(file.name.split(".")[1])
+        var extensionFile = (file.name.split(".")[1])
+        if(extensionFile=="csv"||extensionFile=="txt")
         readCSV(file,attribute)
       //  fs.promises.mkdir(desktopDir, { recursive: true }
      // var reader = new BufferedReader(new FileReader(desktopDir+"/"+file.name));
