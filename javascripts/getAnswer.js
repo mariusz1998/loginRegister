@@ -3,6 +3,7 @@
 function getAnswer(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google) 
 { 
   var attribute;
+  var attributeWithoutUnit;
   var functionOption;
   var max=-9999.9;
   var min=9999.9;
@@ -180,17 +181,16 @@ function getAnswer(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
       {
         console.log("Nie ma takeigo pliku")
       }
-      console.log(file.dayStart)
+    //  console.log(file.dayStart)
      /// var dateTemp = new Date(convert("08-01-2021"))
      // console.log(typeof(dateTemp))
     //  console.log(dateTemp>(file.dayStart))
-     
             //console.log(array[1]);
     for(var i=0;i<array.length;i++){
       var line = array[i].split(';')
       if(attrNumber==-1){
           for (var j=0;j<line.length;j++){
-            if(line[j].search(attribute)!=-1){
+            if(line[j].search(attributeWithoutUnit)!=-1){
             attrNumber=j; 
           }
           }
@@ -228,12 +228,52 @@ function getAnswer(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
 
     }
   }
+  function readJSON(file)
+  {
+   //   var array = fs.readFileSync(desktopDir+"/"+file.name,'ascii').toString().split("\n");
+  var reader =  fs.readFileSync(desktopDir+"/"+file.name)
+    var obj = JSON.parse(reader);
+// console.log(obj.length)
+   //console.log(obj[0]["Data"])
+  // console.log(obj[0][attribute])
+  for(var i=0;i<obj.length;i++){
+      if ( isNaN(obj[i][attribute])  || ((new Date(convertDate(obj[i]["Data"])))<(file.dayStart) ||
+      (new Date(convertDate(obj[i]["Data"])))>(file.dayEnd))) {
+      continue;
+      }   
+      switch (functionOption){
+        case "MAX":
+      if (parseFloat(obj[i][attribute]) > max) {
+        max = parseFloat(obj[i][attribute]);
+        day=obj[i]["Data"];
+        time=obj[i]["Czas"];
+         showResults=true;
+      }
+        break;
+        case "MIN":
+          if (parseFloat(obj[i][attribute]) <min) {
+            min = parseFloat(obj[i][attribute]);
+            day=obj[i]["Data"];
+            time=obj[i]["Czas"];
+               showResults=true;
+          }
+            break;
+            case "AVERAGE":
+            avg+=  parseFloat(obj[i][attribute]);
+            counter++;
+            showResults=true;
+                break;
+  }
+  
+    }  
+
+}
     function generateAnswer(filesArray)
     {
       
 var attrSplit=attribute.split(' ')
-console.log(attrSplit[attrSplit.length-1]) //jednostka
- attribute=attribute.substring(0,attribute.lastIndexOf(" ") ); //przycinam jednostkę 
+//console.log(attrSplit[attrSplit.length-1]) //jednostka
+attributeWithoutUnit=attribute.substring(0,attribute.lastIndexOf(" ") ); //przycinam jednostkę 
  //console.log(attribute)
         //pobiermay pliki które bd czytane do folderu 
       //  console.log(filesArray)
@@ -243,12 +283,13 @@ console.log(attrSplit[attrSplit.length-1]) //jednostka
         var extensionFile = (file.name.split(".")[1])
         if(extensionFile=="csv"||extensionFile=="txt")
         readCSV(file)
+        else if(extensionFile=="json")
+        readJSON(file)
       //  fs.promises.mkdir(desktopDir, { recursive: true }
      // var reader = new BufferedReader(new FileReader(desktopDir+"/"+file.name));
   //   var readline = require('readline');
 
   //sprawdzanie rozszerzenia 
-  //txt and csv
  
     });
     if(showResults==true)
