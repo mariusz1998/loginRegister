@@ -305,16 +305,16 @@ for(var i=0;i<objJson["document"]["Dane"].length;i++){
     case "MAX":
   if (parseFloat(objJson["document"]["Dane"][i]["Pogoda"][attributeWithoutUnit]) > max) {
     max = parseFloat(objJson["document"]["Dane"][i]["Pogoda"][attributeWithoutUnit]);
-    day=objJson["document"]["Dane"][i]["Data"];
-    time=objJson["document"]["Dane"][i]["Czas"];
+    day=objJson["document"]["Dane"][i]["Pogoda"]["Data"];
+    time=objJson["document"]["Dane"][i]["Pogoda"]["Czas"];
      showResults=true;
   }
     break;
     case "MIN":
       if (parseFloat(objJson["document"]["Dane"][i]["Pogoda"][attributeWithoutUnit]) <min) {
         min = parseFloat(objJson["document"]["Dane"][i]["Pogoda"][attributeWithoutUnit]);
-        day=objJson["document"]["Dane"][i]["Data"];
-        time=objJson["document"]["Dane"][i]["Czas"];
+        day=objJson["document"]["Dane"][i]["Pogoda"]["Data"];
+        time=objJson["document"]["Dane"][i]["Pogoda"]["Czas"];
            showResults=true;
       }
         break;
