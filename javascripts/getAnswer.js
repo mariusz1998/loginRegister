@@ -5,7 +5,7 @@ function getAnswer(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
   var attribute;
   var attributeWithoutUnit;
   var functionOption;
-  var max=-9999.9;
+  var max=-9999.9; //reset variables
   var min=9999.9;
   var avg=0;
   var counter=0;
@@ -228,7 +228,7 @@ function getAnswer(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
 
     }
   }
-  function readJSON(file)
+    function readJSON(file)
   {
    //   var array = fs.readFileSync(desktopDir+"/"+file.name,'ascii').toString().split("\n");
   var reader =  fs.readFileSync(desktopDir+"/"+file.name)
@@ -268,6 +268,33 @@ function getAnswer(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
     }  
 
 }
+function readXML(file)
+{
+  console.log("czyt xml")
+  // var array = fs.readFileSync(desktopDir+"/"+file.name,'ascii').toString().split("\n");
+   //var fs = require('fs'),
+  // path = require('path'),
+   xmlReader = require('read-xml');
+   let xmlParser = require('xml2json');
+//var FILE = path.join(__dirname, 'test/xml/simple-iso-8859-1.xml');
+
+// pass a buffer or a path to a xml file
+xmlReader.readXML(fs.readFileSync(desktopDir+"/"+file.name), function(err, data) {
+ if (err) {
+   console.error(err);
+ }
+
+// console.log('xml encoding:', data.encoding);
+// console.log('Decoded xml:', data.content);
+var obj = xmlParser.toJson( data.content)
+var objJson = JSON.parse(obj);
+console.log(typeof(objJson))
+console.log('JSON output',objJson["document"]["Dane"][0]["Pogoda"]["Czas"])
+//var nodeList = data.content.getElementsByTagName("Pogoda");  
+ console.log("Odczyt ")
+});
+
+}
     function generateAnswer(filesArray)
     {
       
@@ -285,6 +312,8 @@ attributeWithoutUnit=attribute.substring(0,attribute.lastIndexOf(" ") ); //przyc
         readCSV(file)
         else if(extensionFile=="json")
         readJSON(file)
+        else if(extensionFile=="xml")
+        readXML(file)
       //  fs.promises.mkdir(desktopDir, { recursive: true }
      // var reader = new BufferedReader(new FileReader(desktopDir+"/"+file.name));
   //   var readline = require('readline');
