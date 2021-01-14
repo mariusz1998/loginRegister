@@ -127,7 +127,12 @@ function getAnswer(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
               if(dateRangeCheck.length==0)
            {
                response=res;
+              // try{
                 downloadFiles(filesArray)
+            //   }
+            //   finally{
+             //   res.render('makeQuestion/errorQuestion.ejs')
+            //   }
            }
               else
               res.render('makeQuestion/noDatesToQuestion.ejs',{dates:dateRangeCheck})
@@ -234,10 +239,17 @@ function getAnswer(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
   {
    //   var array = fs.readFileSync(desktopDir+"/"+file.name,'ascii').toString().split("\n");
   var reader =  fs.readFileSync(desktopDir+"/"+file.name)
+  console.log("Ostatni znak : " +reader.slice(reader.length - 1));
+  if(!(reader.slice(reader.length - 1)=='}' || reader.slice(reader.length - 1)==']'))
+      return;
+  console.log(!(reader.slice(reader.length - 1)=='}' || reader.slice(reader.length - 1)==']'))
     var obj = JSON.parse(reader);
 // console.log(obj.length)
    //console.log(obj[0]["Data"])
   // console.log(obj[0][attribute])
+    console.log(obj[0].length)
+
+
   for(var i=0;i<obj.length;i++){
       if ( isNaN(obj[i][attribute])  || (new Date(convertDate(obj[i]["Data"])))<(file.dayStart) ||
       (new Date(convertDate(obj[i]["Data"])))>(file.dayEnd)) {
@@ -298,11 +310,12 @@ var objJson = JSON.parse(obj);
 attributeWithoutUnit = attributeWithoutUnit.replace(/ /g, '')
 console.log(attributeWithoutUnit )
 for(var i=0;i<objJson["document"]["Dane"].length;i++){
-  if ( isNaN(objJson["document"]["Dane"][i]["Pogoda"][attributeWithoutUnit])  
-  || (new Date(convertDate(objJson["document"]["Dane"][i]["Pogoda"]["Data"])))<(file.dayStart) ||
-  (new Date(convertDate(objJson["document"]["Dane"][i]["Pogoda"]["Data"])))>(file.dayEnd)) {
+  if ( isNaN(objJson["document"]["Dane"][i]["Pogoda"][attributeWithoutUnit]) || 
+  new Date(convertDate(objJson["document"]["Dane"][i]["Pogoda"]["Data"]))<file.dayStart ||
+  new Date(convertDate(objJson["document"]["Dane"][i]["Pogoda"]["Data"]))>file.dayEnd) {
   continue;
   }   
+  console.log(objJson["document"]["Dane"][i]["Pogoda"][attributeWithoutUnit])
   switch (functionOption){
     case "MAX":
   if (parseFloat(objJson["document"]["Dane"][i]["Pogoda"][attributeWithoutUnit]) > max) {
@@ -331,15 +344,15 @@ for(var i=0;i<objJson["document"]["Dane"].length;i++){
 }
     function generateAnswer(filesArray)
     {   
-      console.log(attribute)
+ //     console.log(attribute)
 var attrSplit=attribute.split(' ')
 //console.log(attrSplit[attrSplit.length-1]) //jednostka
-console.log(attrSplit.length)
+//console.log(attrSplit.length)
 if(attrSplit.length>1)
 attributeWithoutUnit=attribute.substring(0,attribute.lastIndexOf(" ") ); //przycinam jednostkę 
 else
 attributeWithoutUnit=attribute
-console.log(attributeWithoutUnit)
+//console.log(attributeWithoutUnit)
  //console.log(attribute)
       //  console.log(filesArray)
       filesArray.forEach(function(file){
