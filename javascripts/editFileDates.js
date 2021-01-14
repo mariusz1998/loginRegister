@@ -18,10 +18,15 @@ function editDatesFile(app,checkAuthenticated,sessionNeo) {
         var obj = JSON.parse(req.query.JSONFrom);
         if(req.session.editfile.otherFiles==false){
            sessionNeo     
-           .run('MATCH (u:User{email:$emailParam}),(b:File{localization:$localizationParam}) Where(u)-[:OWNER|GETACCESS]->(b) and id(b)<>$idFileParam and NOT (date(b.firstDay)>date($dateEndParam) OR date(b.lastDay)<date($dateStartParam)) RETURN b',
-           {emailParam:req.user.email,idFileParam: parseInt(req.session.editfile.id),localizationParam:obj["localization"],dateStartParam:obj["dateToEdit"][0]["startDay"] ,dateEndParam:obj["dateToEdit"][0]["endDay"]}) 
+
+           .run('MATCH (u:User),(b:File{localization:$localizationParam}),(c:File) Where ((u)-[:OWNER|GETACCESS]->(b) and'+
+           ' id(b)<>$idFileParam and NOT (date(b.firstDay)>date($dateEndParam) OR date(b.lastDay)<date($dateStartParam))'+
+            ' and (u)-[:OWNER|GETACCESS]->(c) and id(c)=$idFileParam) RETURN b,u',
+           {idFileParam: parseInt(req.session.editfile.id),localizationParam:obj["localization"],
+           dateStartParam:obj["dateToEdit"][0]["startDay"] ,dateEndParam:obj["dateToEdit"][0]["endDay"]}) 
                      .then(result => {
                     //   console.log(result.records.length)
+              
                         if(result.records.length==0)
                          {
                 sessionNeo
@@ -34,7 +39,7 @@ function editDatesFile(app,checkAuthenticated,sessionNeo) {
                          }
                          else
                             res.render('userFiles/editFileFailed.ejs', {localization:obj["localization"],
-                            firstDay:obj["firstDay"],lastDay:obj["lastDay"]});
+                            firstDay:obj["dateToEdit"][0]["startDay"],lastDay:obj["dateToEdit"][0]["endDay"]});
               })
             }
             else
