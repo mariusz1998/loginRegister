@@ -1,5 +1,3 @@
-//const { RSA_NO_PADDING } = require('constants');
-
 function getAnswer(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google) 
 { 
   //var Timer = require('time-counter')
@@ -128,11 +126,8 @@ function getAnswer(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
               });
               if(dateRangeCheck.length==0)
            {
-               // console.log(filesArray)
+               response=res;
                 downloadFiles(filesArray)
-                response=res;
-              
-            //  console.log("koniec")
            }
               else
               res.render('makeQuestion/noDatesToQuestion.ejs',{dates:dateRangeCheck})
@@ -143,19 +138,23 @@ function getAnswer(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
     })
     function downloadFiles(filesArray)
     {
+      console.log("Download files ")
         //pobiermay pliki które bd czytane do folderu 
         console.log(filesArray.length)
      var counterFiles=0
       filesArray.forEach(function(file){
-         //   const homeDir = require('os').homedir();
-        //    const desktopDir = homeDir+`\\Desktop`+"\\DataLakeFiles";
+        console.log("Download file ")
             fs.promises.mkdir(desktopDir, { recursive: true })
+            console.log("Download file part2")
             const dest = fs.createWriteStream(desktopDir+"/"+file.name);
+            console.log("Download file part3")
           // Authenticating drive API
           const drive = google.drive({ version: 'v3', auth });
+          console.log("Download file part4")
           drive.files.get({fileId: file.googleId, alt: 'media'}, {responseType: 'stream'},
-          function(err, response){
-            response.data
+          function(err, responseDrive){
+            console.log("Download file part5")
+            responseDrive.data
               .on('end', () => {
                   console.log('Done');
                   counterFiles++;
@@ -163,7 +162,8 @@ function getAnswer(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
                   generateAnswer(filesArray)
               })
               .on('error', err => {
-                  console.log('Error', err);
+                  console.log('Error rr ', err);
+               //   response.render('makeQuestion/errorDownloadFile.ejs',{file:file.name})
               })
               .pipe(dest);
           }
@@ -227,9 +227,7 @@ function getAnswer(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
                    showResults=true;
                   break;
     }
-    
       }  
-
     }
   }
     function readJSON(file)
@@ -272,7 +270,7 @@ function getAnswer(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
     }  
 
 }
-function readXML(file)
+    function readXML(file)
 {
   console.log("czyt xml")
   // var array = fs.readFileSync(desktopDir+"/"+file.name,'ascii').toString().split("\n");
@@ -285,20 +283,20 @@ function readXML(file)
 // pass a buffer or a path to a xml file
 xmlReader.readXML(fs.readFileSync(desktopDir+"/"+file.name), function(err, data) {
  if (err) {
-   console.error(err);
+   console.error("Bład xml " +err);
  }
 var obj = xmlParser.toJson( data.content)
 var objJson = JSON.parse(obj);
 //console.log(typeof(objJson))
-console.log('JSON output',objJson["document"]["Dane"][0]["Pogoda"]["Czas"])
+//console.log('JSON output',objJson["document"]["Dane"][0]["Pogoda"]["Czas"])
 //var nodeList = data.content.getElementsByTagName("Pogoda");  
-console.log(objJson["document"]["Dane"].length)
-
+//console.log(objJson["document"]["Dane"].length)
 //console.log(attrSplit[attrSplit.length-1]) //jednostka
+//var nazwa="asd asd a"
+//console.log(nazwa.replace(/ /g, '')) //wszytkie spacje usuwamy
 
-var nazwa="asd asd a"
-console.log(nazwa.replace(/ /g, '')) //wszytkie spacje usuwamy
-
+attributeWithoutUnit = attributeWithoutUnit.replace(/ /g, '')
+console.log(attributeWithoutUnit )
 for(var i=0;i<objJson["document"]["Dane"].length;i++){
   if ( isNaN(objJson["document"]["Dane"][i]["Pogoda"][attributeWithoutUnit])  
   || (new Date(convertDate(objJson["document"]["Dane"][i]["Pogoda"]["Data"])))<(file.dayStart) ||
@@ -328,20 +326,21 @@ for(var i=0;i<objJson["document"]["Dane"].length;i++){
         showResults=true;
             break;
 }
-
 }  
-
 });
-
 }
     function generateAnswer(filesArray)
-    {
-      
+    {   
+      console.log(attribute)
 var attrSplit=attribute.split(' ')
 //console.log(attrSplit[attrSplit.length-1]) //jednostka
+console.log(attrSplit.length)
+if(attrSplit.length>1)
 attributeWithoutUnit=attribute.substring(0,attribute.lastIndexOf(" ") ); //przycinam jednostkę 
+else
+attributeWithoutUnit=attribute
+console.log(attributeWithoutUnit)
  //console.log(attribute)
-        //pobiermay pliki które bd czytane do folderu 
       //  console.log(filesArray)
       filesArray.forEach(function(file){
         console.log("zaczynam")
@@ -383,7 +382,10 @@ attributeWithoutUnit=attribute.substring(0,attribute.lastIndexOf(" ") ); //przyc
       rimraf(desktopDir, function () { console.log("done"); });
      //location='/show/answer?answer='+answer+'&time=20'
      console.log("Sending")
+     if(showResults==true)
      response.render('makeQuestion/showAnswer.ejs',{answer:answer,time:endTime-startTime})
+     else
+     response.render('makeQuestion/errorReadFile.ejs')
     }
 }
 module.exports = getAnswer
