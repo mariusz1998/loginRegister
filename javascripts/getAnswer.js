@@ -2,9 +2,14 @@
 
 function getAnswer(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google) 
 { 
-  var attribute;
-  var attributeWithoutUnit;
-  var functionOption;
+  //var Timer = require('time-counter')
+ // var countUpTimer = new Timer();
+ var startTime, endTime
+  var response
+  var answer
+  var attribute
+  var attributeWithoutUnit
+  var functionOption
   max=-9999.9; //reset variables
   min=9999.9;
   avg=0;
@@ -39,6 +44,9 @@ function getAnswer(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
       })
     })
     app.get('/create/question',checkAuthenticated,(req, res)=>{ 
+      //countUpTimer.start();
+      var hrTime = process.hrtime()
+      startTime=(hrTime[0]* 1000000000 +hrTime[1]) / 1000000;
       max=-9999.9; //reset variables
       min=9999.9;
       avg=0;
@@ -120,22 +128,14 @@ function getAnswer(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
               });
               if(dateRangeCheck.length==0)
            {
-            
                // console.log(filesArray)
                 downloadFiles(filesArray)
+                response=res;
+              
             //  console.log("koniec")
-
-
            }
               else
               res.render('makeQuestion/noDatesToQuestion.ejs',{dates:dateRangeCheck})
-              //console.log("nie czytamy",{dates:dateRangeCheck}) //można przekazać jako argument tą tablicę
-              //jeżeli puste to czytamy jeśli nie to strona 
-            //  let attributteArray = [...new Set(attrArry)] //usuwamy powtarzające się atrybuty
-             // let placesArray = [...new Set( localizationArray)] 
-              //console.log(attributteArray)
-             // console.log(placesArray)
-           //  res.render('makeQuestion/createQuestionPanel.ejs',{attr:attributteArray,localizations:placesArray})
             }
             else
             res.render('makeQuestion/noFilesToQuestion.ejs')
@@ -357,28 +357,33 @@ attributeWithoutUnit=attribute.substring(0,attribute.lastIndexOf(" ") ); //przyc
      // var reader = new BufferedReader(new FileReader(desktopDir+"/"+file.name));
   //   var readline = require('readline');
 
-  //sprawdzanie rozszerzenia 
+  //countUpTimer.stop();
+  var hrTime = process.hrtime()
  
+  endTime= (hrTime[0]* 1000000000 +hrTime[1]) / 1000000;
     });
     if(showResults==true)
     switch (functionOption){
       case "MAX":
-        console.log("Max is : "+max+" " + attrSplit[attrSplit.length-1] +" Day and time "+ day+" "+time)
+     answer="Max is : "+max+" " + attrSplit[attrSplit.length-1] +" Day and time "+ day+" "+time
       break;
       case "MIN":
       
-    console.log("Min is : "+min+" " + attrSplit[attrSplit.length-1] +" Day and time "+ day+" "+time)
+   answer = "Min is : "+min+" " + attrSplit[attrSplit.length-1] +" Day and time "+ day+" "+time
           break;
           case "AVERAGE":    
-    console.log("Average is : "+(avg/counter).toFixed(2)+" " + attrSplit[attrSplit.length-1])
+    answer = "Average is : "+(avg/counter).toFixed(2)+" " + attrSplit[attrSplit.length-1]
               break;
     }
     else
-    console.log("Nie wygenerowano wyniku")
+   answer = "Nie wygenerowano wyniku"
+    console.log(answer+" "+(endTime-startTime))
 
   var rimraf = require("rimraf");
       rimraf(desktopDir, function () { console.log("done"); });
+     //location='/show/answer?answer='+answer+'&time=20'
+     console.log("Sending")
+     response.render('makeQuestion/showAnswer.ejs',{answer:answer,time:endTime-startTime})
     }
- 
 }
 module.exports = getAnswer

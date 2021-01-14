@@ -1,0 +1,18 @@
+<head> 
+    <title> Create question</title> 
+    <link rel="stylesheet" href="/CSS/style.css">
+  </head> 
+  <center>
+    <%=answer%>  
+   <br> Response generated in <%= time %> miliseconds.
+    <div>
+    <form action="/get/question" method="GET">
+        <button id="submit" type="submit">Repeat the question</button>
+      </form>
+    </div>
+      <div>
+      <form action = "/" method="get">
+        <input type = "submit" value = "Back">
+    </form>
+</div>
+</center>
