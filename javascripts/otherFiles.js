@@ -1,8 +1,7 @@
 function otherFiles(app,checkAuthenticated,sessionNeo) {
-    app.get('/files/other',checkAuthenticated,(req, res)=>{
+    app.get('/files/other',checkAuthenticated,(req, res)=>{ //get table of files without owner
         var tableDataFile=""
         var  attrFiles="["
-            // req.user.email=req.body.email
              sessionNeo
                  .run('MATCH (f:File) WHERE NOT (f)-[]-() RETURN f')
                  .then(function(result){   
@@ -23,15 +22,10 @@ function otherFiles(app,checkAuthenticated,sessionNeo) {
                             attrFiles+= "\""+record.get('f').properties.attribute[i]+"\","
                             attrFiles =  attrFiles.substring(0,  attrFiles.length - 1); 
                             attrFiles+="]},"
-                           // tableDataFile +="<td>"+record.get('f').properties.firstDay+"</td>";
                     })
-                    attrFiles =  attrFiles.substring(0,  attrFiles.length - 1); //usunięcie przecinka
+                    attrFiles =  attrFiles.substring(0,  attrFiles.length - 1); 
                     attrFiles+="]"
-                 //   var obj = JSON.parse(attrFiles);
-                 //   console.log(obj[0]["arrayAttrFile"])
-                   // setTimeout(async () =>{ 
                     res.render('otherFiles/files.ejs',{tableData: tableDataFile,arrayFilesAttr:attrFiles})  
-                  //  }  ,2000)
                   }
                   })
                

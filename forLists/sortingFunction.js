@@ -1,4 +1,4 @@
-function mySortingFunction(toSort) {
+function sortingFunction(toSort) {
     var select, options, i, typeOfSorting;
     typeOfSorting = sort.options[sort.selectedIndex].value;
 

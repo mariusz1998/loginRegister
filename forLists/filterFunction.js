@@ -1,4 +1,4 @@
-function myFilterFunction(toFilter) {
+function filterFunction(toFilter) {
     console.log(toFilter);
     var input, filter, select, options, i, txtValue;
     input = document.getElementById('search'+toFilter);

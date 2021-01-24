@@ -1,5 +1,5 @@
-function downloadFile(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google) {
-   app.get('/download/file',checkAuthenticated, (req, res) => {
+function downloadFile(app,checkAuthenticated,sessionNeo,auth,fs,google) {
+   app.get('/download/file',checkAuthenticated, (req, res) => { //download file to folder in desktop 
     var obj = JSON.parse(req.query.JSONFrom);
     var myFiles = JSON.parse(req.query.myFiles);
     sessionNeo          
@@ -7,14 +7,10 @@ function downloadFile(app,checkAuthenticated,sessionNeo,auth,formidable,fs,googl
     {idParam: obj[0]["id"] }) 
               .then(result => {
             var googleID=  result.records[0].get('googleId')   
-           // console.log( googleID)
             const homeDir = require('os').homedir();
-           // console.log(homeDir)
             const desktopDir = homeDir+`\\Desktop`+"\\DataLakeFiles";
-          //  console.log(desktopDir);
             fs.promises.mkdir(desktopDir, { recursive: true })
             const dest = fs.createWriteStream(desktopDir+"/"+obj[0]["nameFile"]);
-          // Authenticating drive API
           const drive = google.drive({ version: 'v3', auth });
           drive.files.get({fileId: googleID, alt: 'media'}, {responseType: 'stream'},
           function(err, response){
@@ -33,7 +29,6 @@ function downloadFile(app,checkAuthenticated,sessionNeo,auth,formidable,fs,googl
           }
       );
          })
-             })
-             
+             })    
 }
 module.exports = downloadFile

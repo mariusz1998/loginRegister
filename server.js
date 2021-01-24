@@ -44,8 +44,8 @@ const SCOPES = ['https://www.googleapis.com/auth/drive'];
 // time.
 const TOKEN_PATH = 'token.json';
 
-const driver = neo4j.driver('bolt://54.172.13.65:33476',
-                  neo4j.auth.basic('neo4j', 'spares-daybreak-linkage'), 
+const driver = neo4j.driver('bolt://54.157.135.221:32868',
+                  neo4j.auth.basic('neo4j', 'flare-yaws-molecule'), 
                   {/* encrypted: 'ENCRYPTION_OFF' */});
 var sessionNeo = driver.session();
 
@@ -97,7 +97,7 @@ function authorize(credentials, callback) {
     updateFile(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
     deleteFile(app,checkAuthenticated,sessionNeo,auth,google)
     ownedFiles(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
-    downloadFile(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
+    downloadFile(app,checkAuthenticated,sessionNeo,auth,fs,google)
     getAnswer(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
   });
 }

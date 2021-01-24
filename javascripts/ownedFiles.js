@@ -1,9 +1,7 @@
 function ownedFiles(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google) {
-    //edit attribute
-    app.get('/files/owned',checkAuthenticated,(req, res)=>{
+    app.get('/files/owned',checkAuthenticated,(req, res)=>{ //genrate table of files which have owner
         var tableDataFile=""
         var  attrFiles="["
-            // req.user.email=req.body.email
              sessionNeo
                  .run('MATCH (u:User{active:true}),(f:File) Where id(u)<>$idParam and (u)-[:OWNER]->(f) RETURN u,f',
                  { idParam: parseInt(req.user.id) })
@@ -26,28 +24,22 @@ function ownedFiles(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
                             attrFiles+= "\""+record.get('f').properties.attribute[i]+"\","
                             attrFiles =  attrFiles.substring(0,  attrFiles.length - 1); 
                             attrFiles+="]},"
-                           // tableDataFile +="<td>"+record.get('f').properties.firstDay+"</td>";
                     })
-                    attrFiles =  attrFiles.substring(0,  attrFiles.length - 1); //usunięcie przecinka
+                    attrFiles =  attrFiles.substring(0,  attrFiles.length - 1); 
                     attrFiles+="]"
-                 //   var obj = JSON.parse(attrFiles);
-                 //   console.log(obj[0]["arrayAttrFile"])
-                   // setTimeout(async () =>{ 
                     res.render('usersFiles/files.ejs',{tableData: tableDataFile,arrayFilesAttr:attrFiles})  
-                  //  }  ,2000)
+
                   }
                   })
                
     })
-    app.get('/edit/file/owned/attr',checkAuthenticated,(req, res)=>{ //id przekazać 
+    app.get('/edit/file/owned/attr',checkAuthenticated,(req, res)=>{  //edit file attributes
         var obj = JSON.parse(req.query.JSONFrom);
         var objAttr = JSON.parse(req.query.attrArray);
         var tempArray = []
         var choiceArray= req.query.choice
         for(var i=0;i<objAttr[choiceArray]["arrayAttrFile"].length;i++)
         tempArray.push(objAttr[choiceArray]["arrayAttrFile"][i])
-        //console.log(obj[0]["id"])
-      //  console.log(obj[0]["nameFile"])
         var  editfile = new Object();
         editfile.name=obj[0]["nameFile"]
         editfile.id=obj[0]["id"]
@@ -57,7 +49,7 @@ function ownedFiles(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
         res.render('usersFiles/editAttrFile.ejs',
         {id:obj[0]["id"],nameFile:obj[0]["nameFile"],user:obj[0]["email"],attr: req.session.editfile.attr})
     })
-    app.get('/attr/edit/file/owned/availble',checkAuthenticated,(req,res)=>{
+    app.get('/attr/edit/file/owned/avaible',checkAuthenticated,(req,res)=>{
         var tempArray = []
         sessionNeo          
         .run(' MATCH (b:File)   RETURN b.attribute as attr') 
@@ -76,36 +68,34 @@ function ownedFiles(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
                            })
            })
          setTimeout(async () =>{ 
-             let attributteArrayTemp = [...new Set(tempArray)] //usuwamy powtarzające się atrybuty
-             let attributteArray= attributteArrayTemp.filter(x => ! req.session.editfile.attr.includes(x)); //odejmujemy tablice
-             res.render('usersFiles/editAttrAvailableFile.ejs',{attr: attributteArrayTemp})
+             let attributeArrayTemp = [...new Set(tempArray)] 
+             let attributeArray= attributeArrayTemp.filter(x => ! req.session.editfile.attr.includes(x)); 
+             res.render('usersFiles/editAttrAvailableFile.ejs',{attr: attributeArray})
      },2000)
     
     });
-    app.get('/attr/edit/file/owned/choosed',checkAuthenticated,(req,res)=>{
+    app.get('/attr/edit/file/owned/choosed',checkAuthenticated,(req,res)=>{ //genrate panel of choosed users
         res.render('userFiles/editAttrChoosedFile.ejs',{attr: req.session.editfile.attr})
     });
-    app.get('/edit/file/owned/attribute',checkAuthenticated, (req, res) => {
+    app.get('/edit/file/owned/attribute',checkAuthenticated, (req, res) => { //set changes to graph data base
         var obj = JSON.parse(req.query.JSONFrom);
         var attrArray = obj["attrToEdit"]
               sessionNeo
               .run('MATCH (n:File) where id(n)=$idParam  SET n.attribute=$attrParam',
               { attrParam:attrArray,idParam: req.session.editfile.id })
               .then(function(){
-                res.redirect('/files/owned'); //to 
+                res.redirect('/files/owned'); 
             })
       });
       //upload files 
       app.post('/set/upload/file/owned', (req, res) => {
-        // var  addfile = new Object();
          var formData = new formidable.IncomingForm();
          formData.parse(req, function (error, fields, files) {
         sessionNeo          
         .run('MATCH (n:File) Where id(n)=$idParam RETURN n.googleID as googleId',
         {idParam: req.session.editfile.id }) 
                   .then(result => {
-                var googleID=  result.records[0].get('googleId')   
-                      
+                var googleID=  result.records[0].get('googleId')       
         const fileMetadata = {
               'name':files.file.name
             };
@@ -113,9 +103,7 @@ function ownedFiles(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
           mimeType: files.file.type,
           body: fs.createReadStream(files.file.path),
         };
-        // Authenticating drive API
         const drive = google.drive({ version: 'v3', auth });
-        // Uploading Single image to drive
         drive.files.update(
           {
             resource: fileMetadata,
@@ -124,14 +112,8 @@ function ownedFiles(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
           },
           async (err, file) => {
             if (err) {
-              // Handle error
-              console.error(err.msg);
-              return res
-                .status(400)
-                .json({ errors: [{ msg: 'Server Error try again later' }] });
+              res.render('usersFiles/updateFileSucces.ejs');
             } else {
-              //console.log(file.data.id)
-              // if file upload success then return the unique google drive id
               sessionNeo
               .run('MATCH (n:File) Where id(n)=$idParam SET n.name=$nameParam',
               {idParam: req.session.editfile.id ,nameParam:files.file.name})
@@ -144,7 +126,7 @@ function ownedFiles(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
        })
            })
      })
-     app.get('/set/upload/file/owned',checkAuthenticated,(req, res)=>{ 
+     app.get('/set/upload/file/owned',checkAuthenticated,(req, res)=>{ //render page to select file 
        var obj = JSON.parse(req.query.JSONFrom);
        var  editfile = new Object();
        editfile.name=obj[0]["nameFile"]
@@ -155,27 +137,19 @@ function ownedFiles(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
       //delete files
       app.get('/delete/file/owned', (req, res) => {
         var obj = JSON.parse(req.query.JSONFrom);
-        console.log(obj[0]["id"]+" "+obj[0]["nameFile"])
      sessionNeo          
      .run('MATCH (n:File) Where id(n)=$idParam RETURN n.googleID as googleId',
      {idParam: obj[0]["id"] }) 
                .then(result => {
-             var googleID=  result.records[0].get('googleId')   
-        
-     // Authenticating drive API
+      var googleID=  result.records[0].get('googleId')   
      const drive = google.drive({ version: 'v3', auth });
-     // Uploading Single image to drive
      drive.files
      .delete({
        fileId: googleID,
      },
        async (err, file) => {
          if (err) {
-           // Handle error
-           console.error(err.msg);
-           return res
-             .status(400)
-             .json({ errors: [{ msg: 'Server Error try again later' }] });
+          res.render('usersFiles/deleteFileSucces.ejs');
          } else {
            sessionNeo
            .run('MATCH (n:File) where id(n)=$idParam DETACH DELETE n',{idParam: obj[0]["id"]})
@@ -187,11 +161,9 @@ function ownedFiles(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
      );
     })
   })
-
-    // /set/owner/file
-    app.get('/set/owner/file/owned',checkAuthenticated,(req, res)=>{ 
+    app.get('/set/owner/file/owned',checkAuthenticated,(req, res)=>{ //change file owner
       var obj = JSON.parse(req.query.JSONFrom);
-      var  editfile = new Object();
+      var editfile = new Object();
       editfile.name=obj[0]["nameFile"]
       editfile.id=obj[0]["id"]
       editfile.startDay=obj[0]["dateStart"]
@@ -202,7 +174,7 @@ function ownedFiles(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
       res.render('usersFiles/setFileOwner.ejs',{id:obj[0]["id"],nameFile:obj[0]["nameFile"]})
       })
   
-      app.get('/users/to/owner/file/owned',checkAuthenticated,(req,res)=>{
+      app.get('/users/to/owner/file/owned',checkAuthenticated,(req,res)=>{ //get users who can being owned of edit file 
            var userArray = []
           var userToDelete = []
           sessionNeo  
@@ -210,23 +182,12 @@ function ownedFiles(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
           {localizationParam: req.session.editfile.localization,emailParam:req.session.editfile.owner}) 
                     .then(result => {
                          result.records.forEach(function(record) {
-                             console.log(result.records)
                              {
                                userArray.push(record.get('u').properties.email)
-                               console.log(record.get('u').properties.email)
-                               console.log((record.get('b').properties.firstDay+" " +(req.session.editfile.startDay)+ " "+record.get('b').properties.lastDay+" "+(req.session.editfile.startDay))) 	
-                               console.log((record.get('b').properties.firstDay<=(req.session.editfile.startDay) && record.get('b').properties.lastDay>=(req.session.editfile.startDay))) 			
-                               console.log((record.get('b').properties.firstDay<=(req.session.editfile.endDay)&& record.get('b').properties.lastDay>=(req.session.editfile.endDay)))  		
-                               console.log((record.get('b').properties.firstDay<=(req.session.editfile.startDay)&& record.get('b').properties.lastDay>=(req.session.editfile.endDay))) 
-                               console.log((record.get('b').properties.firstDay>=(req.session.editfile.startDay)&& record.get('b').properties.lastDay<=(req.session.editfile.endDay)))
-  
-  
                               if((record.get('b').properties.firstDay<=(req.session.editfile.startDay) && record.get('b').properties.lastDay>=(req.session.editfile.startDay)) ||			
                               (record.get('b').properties.firstDay<=(req.session.editfile.endDay)&& record.get('b').properties.lastDay>=(req.session.editfile.endDay))  ||			
                               (record.get('b').properties.firstDay<=(req.session.editfile.startDay)&& record.get('b').properties.lastDay>=(req.session.editfile.endDay)) ||
-                              (record.get('b').properties.firstDay>=(req.session.editfile.startDay)&& record.get('b').properties.lastDay<=(req.session.editfile.endDay)))
-                             {
-                              //   console.log(record.get('u').properties.email)
+                              (record.get('b').properties.firstDay>=(req.session.editfile.startDay)&& record.get('b').properties.lastDay<=(req.session.editfile.endDay))){
                                 userToDelete.push( record.get('u').properties.email )
                           }
                             }
@@ -236,31 +197,25 @@ function ownedFiles(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
           {localizationParam: req.session.editfile.localization}) 
           .then(result => {
             result.records.forEach(function(record) {
-                {
-                 userArray.push(record.get('u').properties.email)
-                }                    
+                 userArray.push(record.get('u').properties.email)                
         })
              })
             })
            setTimeout(async () =>{ 
-             console.log(userArray)
-             console.log(userToDelete)
             let  userArrayTemp = [...new Set(userArray)]
             let usersArray= userArrayTemp.filter(x => ! userToDelete.includes(x)); 
               res.render('usersFiles/setFileOwnerChoosed.ejs',{users: usersArray})
        },1000)
       });
-      app.get('/set/file/owned/owner',checkAuthenticated,(req, res)=>{ 
+      app.get('/set/file/owned/owner',checkAuthenticated,(req, res)=>{  //change owner in graph data base
           var obj = JSON.parse(req.query.JSONFrom);
-         // .run('MATCH (u:User {email:$emailParam}),(f:File) Where id(f)=$idFileParam MERGE(f)<-[r:OWNER]-(u)',
           sessionNeo
-     
-          .run('MATCH (u:User {email:$oldemailParam})-[r:OWNER]->(f:File),(a:User {email:$newEmailParam})'+
+          .run('MATCH (u:User {email:$oldEmailParam})-[r:OWNER]->(f:File),(a:User {email:$newEmailParam})'+
           'Where id(f)=$idFileParam '+
         ' CREATE (a)-[p:OWNER]->(f) '+
         'SET p=r '+
         'DELETE r',
-          { oldemailParam: req.session.editfile.owner, newEmailParam:obj["email"],idFileParam: req.session.editfile.id})
+          { oldEmailParam: req.session.editfile.owner, newEmailParam:obj["email"],idFileParam: req.session.editfile.id})
           .then(function(){
            res.redirect('/files/owned');
         })

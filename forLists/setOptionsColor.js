@@ -1,9 +1,8 @@
 function colorOption(optionArray,toAdd)
 {
-    var iframe = document.getElementById("Choosed"+toAdd);   //dobieram sie do iframe
+    var iframe = document.getElementById("Choosed"+toAdd);  
     var select = iframe.contentWindow.document.getElementById("choosed"+toAdd);  
-    //console.log(iframe.contentWindow.document) 
-    var options = select.getElementsByTagName('option');    //pobieram opcje z listy
+    var options = select.getElementsByTagName('option');   
     for(var i=0;i<options.length;i++)
     {
         optionArray.forEach(function(element){

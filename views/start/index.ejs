@@ -5,7 +5,7 @@
   <title>Login page</title>
 </head>
 <center>
-<h1><%=user.email%></h1>
+<h2>Welcome <%=user.firstName%> <%=user.lastName%></h2>
 
 
 <% if ( user.admin == true) { %>
@@ -22,15 +22,13 @@
     <button id="submit" type="submit">See owned files </button>
   </form>
 <% } %>
-
-<form action="/user/edit" method="POST">
-  <button id="submit" type="submit">Edit Profile</button>
+<form action="/get/question" method="GET">
+  <button id="submit" type="submit">Make an inquiry</button>
 </form>
 
 <form action="/add/file" method="POST">
   <button id="submit" type="submit">Add file</button>
 </form>
-
 <form action="/show/your/files" method="GET">
   <button id="submit" type="submit">Show your files</button>
 </form>
@@ -39,11 +37,13 @@
   <button id="submit" type="submit">Show your access files</button>
 </form>
 
+<form action="/user/edit" method="POST">
+  <button id="submit" type="submit">Edit Profile</button>
+</form>
+
 <form action="/logout?_method=DELETE" method="POST">
   <button type="submit">Log Out</button>
 </form>
 
-<form action="/get/question" method="GET">
-  <button id="submit" type="submit">Make an inquiry</button>
-</form>
+
 </center>

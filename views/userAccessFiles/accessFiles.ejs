@@ -21,19 +21,19 @@
             </select>
 		<div>
             Filter by id: <input type = "number" name = "filterID" id="filterID"
-             onkeyup="myFilterFunction(0,'filterID')" placeholder="Search for id">
+             onkeyup="filterFunction(0,'filterID')" placeholder="Search for id">
             Filter by name: <input type = "text" name = "filterName" id="filterName"
-			 onkeyup="myFilterFunction(1,'filterName')" placeholder="Search for name">
+			 onkeyup="filterFunction(1,'filterName')" placeholder="Search for name">
 			 <br>
 			 Filter by localization: <input type = "text" name = "filterLocalization" id="filterLocalization"
-			 onkeyup="myFilterFunction(2,'filterLocalization')" placeholder="Search for localization">
+			 onkeyup="filterFunction(2,'filterLocalization')" placeholder="Search for localization">
 
 			 Filter by start day: <input type = "text" name = "filterStartDay" id="filterStartDay"
-			 onkeyup="myFilterFunction(3,'filterStartDay')" placeholder="Search for start day">
+			 onkeyup="filterFunction(3,'filterStartDay')" placeholder="Search for start day">
 			 Filter by end day: <input type = "text" name = "filterEndDay" id="filterEndDay"
-             onkeyup="myFilterFunction(4,'filterEndDay')" placeholder="Search for end day">
+             onkeyup="filterFunction(4,'filterEndDay')" placeholder="Search for end day">
              Filter by onwer: <input type = "text" name = "filterOwner" id="filterOwner"
-             onkeyup="myFilterFunction(5,'filterOwner')" placeholder="Search for owner">
+             onkeyup="filterFunction(5,'filterOwner')" placeholder="Search for owner">
 			 </div>
 			 
 	<div>
@@ -142,9 +142,9 @@ JSONToSend = JSONToSend + JSONArrayOfUsersToAdd +"] }";
 				document.getElementById("filesTable").innerHTML=dataTable
                 sort = document.getElementById("sorting");
                 option = document.getElementById("option");
-                sort.addEventListener("change", mySortingFunction.bind(this),false); 
-                option.addEventListener("change", mySortingFunction.bind(this),false); 
-                window.onload = mySortingFunction();
+                sort.addEventListener("change", sortingFunction.bind(this),false); 
+                option.addEventListener("change", sortingFunction.bind(this),false); 
+                window.onload = sortingFunction();
             </script>
 </body> 
 

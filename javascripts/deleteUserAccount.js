@@ -1,7 +1,7 @@
 function deleteUserAccount(app,checkAuthenticated,sessionNeo) {
-    app.get('/user/delete/account',checkAuthenticated,(req, res)=>{ //imie email nazwisko
+    app.get('/user/delete/account',checkAuthenticated,(req, res)=>{ //delete own account
         
-        if(req.user.admin!=true) //nie jest adminem
+        if(req.user.admin!=true) //is not admin 
         {
             sessionNeo
             .run('MATCH (n:User) where id(n)=$idParam DETACH DELETE n',{idParam: req.user.id})
@@ -9,7 +9,7 @@ function deleteUserAccount(app,checkAuthenticated,sessionNeo) {
               res.redirect('/logout?_method=POST');
             })
         }
-        else //is admin 
+        else //is admin, check other admins in system
         {
           var today = new Date();
           var dd = today.getDate();
@@ -20,9 +20,7 @@ function deleteUserAccount(app,checkAuthenticated,sessionNeo) {
           if(mm<10) 
             mm='0'+mm; 
             var dateToday = yyyy+"-"+mm+"-"+dd;
-          // var dateToday="2022-03-20"
           sessionNeo
-          
             .run(' MATCH (u:User)-[r:ADMIN]-(b:Admin) Where id(u)<>$idParam and b.endDay>=date($todayParam) and b.startDay<=date($todayParam) RETURN u'
             ,{idParam: req.user.id,todayParam:dateToday})
             .then(function(result){
@@ -31,17 +29,13 @@ function deleteUserAccount(app,checkAuthenticated,sessionNeo) {
               res.render('editUser/deleteUserWarning.ejs')
               else{
                 sessionNeo
-          
                 .run('MATCH (n:User) where id(n)=$idParam OPTIONAL MATCH (n)-[r:ADMIN]-(a:Admin) where id(n)=$idParam DETACH DELETE n,r,a',{idParam: req.user.id})
                 .then(function(){
-                  res.redirect('/logout?_method=POST');
+                  res.redirect('/logout?_method=POST'); //logout after delete account
                 })
               }
             })
-         
-
         }
-       //  res.render('editUser/editUserData.ejs',{user: req.user})
          })
     }
-    module.exports = deleteUserAccount
+module.exports = deleteUserAccount

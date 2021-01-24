@@ -1,5 +1,5 @@
 function editAttrFile(app,checkAuthenticated,sessionNeo) {
-app.get('/edit/file/attr',checkAuthenticated,(req, res)=>{ //id przekazać 
+app.get('/edit/file/attr',checkAuthenticated,(req, res)=>{  
     var obj = JSON.parse(req.query.JSONFrom);
     var objAttr = JSON.parse(req.query.attrArray);
    var otherFiles = JSON.parse(req.query.otherFiles)
@@ -7,8 +7,6 @@ app.get('/edit/file/attr',checkAuthenticated,(req, res)=>{ //id przekazać
     var choiceArray= req.query.choice
     for(var i=0;i<objAttr[choiceArray]["arrayAttrFile"].length;i++)
     tempArray.push(objAttr[choiceArray]["arrayAttrFile"][i])
-    //console.log(obj[0]["id"])
-  //  console.log(obj[0]["nameFile"])
     var  editfile = new Object();
     editfile.name=obj[0]["nameFile"]
     editfile.id=obj[0]["id"]
@@ -17,10 +15,10 @@ app.get('/edit/file/attr',checkAuthenticated,(req, res)=>{ //id przekazać
    req.session.editfile=editfile
     res.render('userFiles/editAttrFile.ejs',{id:obj[0]["id"],nameFile:obj[0]["nameFile"],attr: req.session.editfile.attr})
 })
-app.get('/attr/edit/choosed',checkAuthenticated,(req,res)=>{
+app.get('/attr/edit/choosed',checkAuthenticated,(req,res)=>{ //genrate attribute of edit file
     res.render('userFiles/editAttrChoosedFile.ejs',{attr: req.session.editfile.attr})
 });
-app.get('/attr/edit/availble',checkAuthenticated,(req,res)=>{
+app.get('/attr/edit/avaible',checkAuthenticated,(req,res)=>{ //genrate all attribute of all user files
     var tempArray = []
     sessionNeo          
     .run('MATCH (u:User{email:$emailParam}) OPTIONAL MATCH (u)-[r:OWNER]-(b:File) Where id(b)<>$idFileParam  RETURN b.attribute as attr',
@@ -40,10 +38,9 @@ app.get('/attr/edit/availble',checkAuthenticated,(req,res)=>{
                        })
        })
      setTimeout(async () =>{ 
-       
-         let attributteArrayTemp = [...new Set(tempArray)] //usuwamy powtarzające się atrybuty
-         let attributteArray= attributteArrayTemp.filter(x => ! req.session.editfile.attr.includes(x)); //odejmujemy tablice
-         res.render('userFiles/editAttrAvailableFile.ejs',{attr: attributteArray})
+         let attributeArrayTemp = [...new Set(tempArray)] 
+         let attributeArray= attributeArrayTemp.filter(x => ! req.session.editfile.attr.includes(x)); 
+         res.render('userFiles/editAttrAvailableFile.ejs',{attr: attributeArray})
  },2000)
 
 });

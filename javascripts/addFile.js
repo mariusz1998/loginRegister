@@ -1,8 +1,8 @@
 function addFile(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google) {
-    app.post('/add/file',checkAuthenticated,(req, res)=>{
+    app.post('/add/file',checkAuthenticated,(req, res)=>{ //render add file panel
         res.render('addFile/selectFilePanel.ejs')
     })
-    app.post('/get/file/property', (req, res) => {
+    app.post('/get/file/property', (req, res) => { //save file data in session and render choose attribute panel
       var  addfile = new Object();
       var formData = new formidable.IncomingForm();
       formData.parse(req, function (error, fields, files) {
@@ -16,7 +16,7 @@ function addFile(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google) {
       res.render('addFile/addFileAttrPanel.ejs')
     })
   })
-    app.get('/attr/availble',checkAuthenticated,(req,res)=>{
+    app.get('/attr/avaible',checkAuthenticated,(req,res)=>{ //generate array of attribute by downloading attributes in other files
        var tempArray = []
        sessionNeo          
        .run('MATCH (u:User{email:$emailParam}) OPTIONAL MATCH (u)-[r:OWNER]-(b:File) RETURN b.attribute as attr',
@@ -36,19 +36,18 @@ function addFile(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google) {
                           })
           })
         setTimeout(async () =>{ 
-            let attributteArray = [...new Set(tempArray)] //usuwamy powtarzające się atrybuty
-      res.render('addFile/availableAttrFile.ejs',{attr: attributteArray})
+            let attributeArray = [...new Set(tempArray)] //delete duplicates
+      res.render('addFile/availableAttrFile.ejs',{attr: attributeArray})
     },2000)
   });
-  app.get('/attr/choosed',checkAuthenticated,(req,res)=>{
+  app.get('/attr/choosed',checkAuthenticated,(req,res)=>{// genrate select option of choosed attribute
     res.render('addFile/choosedAttrList.ejs')
   })
-   app.get('/add/file/attribute',checkAuthenticated, (req, res) => {
+   app.get('/add/file/attribute',checkAuthenticated, (req, res) => { //add file to Google Drive and data base
     var obj = JSON.parse(req.query.JSONFrom);
     var localization = obj["localization"]
     var attrArray = obj["attrToAdd"]
     sessionNeo          
-    
     .run('MATCH (u:User{email:$emailParam}),(b:File{localization:$localizationParam}) Where(u)-[:OWNER|GETACCESS]->(b) and NOT (date(b.firstDay)>date($dateEndParam) OR date(b.lastDay)<date($dateStartParam)) RETURN b',
     {emailParam:req.user.email,localizationParam:localization,dateStartParam:obj["firstDay"] 
     ,dateEndParam:obj["lastDay"] }) 
@@ -63,9 +62,7 @@ function addFile(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google) {
       mimeType: req.session.addfile.type,
       body: fs.createReadStream(req.session.addfile.path),
     };
-    // Authenticating drive API
     const drive = google.drive({ version: 'v3', auth });
-    // Uploading Single image to drive
     drive.files.create(
       {
         resource: fileMetadata,
@@ -73,19 +70,14 @@ function addFile(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google) {
       },
       async (err, file) => {
         if (err) {
-          // Handle error
-          console.error(err.msg);
-          return res
-            .status(400)
-            .json({ errors: [{ msg: 'Server Error try again later' }] });
+          res.render('addFile/addFileError.ejs'); 
         } else {
-          // if file upload success then return the unique google drive id
           sessionNeo
           .run('CREATE(n:File {name:$nameParam, googleID:$googleIDParam, localization:$localizationParam, attribute:$attrParam, firstDay:date($firstDayParam),lastDay:date($lastDayParam)}) WITH n MATCH (u:User {email:$emailParam}) MERGE(n)<-[r:OWNER]-(u)',
           {nameParam:req.session.addfile.name,googleIDParam:file.data.id,localizationParam: localization, attrParam:attrArray,emailParam:req.user.email,
             firstDayParam:obj["firstDay"], lastDayParam:obj["lastDay"] })
           .then(function(){
-            res.render('addFile/addFileSucces.ejs'); //do przeglądu własnych plików?
+            res.render('addFile/addFileSucces.ejs'); 
         })
         }
       }

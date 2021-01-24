@@ -3,13 +3,13 @@ const bcrypt = require('bcrypt')
 
 function initialize(passport,sessionNeo) {
   var user
-  const authenticateUser = async (email, password, done) => { 
+  const authenticateUser = async (email, password, done) => {  //login user and save in session
         user = new Object();
     sessionNeo
             .run('MATCH (u:User{email:$loginParam}) OPTIONAL MATCH (u)-[:ADMIN]-(a:Admin) RETURN u,a',
         {loginParam:email})
         .then(result => {  
-       if(result.records.length>0){ //sprawdzenie czy jest jakiś user
+       if(result.records.length>0){  //check exist logged user
                     user.id = result.records[0].get('u').identity.low
                    user.email=result.records[0].get('u').properties.email
                     user.password=result.records[0].get('u').properties.password
@@ -29,26 +29,25 @@ function initialize(passport,sessionNeo) {
        }
             })
             .catch(error => {
-              console.log("Bład w łaczeniu ")  //brak połączenia
+              return done(null, false, { message: 'Failed connect to server' })  
             })
             setTimeout(async () =>{ 
     if (typeof (user.id)=='undefined') {
-      return done(null, false, { message: 'No user with that email' }) //parametr 1 ->błąd , parametr 2 czy zwracamy użytkownika 
+      return done(null, false, { message: 'No user with that email' }) 
     }
     if (user.active==false) {
-      return done(null, false, { message: 'Account is not active' }) //parametr 1 ->błąd , parametr 2 czy zwracamy użytkownika 
+      return done(null, false, { message: 'Account is not active' })  
     }
     try {
       if (await bcrypt.compare(password, user.password)) {
-        return done(null, user) //parametr2 -> zwracamy użytkownika
+        return done(null, user) 
       } else {
         return done(null, false, { message: 'Password incorrect' })
       }
     } catch (e) {
       return done(e) 
     }
-  }
-            ,3000)
+  } ,3000)
 }
 
   passport.use(new LocalStrategy({ usernameField: 'email' }, authenticateUser))

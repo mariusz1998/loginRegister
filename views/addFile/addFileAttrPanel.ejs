@@ -7,21 +7,21 @@
 <script>var toInit = "Attr";</script>
 <body onload="init(toInit);">
 <center>
-       Select attr :          
+       Select file property:          
         <br/><br/>
         <div id="container">
             <div id="avaible">
                Avaible: 
                 <br/>
-                <iframe name="AvaibleAttr" id="AvaibleAttr" src="/attr/availble"></iframe>
+                <iframe name="AvaibleAttr" id="AvaibleAttr" src="/attr/avaible"></iframe>
             </div>
             <div id="added">
                 Selected:
                 <br/>
                 <iframe id="ChoosedAttr" src="/attr/choosed"></iframe>
             </div>
-           
         </div>
+        <br></br>
         <div>
             <label for="newAttribute">Add attribute</label>
             <input type="text" id="newAttribute" name="newAttribute" >
@@ -42,8 +42,6 @@
         <input type = "submit" value = "Add file" onclick="temp()">
         <br/><br/>
       
-    <!--</form>-->
-
 </center>
 <script>
       function addAttr()

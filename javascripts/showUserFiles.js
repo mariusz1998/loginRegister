@@ -1,8 +1,7 @@
 function showUserFiles(app,checkAuthenticated,sessionNeo) {
-    app.get('/show/your/files',checkAuthenticated,(req, res)=>{
+    app.get('/show/your/files',checkAuthenticated,(req, res)=>{ //generate table of user's files
         var tableDataFile=""
         var  attrFiles="["
-            // req.user.email=req.body.email
              sessionNeo
                  .run('MATCH (u:User ) WHERE id(u)=$idParam OPTIONAL MATCH (f:File)<-[:OWNER]-(u) RETURN f',
                  { idParam: parseInt(req.user.id) })
@@ -24,15 +23,10 @@ function showUserFiles(app,checkAuthenticated,sessionNeo) {
                             attrFiles+= "\""+record.get('f').properties.attribute[i]+"\","
                             attrFiles =  attrFiles.substring(0,  attrFiles.length - 1); 
                             attrFiles+="]},"
-                           // tableDataFile +="<td>"+record.get('f').properties.firstDay+"</td>";
                     })
-                    attrFiles =  attrFiles.substring(0,  attrFiles.length - 1); //usunięcie przecinka
+                    attrFiles =  attrFiles.substring(0,  attrFiles.length - 1); 
                     attrFiles+="]"
-                 //   var obj = JSON.parse(attrFiles);
-                 //   console.log(obj[0]["arrayAttrFile"])
-                   // setTimeout(async () =>{ 
                     res.render('userFiles/files.ejs',{tableData: tableDataFile,arrayFilesAttr:attrFiles})  
-                  //  }  ,2000)
                   }
                   })
                

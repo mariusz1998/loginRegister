@@ -8,7 +8,7 @@
     <body>
         
         <script>var toFilter="Users"</script>
-        Filter: <input type = "text" name = "searchUsers" id="searchUsers" onkeyup="myFilterFunction(toFilter)">
+        Filter: <input type = "text" name = "searchUsers" id="searchUsers" onkeyup="filterFunction(toFilter)">
         
         <center>
             <select name="sorting" size="1" style="width:40%;" id="sorting">
@@ -32,8 +32,8 @@
         <script>
             sort = document.getElementById("sorting");
             var toSort = "Users";
-            sort.addEventListener("change", mySortingFunction.bind(this,toSort),false); 
-            window.onload = mySortingFunction(toSort);
+            sort.addEventListener("change", sortingFunction.bind(this,toSort),false); 
+            window.onload = sortingFunction(toSort);
         </script>
     </body>
 </html>
