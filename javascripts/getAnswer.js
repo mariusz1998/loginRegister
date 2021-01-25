@@ -127,15 +127,18 @@ function getAnswer(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
       filesArray.forEach(function(file){
             fs.promises.mkdir(desktopDir, { recursive: true })
             const dest = fs.createWriteStream(desktopDir+"/"+file.name);
-          // Authenticating drive API
+            dest.on('error', function(err) {
+              response.render('makeQuestion/errorDownloadFile.ejs',{file:"file from data lake"})
+          });
           const drive = google.drive({ version: 'v3', auth });
           drive.files.get({fileId: file.googleId, alt: 'media'}, {responseType: 'stream'},
           function(err, responseDrive){
             responseDrive.data
               .on('end', () => {
                   counterFiles++;
-                  if(filesArray.length==counterFiles)
+                  if(filesArray.length==counterFiles) {
                   generateAnswer(filesArray)
+                  }
               })
               .on('error', err => {
                  response.render('makeQuestion/errorDownloadFile.ejs',{file:file.name})
@@ -317,7 +320,7 @@ attributeWithoutUnit=attribute
    answer = "The result was not generated"
 
   var rimraf = require("rimraf");
-      rimraf(desktopDir);
+    rimraf(desktopDir, function () { console.log("done"); });
       if(showResults==true)
      response.render('makeQuestion/showAnswer.ejs',{answer:answer,time:endTime-startTime})
      else
