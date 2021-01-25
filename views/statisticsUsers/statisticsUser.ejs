@@ -1,6 +1,7 @@
 <head> 
   <title> Edit other account</title> 
   <link rel="stylesheet" href="/CSS/tableStyle.css">
+  <link rel="stylesheet" href="/CSS/style.css">
 </head>
 <center> 
 <div>
@@ -39,21 +40,16 @@
       This user is not an admin now and in the future.
           <% } %>
     <br/><br/>
-    <div>
+    <div class="btn-group">
         <button type="submit" onclick="tempAdmin()">Edit admin date</button>
-      </div>
-      <div>
         <button type="submit" onclick="tempUserData()">Edit user data </button>
-      </div>
-      <div>
         <button type="submit" onclick="tempUserPass()">Edit user password </button>
-      </div>
-      <div>
         <button id="buttonFileDelete">Delete this account</button>
-            </div>
-      <!-- The Modal Delte -->
+        <form action = "/" method="get">
+          <button>Back</button>
+         </form>
+        </div>
 <div id="deleteModal" class="modal">
-	<!-- Modal content -->
 	<div class="modal-content">
   <span class="closeDeleteModal">  &times;</span>
 	  <p id="questionText"></p>
@@ -84,11 +80,9 @@
             modalDelete.style.display = "block";
                   document.getElementById("questionText").innerHTML="You sure delete this account?"
             }
-            // When the user clicks on <span> (x), close the modal
             spanDelete.onclick = function() {
             modalDelete.style.display = "none";
             }
-            // When the user clicks anywhere outside of the modal, close it
             window.onclick = function(event) {
             if (event.target == modalDelete) {
               modalDelete.style.display = "none";

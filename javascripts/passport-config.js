@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt')
 
 function initialize(passport,sessionNeo) {
   var user
+  var passwordUser
   const authenticateUser = async (email, password, done) => {  //login user and save in session
         user = new Object();
     sessionNeo
@@ -12,7 +13,7 @@ function initialize(passport,sessionNeo) {
        if(result.records.length>0){  //check exist logged user
                     user.id = result.records[0].get('u').identity.low
                    user.email=result.records[0].get('u').properties.email
-                    user.password=result.records[0].get('u').properties.password
+                   passwordUser=result.records[0].get('u').properties.password
                     user.active = result.records[0].get('u').properties.active
                     user.firstName = result.records[0].get('u').properties.firstName
                     user.lastName = result.records[0].get('u').properties.lastName
@@ -25,7 +26,6 @@ function initialize(passport,sessionNeo) {
                     }
                     else
                     user.admin =false       
-                console.log(user)
        }
             })
             .catch(error => {
@@ -39,7 +39,7 @@ function initialize(passport,sessionNeo) {
       return done(null, false, { message: 'Account is not active' })  
     }
     try {
-      if (await bcrypt.compare(password, user.password)) {
+      if (await bcrypt.compare(password, passwordUser)) {
         return done(null, user) 
       } else {
         return done(null, false, { message: 'Password incorrect' })

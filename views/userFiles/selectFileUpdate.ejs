@@ -4,11 +4,20 @@
     <title>Select File</title>
 </head>
 <body>
-    <center>
-        You update <%= id%>) <%=nameFile%>
+<center>
+    You update <%= id%>) <%=nameFile%>
     <form method="POST" action="/set/upload/file" enctype="multipart/form-data">
-    <input type="file" name="file">
-    <input type="submit">
+    <input value = "Choose a file" type="file" id="file" name="file" onchange="uploadFile();">
+    <input value = "Next" disabled type="submit" id="button">
 </center>
 </body>
   </form> 
+  <script>
+    function uploadFile() {  //block button when file is not choose
+       if(document.getElementById("file").value==="") { 
+        document.getElementById('button').disabled = true; 
+    } else { 
+        document.getElementById('button').disabled = false;
+    }
+}
+  </script>

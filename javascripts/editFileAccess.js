@@ -14,7 +14,6 @@ function editFileAccess(app,checkAuthenticated,sessionNeo) {
     app.get('/set/access/user/avaible',checkAuthenticated,(req,res)=>{ //generate list users which can set access
         var userArray = []
         var userToDelete = []
-        console.log(req.user.id)
         sessionNeo  
         .run( 'MATCH (u:User{active:true}),(b:File{localization:$localizationParam}) Where id(u)<>$idUserParam and (u)-[:OWNER|GETACCESS]->(b) RETURN u,b',
         {idUserParam: parseInt(req.user.id),localizationParam: req.session.editfile.localization}) 

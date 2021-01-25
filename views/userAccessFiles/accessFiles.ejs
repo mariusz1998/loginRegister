@@ -1,6 +1,4 @@
-<!DOCTYPE html> 
 <html> 
-
 <head> 
   <title> Access Files</title> 
   <link rel="stylesheet" href="/CSS/tableStyle.css">
@@ -27,26 +25,24 @@
 			 <br>
 			 Filter by localization: <input type = "text" name = "filterLocalization" id="filterLocalization"
 			 onkeyup="filterFunction(2,'filterLocalization')" placeholder="Search for localization">
-
 			 Filter by start day: <input type = "text" name = "filterStartDay" id="filterStartDay"
-			 onkeyup="filterFunction(3,'filterStartDay')" placeholder="Search for start day">
+			 onkeyup="filterFunction(3,'filterStartDay')" placeholder="Search for start day">			
+			  <br>
 			 Filter by end day: <input type = "text" name = "filterEndDay" id="filterEndDay"
-             onkeyup="filterFunction(4,'filterEndDay')" placeholder="Search for end day">
+			 onkeyup="filterFunction(4,'filterEndDay')" placeholder="Search for end day">
              Filter by onwer: <input type = "text" name = "filterOwner" id="filterOwner"
              onkeyup="filterFunction(5,'filterOwner')" placeholder="Search for owner">
 			 </div>
-			 
-	<div>
+
+		<div class="btn-group"></div>
 		<button id="buttonFileDelete">Delete access</button>
-		</div>
-		<div>
-			<button id="buttonDeleteAccess" onclick="downloadFile()">Download File</button>
-			</div>
-        <table id="filesTable" class="filesTable">
-        </table>
-<!-- The Modal Delte -->
+		<button id="buttonDeleteAccess" onclick="downloadFile()">Download File</button>
+		<form action = "/" method="get">
+			<button>Back</button>
+		 </form>
+				</div>
+				
 <div id="deleteModal" class="modal">
-	<!-- Modal content -->
 	<div class="modal-content">
   <span class="closeDeleteModal">  &times;</span>
 	  <p id="questionText"></p>
@@ -61,7 +57,8 @@
 	  var buttonDelete = document.getElementById("buttonFileDelete");
 	  var spanDelete = document.getElementsByClassName("closeDeleteModal")[0];
 	  buttonDelete.onclick = function() {
-      var questionValue = "Select a file!"; 
+	  var questionValue = "Select a file!"; 
+	  document.getElementById("questionText").innerHTML=questionValue
       var values=""
 	  modalDelete.style.display = "block";
 		var rows = document.getElementById("filesTable").rows;
@@ -76,11 +73,9 @@
                       questionValue="You sure delete access to:\n"+values+"?"
 				  document.getElementById("questionText").innerHTML=questionValue
 	  }
-	  // When the user clicks on <span> (x), close the modal
 		spanDelete.onclick = function() {
 		modalDelete.style.display = "none";
 	  }
-	  // When the user clicks anywhere outside of the modal, close it
 	  window.onclick = function(event) {
 		if (event.target == modalDelete) {
 			modalDelete.style.display = "none";
@@ -101,9 +96,6 @@
 JSONArrayOfUsersToAdd = JSONArrayOfUsersToAdd.substring(0, JSONArrayOfUsersToAdd.length - 1); //usunięcie przecinka
 JSONToSend = JSONToSend + JSONArrayOfUsersToAdd +"] }";
 
-                        //json=json.substring(0,json.length - 1)
-						console.log(JSONToSend)
-						//console.log("/access/file/delete?JSONFrom={\"filesToDelete\": [" + json +"]}")
                         location="/access/file/delete?JSONFrom="+JSONToSend 
 					}
 						</script>
@@ -138,7 +130,7 @@ JSONToSend = JSONToSend + JSONArrayOfUsersToAdd +"] }";
           <script src="/forTables/filterFunction.js"></script>
           <script src="/forTables/sortFunction.js"></script>
             <script>
-				var dataTable = "<%- tableData %>" //tutaj myślnik nie '='
+				var dataTable = "<%- tableData %>" 
 				document.getElementById("filesTable").innerHTML=dataTable
                 sort = document.getElementById("sorting");
                 option = document.getElementById("option");

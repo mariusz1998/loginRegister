@@ -1,7 +1,19 @@
-You and other have access to file for (<%= localization%>) dates (<%=firstDay%>-<%=lastDay%>) are used.
-
-<form action="/edit/file/property/error" method="GET">
+<head> 
+    <title> Create question</title> 
+    <link rel="stylesheet" href="/CSS/style.css">
+  </head> 
+  <center>
+   <br> You and other have access to file for (<%= localization%>) dates (<%=firstDay%>-<%=lastDay%>) are used.
+   <br><br>
     <div>
-    <button type="submit">Back</button>
+      <form action="/edit/file/property/error" method="GET">
+        <div>
+        <button type="submit">Back</button>
+    </div>
+      </form>
+      <div>
+      <form action = "/" method="get">
+        <input type = "submit" value = "Back">
+    </form>
 </div>
-  </form>
+</center>

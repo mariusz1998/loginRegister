@@ -2,12 +2,10 @@
 <head>
   <meta charset="utf-8">
   <link rel="stylesheet" href="/CSS/style.css">
-  <title>Login page</title>
+  <title>Main page</title>
 </head>
 <center>
 <h2>Welcome <%=user.firstName%> <%=user.lastName%></h2>
-
-
 <% if ( user.admin == true) { %>
   <form action="/users/activate" method="POST">
     <button id="submit" type="submit">Active other users</button>
@@ -44,6 +42,4 @@
 <form action="/logout?_method=DELETE" method="POST">
   <button type="submit">Log Out</button>
 </form>
-
-
 </center>

@@ -42,7 +42,11 @@ iframe {
     display: inline-block;
 }
 
-
+.btn-group button {
+    padding: 10px 24px; 
+    cursor: pointer; 
+    float: center; 
+  }
 
 #container {
   height: 50%;

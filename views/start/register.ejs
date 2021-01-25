@@ -3,6 +3,7 @@
   <link rel="stylesheet" href="/CSS/style.css">
   <title>Register page</title>
 </head>
+<center>
 <h1>Register</h1>
 <% if(typeof alert != 'undefined'){ %>
    <%= alert %>
@@ -22,16 +23,16 @@
   </div>
   <div>
     <label for="password1">Password</label>
-    <input type="password" onChange='checkPasswordMatch()' id="password1" name="password1" required>
+    <input  minlength="3"  type="password" onChange='checkPasswordMatch()' id="password1" name="password1" required>
   </div>
   <div>
     <label for="password2">Repeat Password</label>
-    <input type="password" onChange='checkPasswordMatch()' id="password2" name="password2" required>  <l id="passwordError"></l>
+    <input minlength="3" type="password" onChange='checkPasswordMatch()' id="password2" name="password2" required>  <l id="passwordError"></l>
   </div>
   <button id="submit" type="submit">Register</button>
 </form>
 <a href="/login">Login</a>
-
+</center>
 <script>
 function checkPasswordMatch()
 {

@@ -16,14 +16,17 @@ function downloadFile(app,checkAuthenticated,sessionNeo,auth,fs,google) {
           function(err, response){
             response.data
               .on('end', () => {
-                  console.log('Done');
+             
                   if(myFiles==true)
                   res.render('userFiles/downloadFileSucces.ejs',{path:desktopDir}); 
                   else
                   res.render('userAccessFiles/downloadFileSucces.ejs',{path:desktopDir}); 
               })
               .on('error', err => {
-                  console.log('Error', err);
+                if(myFiles==true)
+                res.render('userFiles/deleteFileError.ejs'); 
+                else
+                res.render('userAccessFiles/downloadFileError.ejs'); 
               })
               .pipe(dest);
           }

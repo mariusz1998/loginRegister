@@ -52,7 +52,6 @@ function addFile(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google) {
     {emailParam:req.user.email,localizationParam:localization,dateStartParam:obj["firstDay"] 
     ,dateEndParam:obj["lastDay"] }) 
               .then(result => {
-                console.log(result.records.length)
                   if(result.records.length==0)
                   {
     const fileMetadata = {

@@ -1,6 +1,7 @@
 <head> 
-  <title> Edit your account</title> 
+  <title> Edit account</title> 
   <link rel="stylesheet" href="/CSS/tableStyle.css">
+  <link rel="stylesheet" href="/CSS/style.css">
 </head>
 <center> 
 <div>
@@ -27,9 +28,7 @@
       <div>
         <button id="buttonFileDelete">Delete your account</button>
             </div>
-      <!-- The Modal Delte -->
 <div id="deleteModal" class="modal">
-	<!-- Modal content -->
 	<div class="modal-content">
   <span class="closeDeleteModal">  &times;</span>
 	  <p id="questionText"></p>
@@ -57,11 +56,9 @@
             modalDelete.style.display = "block";
                   document.getElementById("questionText").innerHTML="You sure delete your account?"
             }
-            // When the user clicks on <span> (x), close the modal
             spanDelete.onclick = function() {
             modalDelete.style.display = "none";
             }
-            // When the user clicks anywhere outside of the modal, close it
             window.onclick = function(event) {
             if (event.target == modalDelete) {
               modalDelete.style.display = "none";

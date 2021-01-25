@@ -24,7 +24,6 @@ function deleteUserAccount(app,checkAuthenticated,sessionNeo) {
             .run(' MATCH (u:User)-[r:ADMIN]-(b:Admin) Where id(u)<>$idParam and b.endDay>=date($todayParam) and b.startDay<=date($todayParam) RETURN u'
             ,{idParam: req.user.id,todayParam:dateToday})
             .then(function(result){
-              console.log(result.records.length)
               if(result.records.length == 0 || result.records[0].get('u')==null)
               res.render('editUser/deleteUserWarning.ejs')
               else{

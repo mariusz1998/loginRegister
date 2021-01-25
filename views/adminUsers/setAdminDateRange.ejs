@@ -1,4 +1,10 @@
-
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/CSS/style.css">
+  <title>User activate</title>
+</head>
+<center>
 <div>
     <label for="email">Email</label>
     <input type="text" id="email"  readonly name="email" value=<%- user.email %> >
@@ -20,6 +26,7 @@
   <input type="date" id="endDay" name="endDay" onchange="endDayChange()" form="DD-MM-YYYY" value=<%- endDay %> min=<%- minDate %>>
 </div>
 <input type = "submit" value = "Set admin date " onclick="temp()">
+</center>
   <script>
 function startDayChange(){
 document.getElementById("endDay").setAttribute("min", document.getElementById("startDay").value);

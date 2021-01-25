@@ -18,36 +18,26 @@ function setFileOwner(app,checkAuthenticated,sessionNeo)
          var userArray = []
         var userToDelete = []
         sessionNeo  
-        .run( 'MATCH (u:User{active:true}),(b:File{localization:$localizationParam}) Where  (u)-[:OWNER|GETACCESS]->(b) RETURN u,b',
+        .run( 'MATCH (u:User{active:true}),(b:File{localization:$localizationParam}) Where (u)-[:OWNER|GETACCESS]->(b) RETURN u,b',
         {localizationParam: req.session.editfile.localization}) 
                   .then(result => {
                        result.records.forEach(function(record) {
-                           console.log(result.records)
-                           {
-                             userArray.push(record.get('u').properties.email)
-
                             if((record.get('b').properties.firstDay<=(req.session.editfile.startDay) && record.get('b').properties.lastDay>=(req.session.editfile.startDay)) ||			
                             (record.get('b').properties.firstDay<=(req.session.editfile.endDay)&& record.get('b').properties.lastDay>=(req.session.editfile.endDay))  ||			
                             (record.get('b').properties.firstDay<=(req.session.editfile.startDay)&& record.get('b').properties.lastDay>=(req.session.editfile.endDay)) ||
                             (record.get('b').properties.firstDay>=(req.session.editfile.startDay)&& record.get('b').properties.lastDay<=(req.session.editfile.endDay))){
                               userToDelete.push( record.get('u').properties.email )
                         }
-                          }
                           })
                            sessionNeo  
-        .run( 'MATCH (u:User),(b:File{localization:$localizationParam}) Where id(u)<>$idUserParam and not (u)-[:OWNER|GETACCESS]->() RETURN u',
-        {idUserParam: parseInt(req.user.id),localizationParam: req.session.editfile.localization}) 
+        .run( 'MATCH (u:User{active:true}) Where id(u)<>$idUserParam  RETURN u', {idUserParam: parseInt(req.user.id)}) 
         .then(result => {
           result.records.forEach(function(record) {
-              {
-               userArray.push(record.get('u').properties.email)
-              }                    
+               userArray.push(record.get('u').properties.email)                 
       })
            })
           })
          setTimeout(async () =>{ 
-           console.log(userArray)
-           console.log(userToDelete)
           let  userArrayTemp = [...new Set(userArray)]
           let usersArray= userArrayTemp.filter(x => ! userToDelete.includes(x)); 
             res.render('otherFiles/setFileOwnerChoosed.ejs',{users: usersArray})

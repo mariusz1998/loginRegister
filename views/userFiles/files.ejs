@@ -1,6 +1,4 @@
-<!DOCTYPE html> 
 <html> 
-
 <head> 
   <title>  My Files</title> 
   <link rel="stylesheet" href="/CSS/tableStyle.css">
@@ -29,37 +27,28 @@
 
 			 Filter by start day: <input type = "text" name = "filterStartDay" id="filterStartDay"
 			 onkeyup="filterFunction(3,'filterStartDay')" placeholder="Search for start day">
+			 <br>
 			 Filter by end day: <input type = "text" name = "filterEndDay" id="filterEndDay"
              onkeyup="filterFunction(4,'filterEndDay')" placeholder="Search for end day">
 			 </div>
 			 
-    	<!-- Trigger/Open The Modal -->
+<div class="btn-group">
 <button id="buttonAttr">Show attribute</button> 
-<div>
 <button id="buttonDateRange" onclick="editDate()">Edit date range</button>
-</div>
-<div>
-	<button id="buttonFileUpdate" onclick="editFile()">Update file</button>
-	</div>
-	<div>
-		<button id="buttonFileDelete">Delete file</button>
+<button id="buttonFileUpdate" onclick="editFile()">Update file</button>
+<button id="buttonFileDelete">Delete file</button>
+<button id="buttonEditAccess" onclick="editAcess()">Set accesss</button>
+<button id="buttonDeleteAccess" onclick="deleteAcess()">Delete accesss</button>
+<button id="buttonDeleteAccess" onclick="downloadFile()">Download File</button>
+<form action = "/" method="get">
+	<button>Back</button>
+ </form>
 		</div>
-		<div>
-			<button id="buttonEditAccess" onclick="editAcess()">Set accesss</button>
-			</div>
-			<div>
-				<button id="buttonDeleteAccess" onclick="deleteAcess()">Delete accesss</button>
-				</div>
-				<div>
-					<button id="buttonDeleteAccess" onclick="downloadFile()">Download File</button>
-					</div>
 		
 	<table id="filesTable" class="filesTable">
 	</table>
 
-<!-- The Modal -->
 <div id="myModal" class="modal">
-  <!-- Modal content -->
   <div class="modal-content">
 <span class="close">  &times;</span>
 	<p id="fileAttrText"></p>
@@ -67,9 +56,7 @@
   <button disabled=false id="buttonEditAttr" onclick="temp()">Edit attribute</button>
 </div>
 
-<!-- The Modal Delte -->
 <div id="deleteModal" class="modal">
-	<!-- Modal content -->
 	<div class="modal-content">
   <span class="closeDeleteModal">  &times;</span>
 	  <p id="questionText"></p>
@@ -82,14 +69,10 @@
 <script  type='text/javascript'>
   var JSONFileAttr = '<%-arrayFilesAttr%>'
   var arrayFilesNumber
-       var obj = JSON.parse(JSONFileAttr);
-	// Get the modal
+    var obj = JSON.parse(JSONFileAttr);
 	var modal = document.getElementById("myModal")
-	// Get the button that opens the modal
 	var btn = document.getElementById("buttonAttr");
-	// Get the <span> element that closes the modal
 	var span = document.getElementsByClassName("close")[0];
-	// When the user clicks the button, open the modal 
 	btn.onclick = function() {
     var row_value = "Select a file!"; 
 	  modal.style.display = "block";
@@ -112,11 +95,9 @@
                 }
                 document.getElementById("fileAttrText").innerHTML=row_value
 	}
-	// When the user clicks on <span> (x), close the modal
 	span.onclick = function() {
 	  modal.style.display = "none";
 	}
-	// When the user clicks anywhere outside of the modal, close it
 	window.onclick = function(event) {
 	  if (event.target == modal) {
 		modal.style.display = "none";
@@ -126,7 +107,6 @@
 	</script>
 
 <script  type='text/javascript'>
-		// var obj = JSON.parse(JSONFileAttr);
 	  var modalDelete = document.getElementById("deleteModal")
 	  var buttonDelete = document.getElementById("buttonFileDelete");
 	  var spanDelete = document.getElementsByClassName("closeDeleteModal")[0];
@@ -143,11 +123,9 @@
 					  } 
 				  document.getElementById("questionText").innerHTML=questionValue
 	  }
-	  // When the user clicks on <span> (x), close the modal
 		spanDelete.onclick = function() {
 		modalDelete.style.display = "none";
 	  }
-	  // When the user clicks anywhere outside of the modal, close it
 	  window.onclick = function(event) {
 		if (event.target == modalDelete) {
 			modalDelete.style.display = "none";
@@ -155,9 +133,6 @@
 	  }
 	  
 	  </script>
-
-
-
 	<script type="text/javascript"> 
 	function temp()
 	  {
@@ -202,7 +177,6 @@
 					<script type="text/javascript"> 
 						function deleteFile()
 						  {
-							  //czy na pewno te okno zrób 
 							var rows = document.getElementById("filesTable").rows;
 					
 									for(var i=1;i<rows.length;i++){
@@ -268,14 +242,14 @@
 					rows[i].classList.add('highlight'); 
 					document.getElementById('buttonEditAttr').disabled=false
 				}	else
-					rows[i].classList.remove('highlight')  //tło 
+					rows[i].classList.remove('highlight') 
 				}
 			}); 
 	</script> 
           <script src="/forTables/filterFunction.js"></script>
           <script src="/forTables/sortFunction.js"></script>
             <script>
-				var dataTable = "<%- tableData %>" //tutaj myślnik nie '='
+				var dataTable = "<%- tableData %>"
 				document.getElementById("filesTable").innerHTML=dataTable
                 sort = document.getElementById("sorting");
                 option = document.getElementById("option");

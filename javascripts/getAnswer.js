@@ -317,7 +317,7 @@ attributeWithoutUnit=attribute
    answer = "The result was not generated"
 
   var rimraf = require("rimraf");
-      rimraf(desktopDir, function () { console.log("done");});
+      rimraf(desktopDir);
       if(showResults==true)
      response.render('makeQuestion/showAnswer.ejs',{answer:answer,time:endTime-startTime})
      else

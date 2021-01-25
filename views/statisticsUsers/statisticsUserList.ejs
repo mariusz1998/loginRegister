@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -6,14 +5,13 @@
         <title>Users list</title>
     </head>
     <body>
-        <center></center>
         <script>var toFilter="User"</script>
         Filter: <input type = "text" name = "searchUser" id="searchUser" onkeyup="filterFunction(toFilter)">
             <select name="sorting" size="1" style="width:40%;" id="sorting">
                 <option selected>A-Z</option>
                 <option>Z-A</option>
             </select>
-        </center>
+       
                     <select name="choosedUser" size="7" style="width:100%;" id="choosedUser">
                         <% users.forEach(function(user){%>
                             <option> <%= user %>  </option>

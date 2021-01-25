@@ -4,7 +4,6 @@ function filterFunction(valueFilter,nameInput) {
     input = document.getElementById(nameInput);
     var filter = input.value.toUpperCase();
 
-    console.log(valueFilter+ " " +nameInput+" "+filter)
     table = document.getElementById("filesTable");
     rows = table.rows;
     for (i = 1; i < (rows.length ); i++) {

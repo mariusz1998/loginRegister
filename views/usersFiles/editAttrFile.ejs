@@ -6,7 +6,6 @@
  </head>
 <script> 
     var arrayAttrFile =[] 
-    console.log('<%- attr%>')
     '<% for(var j=0; j<attr.length; j++) { %>'
         arrayAttrFile.push('<%- attr[j]%>');
        ' <%}%>'
@@ -37,8 +36,6 @@ var toInit = "Attr";</script>
             <input type = "submit" value = "Edit file attribute" onclick="temp()">
           </div>
       
-    <!--</form>-->
-
 </center>
 <script>
       function addAttr()
