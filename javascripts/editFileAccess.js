@@ -30,7 +30,7 @@ function editFileAccess(app,checkAuthenticated,sessionNeo) {
                           }
                           })
                            sessionNeo  
-        .run( 'MATCH (u:User),(b:File{localization:$localizationParam}) Where id(u)<>$idUserParam and (not (u)-[:OWNER|GETACCESS]->() or not (u)-[:OWNER|GETACCESS]->(b)) RETURN u',
+        .run( 'MATCH (u:User{active:true}),(b:File{localization:$localizationParam}) Where id(u)<>$idUserParam and (not (u)-[:OWNER|GETACCESS]->() or not (u)-[:OWNER|GETACCESS]->(b)) RETURN u',
         {idUserParam: parseInt(req.user.id),localizationParam: req.session.editfile.localization}) 
         .then(result => {
           result.records.forEach(function(record) {

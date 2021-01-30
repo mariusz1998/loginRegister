@@ -8,10 +8,13 @@
     You update <%= id%>) <%=nameFile%>
     <form method="POST" action="/set/upload/file" enctype="multipart/form-data">
     <input value = "Choose a file" type="file" id="file" name="file" onchange="uploadFile();">
-    <input value = "Next" disabled type="submit" id="button">
+    <input value = "Update" disabled type="submit" id="button">
+</form> 
+    <form action="/show/your/files" method="GET">
+        <div><input type = "submit" value = "Back"></div>
+       </form>
 </center>
-</body>
-  </form> 
+
   <script>
     function uploadFile() {  //block button when file is not choose
        if(document.getElementById("file").value==="") { 

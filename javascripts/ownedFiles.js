@@ -7,7 +7,7 @@ function ownedFiles(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
                  { idParam: parseInt(req.user.id) })
                  .then(function(result){   
                  if(result.records.length ==0 || result.records[0].get('f')==null)
-                  res.render('usersFiless/ownedFiles.ejs')
+                  res.render('usersFiles/noFiles.ejs')
                  else
                  {
                     tableDataFile +="<tr><th>Id</th> <th>Name</th> <th>Localization</th> <th>First Day</th> <th>Last Day</th> <th>Owner</th> </tr>"

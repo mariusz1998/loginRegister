@@ -11,6 +11,12 @@ function downloadFile(app,checkAuthenticated,sessionNeo,auth,fs,google) {
             const desktopDir = homeDir+`\\Desktop`+"\\DataLakeFiles";
             fs.promises.mkdir(desktopDir, { recursive: true })
             const dest = fs.createWriteStream(desktopDir+"/"+obj[0]["nameFile"]);
+            dest.on('error', function(err) {
+              if(myFiles==true)
+              res.render('userFiles/downloadFileError.ejs'); 
+              else
+              res.render('userAccessFiles/downloadFileError.ejs'); 
+          });
           const drive = google.drive({ version: 'v3', auth });
           drive.files.get({fileId: googleID, alt: 'media'}, {responseType: 'stream'},
           function(err, response){
@@ -24,7 +30,7 @@ function downloadFile(app,checkAuthenticated,sessionNeo,auth,fs,google) {
               })
               .on('error', err => {
                 if(myFiles==true)
-                res.render('userFiles/deleteFileError.ejs'); 
+                res.render('userFiles/downloadFileError.ejs'); 
                 else
                 res.render('userAccessFiles/downloadFileError.ejs'); 
               })
