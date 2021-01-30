@@ -6,3 +6,6 @@ function submit(){
   JSONToSend = JSONToSend  + "\"endDay\":\"" +  endDay + "\"}]}"
   location='/user/setAdmin/date?JSONFrom='+JSONToSend
 }
+function back(){
+  location='/users/showStatistics/new'
+}

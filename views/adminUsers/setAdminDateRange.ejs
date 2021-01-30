@@ -25,7 +25,8 @@
     <label for="endDay">End day:</label>
   <input type="date" id="endDay" name="endDay" onchange="endDayChange()" form="DD-MM-YYYY" value=<%- endDay %> min=<%- minDate %>>
 </div>
-<input type = "submit" value = "Set admin date " onclick="temp()">
+<div><input type = "submit" value = "Set admin date " onclick="temp()"></div>
+<div><input type = "submit" value = "Back" onclick="temp1()"></div>
 </center>
   <script>
 function startDayChange(){
@@ -37,6 +38,9 @@ document.getElementById("startDay").setAttribute("max", document.getElementById(
 function temp(){
 
   submit();
+}
+function temp1(){
+    back();
 }
   </script>
 
