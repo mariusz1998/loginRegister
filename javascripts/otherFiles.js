@@ -3,7 +3,7 @@ function otherFiles(app,checkAuthenticated,sessionNeo) {
         var tableDataFile=""
         var  attrFiles="["
              sessionNeo
-                 .run('MATCH (f:File) WHERE NOT (f)-[]-() RETURN f')
+                 .run('MATCH (f:File) WHERE NOT (f)-[:OWNER]-() RETURN f')
                  .then(function(result){   
                  if(result.records.length ==0 || result.records[0].get('f')==null)
                   res.render('otherFiles/noFiles.ejs')
