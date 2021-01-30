@@ -40,8 +40,8 @@ let auth;
 const SCOPES = ['https://www.googleapis.com/auth/drive'];
 const TOKEN_PATH = 'token.json';
 
-const driver = neo4j.driver('bolt://54.157.135.221:32868',
-                  neo4j.auth.basic('neo4j', 'flare-yaws-molecule'), 
+const driver = neo4j.driver('bolt://100.26.159.204:32848',
+                  neo4j.auth.basic('neo4j', 'sequence-struts-deficiencies'), 
                   {/* encrypted: 'ENCRYPTION_OFF' */});
 var sessionNeo = driver.session();
 

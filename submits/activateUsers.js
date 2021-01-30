@@ -11,7 +11,7 @@ var JSONToSend ="{\"usersToAdd\": [";
 var JSONArrayOfUsersToAdd = "";
 for (i = 0; i < options.length; i++){
   var optionsToAdd = options[i].text.split(' ') 
-    JSONArrayOfUsersToAdd = JSONArrayOfUsersToAdd + "\"" + optionsToAdd[1] + "\", "
+    JSONArrayOfUsersToAdd = JSONArrayOfUsersToAdd + "\"" + optionsToAdd[0] + "\", "
 }
 JSONArrayOfUsersToAdd = JSONArrayOfUsersToAdd.substring(0, JSONArrayOfUsersToAdd.length - 2); 
 JSONToSend = JSONToSend + JSONArrayOfUsersToAdd +"] }";

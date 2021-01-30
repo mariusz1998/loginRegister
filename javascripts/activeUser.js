@@ -12,11 +12,14 @@ function activeUser(app,checkAuthenticated,sessionNeo) {
     .run('MATCH (n:User{active:false}) RETURN (n)') 
     .then(function(result){
       result.records.forEach(function(record){
-        allUsersEmails.push(record._fields[0].identity.low+") "+record._fields[0].properties.email 
+        allUsersEmails.push(record._fields[0].properties.email 
         + " "+ record._fields[0].properties.firstName + " "+ record._fields[0].properties.lastName )
       });
     res.render('activateUsers/activateUsersList.ejs',{users: allUsersEmails})
   })
+  .catch((error) => {
+    console.error(error); //tutaj dodaj brak strony błąd
+  });
 });
  app.get('/users/choosed',checkAuthenticated,(req,res)=>{ //render select panel
     res.render('listUsers/choosedUsersList.ejs')
