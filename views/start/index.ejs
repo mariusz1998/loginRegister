@@ -8,38 +8,36 @@
 <h2>Welcome <%=user.firstName%> <%=user.lastName%></h2>
 <% if ( user.admin == true) { %>
   <form action="/users/activate" method="POST">
-    <button id="submit" type="submit">Active other users</button>
+    <input type = "submit" value = "Active other users">
   </form>
   <form action="/users/overview" method="POST">
-    <button id="submit" type="submit">See users</button>
+    <input type = "submit" value = "See users">
   </form>
   <form action="/files/other" method="GET">
-    <button id="submit" type="submit">See other files</button>
+    <input type = "submit" value = "See other files">
   </form>
     <form action="/files/owned" method="GET">
-    <button id="submit" type="submit">See owned files </button>
+      <input type = "submit" value = "See owned files">
   </form>
 <% } %>
 <form action="/get/question" method="GET">
-  <button id="submit" type="submit">Make an inquiry</button>
+  <input type = "submit" value = "Make an inquiry">
 </form>
 
 <form action="/add/file" method="POST">
-  <button id="submit" type="submit">Add file</button>
+  <input type = "submit" value = "Add file">
 </form>
 <form action="/show/your/files" method="GET">
-  <button id="submit" type="submit">Show your files</button>
+  <input type = "submit" value = "Show your files">
 </form>
-
 <form action="/show/your/access/files" method="GET">
-  <button id="submit" type="submit">Show your access files</button>
+  <input type = "submit" value = "Show your access files">
 </form>
 
 <form action="/user/edit" method="POST">
-  <button id="submit" type="submit">Edit Profile</button>
+  <input type = "submit" value = "Edit Profile">
 </form>
-
 <form action="/logout?_method=DELETE" method="POST">
-  <button type="submit">Log Out</button>
+  <input type = "submit" value = "Log Out">
 </form>
 </center>
