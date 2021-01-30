@@ -17,17 +17,22 @@
     <input type="text" readonly id="lastName" name="lastName"  value=<%- user.lastName %> >
   </div>
 
-    <br/><br/>
-
+    <br/>
       <div>
-        <button type="submit" onclick="tempUserData()">Edit your data </button>
+        <input value = "Edit your data" type = "submit" onclick="tempUserData()">
       </div>
+      <br/>
       <div>
-        <button type="submit" onclick="tempUserPass()">Edit your password </button>
+        <input value = "Edit your password" type = "submit" onclick="tempUserPass()"> 
       </div>
+      <br/>
       <div>
-        <button id="buttonFileDelete">Delete your account</button>
+        <input value = "Delete your account" type = "submit" id="buttonFileDelete">
             </div>
+            <br/>
+            <form action = "/" method="get">
+              <div><input type = "submit" value = "Back">  </div>
+          </form>
 <div id="deleteModal" class="modal">
 	<div class="modal-content">
   <span class="closeDeleteModal">  &times;</span>
