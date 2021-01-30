@@ -202,14 +202,8 @@ function ownedFiles(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
              })
             })
            setTimeout(async () =>{ 
-            console.log("Do usuniecia")
-            console.log(userToDelete)
-            console.log("User array")
-            console.log(userArray)
             let  userArrayTemp = [...new Set(userArray)]
            let  usersArrayToSend= userArrayTemp.filter(x => ! userToDelete.includes(x)); 
-           console.log("Co wpyisze")
-           console.log(usersArrayToSend)
               res.render('usersFiles/setFileOwnerChoosed.ejs',{users: usersArrayToSend})
        },1000)
       });

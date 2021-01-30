@@ -41,7 +41,8 @@
 			<button>Back</button>
 		 </form>
 				</div>
-				
+				<table id="filesTable" class="filesTable">
+				</table>
 <div id="deleteModal" class="modal">
 	<div class="modal-content">
   <span class="closeDeleteModal">  &times;</span>
@@ -118,13 +119,19 @@ JSONToSend = JSONToSend + JSONArrayOfUsersToAdd +"] }";
 		function downloadFile()
 		  {
 			var rows = document.getElementById("filesTable").rows;
-	
+	var value=0;
+	var index;
 					for(var i=1;i<rows.length;i++){
-					if( rows[i].classList.contains('highlight'))
-						location="/download/file?JSONFrom=[{\"id\":"+rows[i].cells[0].innerHTML+",\"nameFile\":\""+
-						rows[i].cells[1].innerHTML+"\"}]"+"&myFiles=false"
-			
+					if( rows[i].classList.contains('highlight')){	
+						value++	
+						index =i
 		}
+	}
+		if(value==1)
+		location="/download/file?JSONFrom=[{\"id\":"+rows[index].cells[0].innerHTML+",\"nameFile\":\""+
+					rows[index].cells[1].innerHTML+"\"}]"+"&myFiles=false"
+					else
+					alert("Choose one file!")
 	}
 		</script>
           <script src="/forTables/filterFunction.js"></script>
