@@ -30,7 +30,7 @@ function setFileOwner(app,checkAuthenticated,sessionNeo)
                         }
                           })
                            sessionNeo  
-        .run( 'MATCH (u:User{active:true}) Where id(u)<>$idUserParam  RETURN u', {idUserParam: parseInt(req.user.id)}) 
+        .run( 'MATCH (u:User{active:true})   RETURN u') 
         .then(result => {
           result.records.forEach(function(record) {
                userArray.push(record.get('u').properties.email)                 

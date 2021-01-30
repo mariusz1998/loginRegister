@@ -10,9 +10,15 @@
     <input value = "Choose a file" type="file" id="file" name="file" onchange="uploadFile();">
     <input value = "Update" disabled type="submit" id="button">
 </form> 
+<% if ( otherfile == true) { %>
+    <form action="/files/other" method="GET">
+        <div><input type = "submit" value = "Back"></div>
+  <% } else { %>
+
     <form action="/show/your/files" method="GET">
         <div><input type = "submit" value = "Back"></div>
        </form>
+       <% } %>
 </center>
 
   <script>

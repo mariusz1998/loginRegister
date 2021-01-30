@@ -178,7 +178,7 @@ function ownedFiles(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
            var userArray = []
           var userToDelete = []
           sessionNeo  
-          .run( 'MATCH (u:User{active:true}),(b:File{localization:$localizationParam}) Where u.email<>$emailParam and (u)-[:OWNER|GETACCESS]->(b) RETURN u,b',
+          .run( 'MATCH (u:User{active:true}),(b:File{localization:$localizationParam}) Where (u)-[:OWNER|GETACCESS]->(b) RETURN u,b',
           {localizationParam: req.session.editfile.localization,emailParam:req.session.editfile.owner}) 
                     .then(result => {
                          result.records.forEach(function(record) {
@@ -193,7 +193,7 @@ function ownedFiles(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
                             }
                             })
                              sessionNeo  
-          .run( 'MATCH (u:User),(b:File{localization:$localizationParam}) Where not (u)-[:OWNER|GETACCESS]->() RETURN u',
+          .run( 'MATCH (u:User{active:true}) RETURN u',
           {localizationParam: req.session.editfile.localization}) 
           .then(result => {
             result.records.forEach(function(record) {
@@ -202,9 +202,15 @@ function ownedFiles(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
              })
             })
            setTimeout(async () =>{ 
+            console.log("Do usuniecia")
+            console.log(userToDelete)
+            console.log("User array")
+            console.log(userArray)
             let  userArrayTemp = [...new Set(userArray)]
-            let usersArray= userArrayTemp.filter(x => ! userToDelete.includes(x)); 
-              res.render('usersFiles/setFileOwnerChoosed.ejs',{users: usersArray})
+           let  usersArrayToSend= userArrayTemp.filter(x => ! userToDelete.includes(x)); 
+           console.log("Co wpyisze")
+           console.log(usersArrayToSend)
+              res.render('usersFiles/setFileOwnerChoosed.ejs',{users: usersArrayToSend})
        },1000)
       });
       app.get('/set/file/owned/owner',checkAuthenticated,(req, res)=>{  //change owner in graph data base

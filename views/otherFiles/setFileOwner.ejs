@@ -2,11 +2,11 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/CSS/style.css">
-    <title>User list</title>
+    <title>Users list</title>
  </head>
 <script>var toInit = "Users";</script>
 <center>
-       Select one user for <%=id%>)<%=nameFile%>:          
+       Select one user for <%=id%>) <%=nameFile%>:          
         <br/><br/>
         <div id="container">
             <div id="avaible">
@@ -19,7 +19,7 @@
             <input type = "submit" value = "Set Owner" onclick="temp()">
         </div>
     
-    <form action = "/" method="get">
+        <form action="/files/other" method="GET">
         <input type = "submit" value = "Back">
     </form>
 </center>

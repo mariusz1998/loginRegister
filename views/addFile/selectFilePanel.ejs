@@ -8,9 +8,14 @@
         <form method="POST" action="/get/file/property" enctype="multipart/form-data">
         <input value = "Choose a file" type="file" id="file" name="file" onchange="addFile();">
         <input value = "Next" disabled type="submit" id="button">
-    </center>
-    </body>
       </form> 
+      <br><br>
+      <form action = "/" method="get">
+        <input type = "submit" value = "Back">
+    </form>
+  </body>
+</center>
+   
       <script>
         function addFile() {  //block button when file is not choose
 	       if(document.getElementById("file").value==="") { 

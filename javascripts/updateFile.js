@@ -50,7 +50,7 @@ function updateFile(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
     editfile.id=obj[0]["id"]
     editfile.otherFiles= otherFiles
    req.session.editfile=editfile
-   res.render('userFiles/selectFileUpdate.ejs',{id:obj[0]["id"],nameFile:obj[0]["nameFile"]})
+   res.render('userFiles/selectFileUpdate.ejs',{id:obj[0]["id"],nameFile:obj[0]["nameFile"],otherfile:otherFiles})
    })
 }
 module.exports = updateFile
