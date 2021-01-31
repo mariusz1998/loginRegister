@@ -30,6 +30,9 @@ function deleteFile(app,checkAuthenticated,sessionNeo,auth,google) {
        }
      );
     })
+    .catch((error) => {
+      res.redirect('/errorConnect');
+    });
   })
 }
 module.exports = deleteFile

@@ -18,6 +18,9 @@ function editUsers(app,checkAuthenticated,sessionNeo) //edit users by admin
                 res.render('editUsers/editUsersData.ejs',{alert:"Email is used",user: req.session.selectUser})
                 }
               })
+              .catch((error) => {
+                res.redirect('/errorConnect');
+              });
             }
             setTimeout(() =>{ 
               if(doEdit==true){
@@ -29,6 +32,9 @@ function editUsers(app,checkAuthenticated,sessionNeo) //edit users by admin
                 .then(function(result){   
                     res.redirect('/users/showStatistics/new')
                })
+               .catch((error) => {
+                res.redirect('/errorConnect');
+              });
               }
               } ,3000)
             
@@ -45,7 +51,10 @@ function editUsers(app,checkAuthenticated,sessionNeo) //edit users by admin
               { idParam: parseInt(req.session.selectUser.id),  passwordParam:hashedPassword })
               .then(function(result){   
                   res.redirect('/users/showStatistics/new')
-             })                
+             })   
+             .catch((error) => {
+              res.redirect('/errorConnect');
+            });             
                }  ,2000)
     })
 }

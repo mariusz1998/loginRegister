@@ -37,6 +37,9 @@ app.get('/attr/edit/avaible',checkAuthenticated,(req,res)=>{ //genrate all attri
                        }
                        })
        })
+       .catch((error) => {
+        res.redirect('/errorConnect');
+      });
      setTimeout(async () =>{ 
          let attributeArrayTemp = [...new Set(tempArray)] 
          let attributeArray= attributeArrayTemp.filter(x => ! req.session.editfile.attr.includes(x)); 
@@ -56,6 +59,9 @@ app.get('/edit/file/attribute',checkAuthenticated, (req, res) => {
           else
           res.redirect('/files/other'); //to other files
       })
+      .catch((error) => {
+        res.redirect('/errorConnect');
+      });
 });
 }
 module.exports = editAttrFile

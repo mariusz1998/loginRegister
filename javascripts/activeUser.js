@@ -18,7 +18,7 @@ function activeUser(app,checkAuthenticated,sessionNeo) {
     res.render('activateUsers/activateUsersList.ejs',{users: allUsersEmails})
   })
   .catch((error) => {
-    console.error(error); //tutaj dodaj brak strony błąd
+    res.redirect('/errorConnect');
   });
 });
  app.get('/users/choosed',checkAuthenticated,(req,res)=>{ //render select panel
@@ -34,6 +34,9 @@ function activeUser(app,checkAuthenticated,sessionNeo) {
   .then(function(){
     res.redirect('/users/activate/success');
 })
+.catch((error) => {
+  res.redirect('/errorConnect');
+});
  });
 }
 module.exports = activeUser

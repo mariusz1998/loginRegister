@@ -10,6 +10,6 @@ function submit()
   var option = select.options[select.selectedIndex].text;    
 var JSONToSend ="{\"userToAdd\": [{";
   var optionsToAdd = option.split(' ') 
-    JSONToSend = JSONToSend + "\"id\":\"" + optionsToAdd[0].substring(0, optionsToAdd[0].length - 1) + "\"}]}"
+    JSONToSend = JSONToSend + "\"email\":\"" + optionsToAdd[0]+"\"}]}"
   location='/user/showStatistics?JSONFrom='+JSONToSend
 }

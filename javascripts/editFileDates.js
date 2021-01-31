@@ -31,12 +31,18 @@ function editDatesFile(app,checkAuthenticated,sessionNeo) {
             firstDayParam:obj["dateToEdit"][0]["startDay"], lastDayParam:obj["dateToEdit"][0]["endDay"]})
           .then(function(){
             res.render('userFiles/editFileSucces.ejs'); 
-        })         
+        })     
+        .catch((error) => {
+          res.redirect('/errorConnect');
+        });    
                          }
                          else
                             res.render('userFiles/editFileFailed.ejs', {localization:obj["localization"],
                             firstDay:obj["dateToEdit"][0]["startDay"],lastDay:obj["dateToEdit"][0]["endDay"]});
               })
+              .catch((error) => {
+                res.redirect('/errorConnect');
+              });
             }
             else
             {
@@ -46,7 +52,10 @@ function editDatesFile(app,checkAuthenticated,sessionNeo) {
                 firstDayParam:obj["dateToEdit"][0]["startDay"], lastDayParam:obj["dateToEdit"][0]["endDay"]})
               .then(function(){
                 res.redirect('/files/other'); //to other files
-            })         
+            })  
+            .catch((error) => {
+              res.redirect('/errorConnect');
+            });       
 
             }
        })

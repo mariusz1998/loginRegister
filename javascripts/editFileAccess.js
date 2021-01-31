@@ -39,7 +39,13 @@ function editFileAccess(app,checkAuthenticated,sessionNeo) {
               }                    
       })
            })
+           .catch((error) => {
+            res.redirect('/errorConnect');
+          });
           })
+          .catch((error) => {
+            res.redirect('/errorConnect');
+          });
          setTimeout(async () =>{ 
           let  userArrayTemp = [...new Set(userArray)] //delete duplicates
           let usersArray= userArrayTemp.filter(x => ! userToDelete.includes(x)); //substring arrays 
@@ -60,6 +66,9 @@ function editFileAccess(app,checkAuthenticated,sessionNeo) {
     .then(function(){
       res.redirect('/show/your/files');
           })
+          .catch((error) => {
+            res.redirect('/errorConnect');
+          });
     });
     }
     module.exports = editFileAccess

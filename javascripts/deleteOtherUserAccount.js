@@ -6,6 +6,9 @@ function deleteOtherUserAccount(app,checkAuthenticated,sessionNeo) {
                  .then(function(){
                   res.redirect('/users/overview/after/delete');
                 })
+                .catch((error) => {
+                  res.redirect('/errorConnect');
+                });
          })
     }
     module.exports = deleteOtherUserAccount

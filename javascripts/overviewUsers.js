@@ -12,19 +12,22 @@ function overviewUsers(app,checkAuthenticated,sessionNeo)
         .run('MATCH (n:User{active:true}) WHERE id(n)<>$idParam RETURN (n)',{idParam:req.user.id}) 
         .then(function(result){
           result.records.forEach(function(record){
-            allUsers.push(record._fields[0].identity.low+") "+record._fields[0].properties.email 
+            allUsers.push(record._fields[0].properties.email 
             + " "+ record._fields[0].properties.firstName + " "+ record._fields[0].properties.lastName )
           });
         res.render('statisticsUsers/statisticsUserList.ejs',{users: allUsers}) //send to panel of choosed user
       })
+      .catch((error) => {
+        res.redirect('/errorConnect');
+      });
     });
 
     app.get('/user/showStatistics',checkAuthenticated,(req, res)=>{ //genrate page show user data
       var obj = JSON.parse(req.query.JSONFrom);
     var  user = new Object();
       sessionNeo
-      .run('MATCH (u:User) WHERE id(u)=$idParam OPTIONAL MATCH (u)-[:ADMIN]-(a:Admin) RETURN a,u'
-      ,{idParam: parseInt(obj["userToAdd"][0]["id"])}) 
+      .run('MATCH (u:User{email:$emailParam}) OPTIONAL MATCH (u)-[:ADMIN]-(a:Admin) RETURN a,u'
+      ,{emailParam:(obj["userToAdd"][0]["email"])}) 
       .then(function(result){ 
         user.id = result.records[0].get('u').identity.low
        user.email=result.records[0].get('u').properties.email
@@ -50,6 +53,9 @@ function overviewUsers(app,checkAuthenticated,sessionNeo)
         req.session.selectUser=user;  
         res.render('statisticsUsers/statisticsUser.ejs',{user: user}) 
       })
+      .catch((error) => {
+        res.redirect('/errorConnect');
+      });
      });  
 
      app.get('/user/setAdmin',checkAuthenticated,(req, res)=>{ //genrate page to set/edit days being an administrator of user
@@ -97,6 +103,9 @@ function overviewUsers(app,checkAuthenticated,sessionNeo)
     .then(function(){
     res.redirect('/users/showStatistics/new')
       })  
+      .catch((error) => {
+        res.redirect('/errorConnect');
+      });
   })
 
   app.get('/users/showStatistics/new',checkAuthenticated,(req, res)=>{ //show edit statistics
@@ -129,6 +138,9 @@ function overviewUsers(app,checkAuthenticated,sessionNeo)
       res.render('statisticsUsers/statisticsUser.ejs',{user: user})
 
     })
+    .catch((error) => {
+      res.redirect('/errorConnect');
+    });
    });  
    app.get('/user/showStatistics/new',checkAuthenticated,(req, res)=>{ //show edit statistics
       sessionNeo
@@ -141,6 +153,9 @@ function overviewUsers(app,checkAuthenticated,sessionNeo)
           req.user.lastName = result.records[0].get('u').properties.lastName
         res.render('editUser/editUser.ejs',{user:req.user})
       })
+      .catch((error) => {
+        res.redirect('/errorConnect');
+      });
      });  
 }
 module.exports =  overviewUsers

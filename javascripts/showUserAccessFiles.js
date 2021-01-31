@@ -25,6 +25,9 @@ function showUserAccessFiles(app,checkAuthenticated,sessionNeo) {
                     res.render('userAccessFiles/accessFiles.ejs',{tableData: tableDataFile})  
                   }
                   })
+                  .catch((error) => {
+                    res.redirect('/errorConnect');
+                  });
                
     })
     app.get('/access/file/delete', (req, res) => { //removing access to files that have been accessed
@@ -36,6 +39,9 @@ function showUserAccessFiles(app,checkAuthenticated,sessionNeo) {
                .then(result => {
                 res.redirect('/show/your/access/files');
     })
+    .catch((error) => {
+      res.redirect('/errorConnect');
+    });
   })
 }
 module.exports = showUserAccessFiles

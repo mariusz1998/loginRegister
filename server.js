@@ -139,11 +139,17 @@ function getAccessToken(oAuth2Client, callback) {
             .then(function(result){   
                 res.render('start/login.ejs')
            })
+           .catch((error) => {
+            res.redirect('/errorConnect');
+          });
              } catch{
         res.redirect('/register')
       }
     } ,2000)
   })
+  .catch((error) => {
+    res.redirect('/errorConnect');
+  });
     })
     app.delete('/logout', (req, res) => {
       req.logOut()
@@ -153,6 +159,10 @@ function getAccessToken(oAuth2Client, callback) {
          req.logOut()
            res.redirect('/')
        });
+       app.get('/errorConnect', (req, res) => {
+        req.logOut()
+          res.render('start/login.ejs',{connectError:"Failed connect to data base."})
+      });
 
     function checkAuthenticated(req, res, next) {
         if (req.isAuthenticated()) { 

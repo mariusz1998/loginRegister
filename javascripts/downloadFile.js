@@ -38,6 +38,9 @@ function downloadFile(app,checkAuthenticated,sessionNeo,auth,fs,google) {
           }
       );
          })
+         .catch((error) => {
+          res.redirect('/errorConnect');
+        });
              })    
 }
 module.exports = downloadFile

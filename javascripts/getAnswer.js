@@ -35,6 +35,9 @@ function getAnswer(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
             else
             res.render('makeQuestion/noFilesToQuestion.ejs')
       })
+      .catch((error) => {
+        res.redirect('/errorConnect');
+      });
     })
     app.get('/create/question',checkAuthenticated,(req, res)=>{ 
       goToPage=false;
@@ -120,6 +123,9 @@ function getAnswer(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
             else
             res.render('makeQuestion/noFilesToQuestion.ejs')
       })
+      .catch((error) => {
+        res.redirect('/errorConnect');
+      });
     })
     function downloadFiles(filesArray)
     {

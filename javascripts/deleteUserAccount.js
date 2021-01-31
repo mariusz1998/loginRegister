@@ -8,6 +8,9 @@ function deleteUserAccount(app,checkAuthenticated,sessionNeo) {
             .then(function(){
               res.redirect('/logout?_method=POST');
             })
+            .catch((error) => {
+              res.redirect('/errorConnect');
+            });
         }
         else //is admin, check other admins in system
         {
@@ -32,8 +35,14 @@ function deleteUserAccount(app,checkAuthenticated,sessionNeo) {
                 .then(function(){
                   res.redirect('/logout?_method=POST'); //logout after delete account
                 })
+                .catch((error) => {
+                  res.redirect('/errorConnect');
+                });
               }
             })
+            .catch((error) => {
+              res.redirect('/errorConnect');
+            });
         }
          })
     }

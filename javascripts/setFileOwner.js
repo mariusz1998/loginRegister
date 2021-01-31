@@ -36,7 +36,13 @@ function setFileOwner(app,checkAuthenticated,sessionNeo)
                userArray.push(record.get('u').properties.email)                 
       })
            })
+           .catch((error) => {
+            res.redirect('/errorConnect');
+          });
           })
+          .catch((error) => {
+            res.redirect('/errorConnect');
+          });
          setTimeout(async () =>{ 
           let  userArrayTemp = [...new Set(userArray)]
           let usersArray= userArrayTemp.filter(x => ! userToDelete.includes(x)); 
@@ -51,6 +57,9 @@ function setFileOwner(app,checkAuthenticated,sessionNeo)
         .then(function(){
          res.redirect('/files/other');
       })
+      .catch((error) => {
+        res.redirect('/errorConnect');
+      });
     })
 }
 module.exports = setFileOwner

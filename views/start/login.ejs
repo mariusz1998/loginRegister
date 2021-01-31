@@ -8,6 +8,9 @@
 <% if (messages.error){ %>
     <%= messages.error %>
   <% } %>
+<% if (typeof connectError != 'undefined' ){ %>
+    <%= connectError %>
+  <% } %>
 <form action="/login" method="POST">
   <div>
     <label for="email">Email</label>

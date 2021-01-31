@@ -35,6 +35,9 @@ function addFile(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google) {
                           }
                           })
           })
+          .catch((error) => {
+            res.redirect('/errorConnect');
+          });
         setTimeout(async () =>{ 
             let attributeArray = [...new Set(tempArray)] //delete duplicates
       res.render('addFile/availableAttrFile.ejs',{attr: attributeArray})
@@ -78,12 +81,18 @@ function addFile(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google) {
           .then(function(){
             res.render('addFile/addFileSucces.ejs'); 
         })
+        .catch((error) => {
+          res.redirect('/errorConnect');
+        });
         }
       }
     );
                   }
                   else
                     res.render('addFile/addFileFailed.ejs',{localization:localization,firstDay:obj["firstDay"],lastDay:obj["lastDay"]});
+                })
+                .catch((error) => {
+                  res.redirect('/errorConnect');
                 });
   });
 }

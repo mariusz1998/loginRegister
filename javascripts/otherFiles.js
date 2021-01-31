@@ -28,6 +28,9 @@ function otherFiles(app,checkAuthenticated,sessionNeo) {
                     res.render('otherFiles/files.ejs',{tableData: tableDataFile,arrayFilesAttr:attrFiles})  
                   }
                   })
+                  .catch((error) => {
+                    res.redirect('/errorConnect');
+                  });
                
     })
 }

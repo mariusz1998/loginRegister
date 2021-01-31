@@ -31,6 +31,9 @@ function ownedFiles(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
 
                   }
                   })
+                  .catch((error) => {
+                    res.redirect('/errorConnect');
+                  });
                
     })
     app.get('/edit/file/owned/attr',checkAuthenticated,(req, res)=>{  //edit file attributes
@@ -67,6 +70,9 @@ function ownedFiles(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
                            }
                            })
            })
+           .catch((error) => {
+            res.redirect('/errorConnect');
+          });
          setTimeout(async () =>{ 
              let attributeArrayTemp = [...new Set(tempArray)] 
              let attributeArray= attributeArrayTemp.filter(x => ! req.session.editfile.attr.includes(x)); 
@@ -86,6 +92,9 @@ function ownedFiles(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
               .then(function(){
                 res.redirect('/files/owned'); 
             })
+            .catch((error) => {
+              res.redirect('/errorConnect');
+            });
       });
       //upload files 
       app.post('/set/upload/file/owned', (req, res) => {
@@ -120,10 +129,16 @@ function ownedFiles(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
               .then(function(){
                res.render('usersFiles/updateFileSucces.ejs'); 
             })
+            .catch((error) => {
+              res.redirect('/errorConnect');
+            });
             }
           }
         );
        })
+       .catch((error) => {
+        res.redirect('/errorConnect');
+      });
            })
      })
      app.get('/set/upload/file/owned',checkAuthenticated,(req, res)=>{ //render page to select file 
@@ -156,10 +171,16 @@ function ownedFiles(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
            .then(function(){
              res.render('usersFiles/deleteFileSucces.ejs',{information:obj[0]["id"]+" "+obj[0]["nameFile"]});
          })
+         .catch((error) => {
+          res.redirect('/errorConnect');
+        });
          }
        }
      );
     })
+    .catch((error) => {
+      res.redirect('/errorConnect');
+    });
   })
     app.get('/set/owner/file/owned',checkAuthenticated,(req, res)=>{ //change file owner
       var obj = JSON.parse(req.query.JSONFrom);
@@ -201,6 +222,9 @@ function ownedFiles(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
         })
              })
             })
+            .catch((error) => {
+              res.redirect('/errorConnect');
+            });
            setTimeout(async () =>{ 
             let  userArrayTemp = [...new Set(userArray)]
            let  usersArrayToSend= userArrayTemp.filter(x => ! userToDelete.includes(x)); 
@@ -219,6 +243,9 @@ function ownedFiles(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
           .then(function(){
            res.redirect('/files/owned');
         })
+        .catch((error) => {
+          res.redirect('/errorConnect');
+        });
       })
 }
 module.exports = ownedFiles

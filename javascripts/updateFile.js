@@ -36,10 +36,16 @@ function updateFile(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
             else
             res.render('otherFiles/updateOtherFileSuccess.ejs');
          })
+         .catch((error) => {
+          res.redirect('/errorConnect');
+        });
          }
        }
      );
     })
+    .catch((error) => {
+      res.redirect('/errorConnect');
+    });
         })
   })
   app.get('/set/upload/file',checkAuthenticated,(req, res)=>{ 

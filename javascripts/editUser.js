@@ -20,6 +20,9 @@ function editUser(app,checkAuthenticated,sessionNeo)
                 res.render('editUser/editUserData.ejs',{alert:"Email is used",user: req.user})
             }
             })
+            .catch((error) => {
+              res.redirect('/errorConnect');
+            });
           }
           setTimeout(() =>{ 
             if(doEdit==true){
@@ -30,6 +33,9 @@ function editUser(app,checkAuthenticated,sessionNeo)
               .then(function(result){   
                   res.redirect('/user/showStatistics/your/new')
              })
+             .catch((error) => {
+              res.redirect('/errorConnect');
+            });
             }
           } ,3000)
     })
@@ -50,6 +56,9 @@ function editUser(app,checkAuthenticated,sessionNeo)
             res.render('editUser/editUser.ejs',{user: user})
       
           })
+          .catch((error) => {
+            res.redirect('/errorConnect');
+          });
          });  
     app.get('/user/edit/password',checkAuthenticated,(req, res)=>{ 
           res.render('editUser/editUserPassword.ejs',{user: req.user})
@@ -63,6 +72,9 @@ function editUser(app,checkAuthenticated,sessionNeo)
                 .then(function(result){   
                     res.render('editUser/editUser.ejs',{user: req.user})
                })
+               .catch((error) => {
+                res.redirect('/errorConnect');
+              });
                  }  ,2000)
       })
 }

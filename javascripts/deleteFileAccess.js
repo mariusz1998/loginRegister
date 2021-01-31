@@ -21,6 +21,9 @@ function deleteFileAccess(app,checkAuthenticated,sessionNeo) {
                             res.render('userFiles/deleteAccessFile.ejs',{id:obj[0]["id"],nameFile:obj[0]["nameFile"]})
                      },2000)
           })
+          .catch((error) => {
+            res.redirect('/errorConnect');
+          });
     })
     app.get('/delete/access/user/avaible',checkAuthenticated,(req,res)=>{ //genrate panel current users who have access
             res.render('userFiles/deleteAccessFileUsersAbailable.ejs',{users:  req.session.editfile.accessArray})
@@ -37,6 +40,9 @@ function deleteFileAccess(app,checkAuthenticated,sessionNeo) {
     .then(function(){
       res.redirect('/show/your/files');
           })
+          .catch((error) => {
+            res.redirect('/errorConnect');
+          });
     });
     }
 module.exports = deleteFileAccess
