@@ -63,10 +63,14 @@ app.use(session({
 app.use(passport.initialize())
 app.use(passport.session())
 app.use(methodOverride('_method'))
-  
+
+
+
+
+
 app.get('/',checkAuthenticated, (req, res) => {
 fs.readFile('credentials.json', (err, content) => {
-  if (err)   res.render('start/errorPage,ejs')
+  if (err)   res.render('start/errorPage.ejs')
   authorize(JSON.parse(content));
 });
 
@@ -102,7 +106,7 @@ function getAccessToken(oAuth2Client, callback) {
       if (err) return console.error('Error retrieving access token', err);
       oAuth2Client.setCredentials(token);
       fs.writeFile(TOKEN_PATH, JSON.stringify(token), (err) => {
-        if (err)  res.render('start/errorPage,ejs')
+        if (err)  res.render('start/errorPage.ejs')
       });
       auth = authoAuth2Client;
     });
@@ -192,4 +196,8 @@ function getAccessToken(oAuth2Client, callback) {
       otherFiles(app,checkAuthenticated,sessionNeo)
       setFileOwner(app,checkAuthenticated,sessionNeo)
  
+      app.get('*', function(req, res){
+        res.render('start/badUrLPage.ejs')
+        });
+
 app.listen(3000)
