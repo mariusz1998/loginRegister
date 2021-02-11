@@ -34,14 +34,14 @@ function showUserAccessFiles(app,checkAuthenticated,sessionNeo) {
         var obj = JSON.parse(req.query.JSONFrom);
         var idArray = obj["idFiles"]
      sessionNeo          
-     .run('MATCH (n:User{email:$emailParam})-[r:GETACCESS]->(f:File) Where id(f) in {idFiles} DELETE r',
+     .run('MATCH (n:User{email:$emailParam})-[r:GETACCESS]->(f:File) Where id(f) in $idFiles DELETE r',
      {idFiles:idArray,emailParam: req.user.email})  
                .then(result => {
                 res.redirect('/show/your/access/files');
     })
-    .catch((error) => {
-      res.redirect('/errorConnect');
-    });
+     .catch((error) => {
+       res.redirect('/errorConnect');
+     });
   })
 }
 module.exports = showUserAccessFiles

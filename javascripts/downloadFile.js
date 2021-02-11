@@ -9,7 +9,7 @@ function downloadFile(app,checkAuthenticated,sessionNeo,auth,fs,google) {
             var googleID=  result.records[0].get('googleId')   
             const homeDir = require('os').homedir();
             const desktopDir = homeDir+`\\Desktop`+"\\DataLakeFiles";
-            fs.promises.mkdir(desktopDir, { recursive: true })
+            fs.mkdirSync(desktopDir, { recursive: true })
             const dest = fs.createWriteStream(desktopDir+"/"+obj[0]["nameFile"]);
             dest.on('error', function(err) {
               if(myFiles==true)

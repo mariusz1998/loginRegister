@@ -35,7 +35,7 @@ function deleteFileAccess(app,checkAuthenticated,sessionNeo) {
       var obj = JSON.parse(req.query.JSONFrom);
       var attrArray = obj["usersToAdd"]
     sessionNeo 
-    .run('MATCH (n:User)-[r:GETACCESS]->(f:File) Where id(f)=$idFileParam and n.email in {email} DELETE r',
+    .run('MATCH (n:User)-[r:GETACCESS]->(f:File) Where id(f)=$idFileParam and n.email in $email DELETE r',
     {email:attrArray,idFileParam: req.session.editfile.id}) 
     .then(function(){
       res.redirect('/show/your/files');

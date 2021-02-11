@@ -13,7 +13,7 @@ function getAnswer(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
   var time;
   var showResults
   const homeDir = require('os').homedir();
-  const desktopDir = homeDir+`\\Desktop`+"\\DataLakeFiles";
+  const desktopDir = homeDir+`\\Desktop`+`\\DataLakeFiles`;
   app.get('/get/question',checkAuthenticated,(req, res)=>{ 
    var attrArry = []
    var localizationArray = []
@@ -40,6 +40,7 @@ function getAnswer(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
       });
     })
     app.get('/create/question',checkAuthenticated,(req, res)=>{ 
+      goToPage=false;
       var hrTime = process.hrtime()
       startTime=(hrTime[0]* 1000000000 +hrTime[1]) / 1000000;
       max=-9999.9; //reset variables
@@ -127,14 +128,14 @@ function getAnswer(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
         res.redirect('/errorConnect');
       });
     })
-    function downloadFiles(filesArray)
-    {
+    function downloadFiles(filesArray) {
+
+     fs.mkdirSync(desktopDir, { recursive: true })
      var counterFiles=0
       filesArray.forEach(function(file){
-            fs.promises.mkdir(desktopDir, { recursive: true })
-            const dest = fs.createWriteStream(desktopDir+"/"+file.name);
+            const dest = fs.createWriteStream(desktopDir+`/`+file.name);
             dest.on('error', function(err) {
-              response.render('makeQuestion/errorDownloadFile.ejs',{file:"file from data lake"})
+              response.render('makeQuestion/errorDownloadFile.ejs',{file:"file from data lake "})
           });
           const drive = google.drive({ version: 'v3', auth });
           drive.files.get({fileId: file.googleId, alt: 'media'}, {responseType: 'stream'},
@@ -143,8 +144,8 @@ function getAnswer(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
               .on('end', () => {
                   counterFiles++;
                   if(filesArray.length==counterFiles) {
-                  generateAnswer(filesArray)
-                  }
+                    generateAnswer(filesArray)
+                    }
               })
               .on('error', err => {
                  response.render('makeQuestion/errorDownloadFile.ejs',{file:file.name})
@@ -168,7 +169,6 @@ function getAnswer(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
       catch(err){
         response.render('makeQuestion/errorQuestion.ejs',{file:file.name})
       }
-      console.log(array.length)
     for(var i=0;i<array.length;i++){
       var line = array[i].split(';')
       if(attrNumber==-1){
