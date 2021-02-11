@@ -10,10 +10,7 @@ function deleteFileAccess(app,checkAuthenticated,sessionNeo) {
        {idFileParam: editfile.id,idUserParam:req.user.id}) 
                  .then(result => {
                             result.records.forEach(function(record) {
-                          {
-                           userArray.push( record.get('n').properties.email +" - "+record.get('n').properties.lastName+" "+
-                           record.get('n').properties.firstName)
-                          }
+                           userArray.push(record.get('n').properties.email)
                           })
                           setTimeout(async () =>{ 
                             editfile.accessArray=userArray

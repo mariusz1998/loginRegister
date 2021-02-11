@@ -18,8 +18,8 @@ function setFileOwner(app,checkAuthenticated,sessionNeo)
          var userArray = []
         var userToDelete = []
         sessionNeo  
-        .run( 'MATCH (u:User{active:true}),(b:File{localization:$localizationParam}) Where (u)-[:OWNER|GETACCESS]->(b) RETURN u,b',
-        {localizationParam: req.session.editfile.localization}) 
+        .run( 'MATCH (u:User{active:true}),(b:File{localization:$localizationParam}) Where id(b)<>$idFileParam and (u)-[:OWNER|GETACCESS]->(b) RETURN u,b',
+        {localizationParam: req.session.editfile.localization,idFileParam:req.session.editfile.id}) 
                   .then(result => {
                        result.records.forEach(function(record) {
                             if((record.get('b').properties.firstDay<=(req.session.editfile.startDay) && record.get('b').properties.lastDay>=(req.session.editfile.startDay)) ||			
