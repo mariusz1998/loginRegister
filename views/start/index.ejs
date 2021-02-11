@@ -8,7 +8,7 @@
 <h2>Welcome <%=user.firstName%> <%=user.lastName%></h2>
 <% if ( user.admin == true) { %>
   <form action="/users/activate" method="POST">
-    <input type = "submit" value = "Active other users">
+    <input type = "submit" value = "Activate users">
   </form>
   <form action="/users/overview" method="POST">
     <input type = "submit" value = "See users">
@@ -28,16 +28,16 @@
   <input type = "submit" value = "Add file">
 </form>
 <form action="/show/your/files" method="GET">
-  <input type = "submit" value = "Show your files">
+  <input type = "submit" value = "Show files">
 </form>
 <form action="/show/your/access/files" method="GET">
-  <input type = "submit" value = "Show your access files">
+  <input type = "submit" value = "Show access files">
 </form>
 
 <form action="/user/edit" method="POST">
-  <input type = "submit" value = "Edit Profile">
+  <input type = "submit" value = "Edit profile">
 </form>
 <form action="/logout?_method=DELETE" method="POST">
-  <input type = "submit" value = "Log Out">
+  <input type = "submit" value = "Log out">
 </form>
 </center>

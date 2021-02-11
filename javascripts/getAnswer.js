@@ -99,7 +99,7 @@ function getAnswer(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
               var extensionFile = (record.get('b').properties.name .split(".")[1])
               if(extensionFile!="csv"&& extensionFile!="txt" &&
              extensionFile!="json" && extensionFile!="xml")
-             res.render('makeQuestion/noFilesToQuestion.ejs')
+             return   res.render('makeQuestion/noFilesToQuestion.ejs')
               if(dateFileStartCopy<dateRangeStartCopy)
               dateFileStartCopy=dateRangeStartCopy
               if(dateFileEnd>dateRangeEnd)
@@ -115,27 +115,27 @@ function getAnswer(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
             fileNumber++;
               });
               if(dateRangeCheck.length==0){
-               response=res;
-                downloadFiles(filesArray)
+             //  response=res;
+                downloadFiles(filesArray,res)
            }
               else
-              res.render('makeQuestion/noDatesToQuestion.ejs',{dates:dateRangeCheck})
+            return  res.render('makeQuestion/noDatesToQuestion.ejs',{dates:dateRangeCheck})
             }
             else
-            res.render('makeQuestion/noFilesToQuestion.ejs')
+          return  res.render('makeQuestion/noFilesToQuestion.ejs')
       })
       .catch((error) => {
         res.redirect('/errorConnect');
       });
     })
-    function downloadFiles(filesArray) {
+    function downloadFiles(filesArray,res) {
 
      fs.mkdirSync(desktopDir, { recursive: true })
      var counterFiles=0
       filesArray.forEach(function(file){
             const dest = fs.createWriteStream(desktopDir+`/`+file.name);
             dest.on('error', function(err) {
-              response.render('makeQuestion/errorDownloadFile.ejs',{file:"file from data lake "})
+              res.render('makeQuestion/errorDownloadFile.ejs',{file:"file from data lake "})
           });
           const drive = google.drive({ version: 'v3', auth });
           drive.files.get({fileId: file.googleId, alt: 'media'}, {responseType: 'stream'},
@@ -144,11 +144,11 @@ function getAnswer(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
               .on('end', () => {
                   counterFiles++;
                   if(filesArray.length==counterFiles) {
-                    generateAnswer(filesArray)
+                    generateAnswer(filesArray,res)
                     }
               })
               .on('error', err => {
-                 response.render('makeQuestion/errorDownloadFile.ejs',{file:file.name})
+                 res.render('makeQuestion/errorDownloadFile.ejs',{file:file.name})
               })
               .pipe(dest);
           }
@@ -291,7 +291,7 @@ for(var i=0;i<objJson["document"]["Dane"].length;i++){
 }  
 });
 }
-    function generateAnswer(filesArray)
+    function generateAnswer(filesArray,res)
     {   
 var attrSplit=attribute.split(' ')
 if(attrSplit.length>1)
@@ -329,9 +329,9 @@ attributeWithoutUnit=attribute
   var rimraf = require("rimraf");
     rimraf(desktopDir, function () { console.log("done"); });
       if(showResults==true)
-     response.render('makeQuestion/showAnswer.ejs',{answer:answer,time:endTime-startTime})
+  return   res.render('makeQuestion/showAnswer.ejs',{answer:answer,time:endTime-startTime})
      else
-     response.render('makeQuestion/errorReadFile.ejs')
+   return  res.render('makeQuestion/errorReadFile.ejs')
     
   }
 }
