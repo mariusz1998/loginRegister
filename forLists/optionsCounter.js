@@ -7,6 +7,8 @@ function countingFunction(toCount) {
         var options = select.getElementsByTagName('option');  
         iframe.contentWindow.document.getElementById("amount").value = options.length;
     }
+    else
+    iframe.contentWindow.document.getElementById("amount").value = 0
     
     var iframe2 = document.getElementById("Choosed"+toCount);   
     if(iframe2!=null)
@@ -15,4 +17,6 @@ function countingFunction(toCount) {
         var options2 = select2.getElementsByTagName('option');  
         iframe2.contentWindow.document.getElementById("amount").value = options2.length;
     }
+    else
+    iframe.contentWindow.document.getElementById("amount").value = 0
 }

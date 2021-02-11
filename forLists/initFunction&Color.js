@@ -7,4 +7,5 @@ function init(toInit,optionArray)
     var iframe2 = document.getElementById("Choosed"+toInit);  
     var select2 = iframe2.contentWindow.document.getElementById("choosed"+toInit);
     select2.addEventListener("click", deleteFunction.bind(this,toInit,optionArray),false);
+    countingFunction(toInit);
 }

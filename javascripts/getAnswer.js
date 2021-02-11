@@ -11,7 +11,7 @@ function getAnswer(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
   counter=0;
   var day;
   var time;
-  var showResults =  false;
+  var showResults
   const homeDir = require('os').homedir();
   const desktopDir = homeDir+`\\Desktop`+"\\DataLakeFiles";
   app.get('/get/question',checkAuthenticated,(req, res)=>{ 
@@ -40,13 +40,13 @@ function getAnswer(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
       });
     })
     app.get('/create/question',checkAuthenticated,(req, res)=>{ 
-      goToPage=false;
       var hrTime = process.hrtime()
       startTime=(hrTime[0]* 1000000000 +hrTime[1]) / 1000000;
       max=-9999.9; //reset variables
       min=9999.9;
       avg=0;
       counter=0;
+      showResults =  false;
         var obj = JSON.parse(req.query.JSONFrom);
         var lastDay=(obj["lastDay"])
         var firstDay=obj["firstDay"]
@@ -168,6 +168,7 @@ function getAnswer(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
       catch(err){
         response.render('makeQuestion/errorQuestion.ejs',{file:file.name})
       }
+      console.log(array.length)
     for(var i=0;i<array.length;i++){
       var line = array[i].split(';')
       if(attrNumber==-1){

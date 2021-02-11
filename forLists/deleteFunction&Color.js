@@ -7,6 +7,7 @@ function deleteFunction(toDelete,optionArray)
     var iframe2 = document.getElementById("Avaible"+toDelete);  
     var select2 = iframe2.contentWindow.document.getElementById("choosed"+toDelete);  
     var option = document.createElement("option");
+  //  console.log(select.selectedIndex)
     option.text = options[select.selectedIndex].text;
     
     optionArray.forEach(function(element){

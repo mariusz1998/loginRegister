@@ -40,8 +40,8 @@ let auth;
 const SCOPES = ['https://www.googleapis.com/auth/drive'];
 const TOKEN_PATH = 'token.json';
 
-const driver = neo4j.driver('bolt://100.26.159.204:32848',
-                  neo4j.auth.basic('neo4j', 'sequence-struts-deficiencies'), 
+const driver = neo4j.driver('bolt://54.165.188.122:7687',
+                  neo4j.auth.basic('neo4j', 'dam-accrual-hoop'), 
                   {/* encrypted: 'ENCRYPTION_OFF' */});
 var sessionNeo = driver.session();
 
@@ -63,10 +63,6 @@ app.use(session({
 app.use(passport.initialize())
 app.use(passport.session())
 app.use(methodOverride('_method'))
-
-
-
-
 
 app.get('/',checkAuthenticated, (req, res) => {
 fs.readFile('credentials.json', (err, content) => {
@@ -126,7 +122,6 @@ function getAccessToken(oAuth2Client, callback) {
     res.render('start/register.ejs')
   })
   app.post('/register',checkNotAuthenticated,  async (req, res) => {
-    
     sessionNeo
     .run('MATCH (n:User{email:$emailParam}) RETURN count(n) as user_exists',
     {emailParam:req.body.email})
@@ -167,7 +162,7 @@ function getAccessToken(oAuth2Client, callback) {
         req.logOut()
           res.render('start/login.ejs',{connectError:"Failed connect to data base."})
       });
-
+    
     function checkAuthenticated(req, res, next) {
         if (req.isAuthenticated()) { 
           return next()
@@ -195,9 +190,5 @@ function getAccessToken(oAuth2Client, callback) {
       deleteOtherUserAccount(app,checkAuthenticated,sessionNeo)
       otherFiles(app,checkAuthenticated,sessionNeo)
       setFileOwner(app,checkAuthenticated,sessionNeo)
- 
-      app.get('*', function(req, res){
-        res.render('start/badUrLPage.ejs')
-        });
-
+    
 app.listen(3000)
