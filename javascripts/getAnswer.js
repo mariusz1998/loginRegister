@@ -98,7 +98,7 @@ function getAnswer(app,checkAuthenticated,sessionNeo,auth,formidable,fs,google)
             if(dateRageFileSizeBeforeDelete>dateRangeCheck.length){
               var extensionFile = (record.get('b').properties.name .split(".")[1])
               if(extensionFile!="csv"&& extensionFile!="txt" &&
-             extensionFile=="json" && extensionFile!="xml")
+             extensionFile!="json" && extensionFile!="xml")
              res.render('makeQuestion/noFilesToQuestion.ejs')
               if(dateFileStartCopy<dateRangeStartCopy)
               dateFileStartCopy=dateRangeStartCopy
