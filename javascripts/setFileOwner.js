@@ -30,7 +30,7 @@ function setFileOwner(app,checkAuthenticated,sessionNeo)
                         }
                           })
                            sessionNeo  
-        .run( 'MATCH (u:User{active:true})   RETURN u') 
+        .run( 'MATCH (u:User{active:true}) RETURN u') 
         .then(result => {
           result.records.forEach(function(record) {
                userArray.push(record.get('u').properties.email)                 
@@ -44,6 +44,7 @@ function setFileOwner(app,checkAuthenticated,sessionNeo)
             res.redirect('/errorConnect');
           });
          setTimeout(async () =>{ 
+     
           let  userArrayTemp = [...new Set(userArray)]
           let usersArray= userArrayTemp.filter(x => ! userToDelete.includes(x)); 
             res.render('otherFiles/setFileOwnerChoosed.ejs',{users: usersArray})
@@ -52,12 +53,13 @@ function setFileOwner(app,checkAuthenticated,sessionNeo)
     app.get('/set/file/owner',checkAuthenticated,(req, res)=>{  //ser file owner in data graph
         var obj = JSON.parse(req.query.JSONFrom);
         sessionNeo
-        .run('MATCH (u:User {email:$emailParam}),(f:File) Where id(f)=$idFileParam MERGE(f)<-[r:OWNER]-(u)',
+        .run('MATCH (u:User {email:$emailParam}),(f:File) OPTIONAL MATCH (f)<-[g:GETACCESS]-(u) with u,f,g Where id(f)=$idFileParam MERGE(f)<-[r:OWNER]-(u) Delete g',
         { emailParam:obj["email"],idFileParam: req.session.editfile.id})
         .then(function(){
          res.redirect('/files/other');
       })
       .catch((error) => {
+        console.log(error)
         res.redirect('/errorConnect');
       });
     })
